@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Uko KazeB ikora" %} · KazeB{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <h1 class="h3 mb-4">{% trans "Uko KazeB ikora" %}</h1>
+
+    <p>
+      {% trans "KazeB ni ikiraro gihuza abaguzi n'abagurisha kugira ngo babonane vuba kandi byoroshye. Abagurisha bashyiraho ibicuruzwa byabo, abaguzi bakabishakisha bakabona ubicuruza." %}
+    </p>
+
+    <h2 class="h5 mt-4">{% trans "Icyo KazeB ikora" %}</h2>
+    <ul>
+      <li>{% trans "Itanga urubuga rwo gushyiraho no gushakisha ibicuruzwa." %}</li>
+      <li>{% trans "Ihuza abaguzi n'abagurisha binyuze mu butumwa, WhatsApp, cyangwa telefone." %}</li>
+    </ul>
+
+    <h2 class="h5 mt-4">{% trans "Icyo KazeB idakora" %}</h2>
+    <ul>
+      <li>{% trans "Ntabwo yishyurira cyangwa yakira amafaranga hagati y'abaguzi n'abagurisha." %}</li>
+      <li>{% trans "Ntabwo yohereza cyangwa igenzura ibicuruzwa mu buryo bw'umubiri." %}</li>
+      <li>{% trans "Ntabwo ari umuhuza wemewe mu byerekeye amasezerano hagati y'abaguzi n'abagurisha." %}</li>
+    </ul>
+
+    <h2 class="h5 mt-4">{% trans "Umutekano wawe" %}</h2>
+    <ul>
+      <li>{% trans "Hura n'ucuruza ahantu hafunguriwe abantu benshi kandi umenye neza icyo ugura mbere yo kwishyura." %}</li>
+      <li>{% trans "Ntiwohereza amafaranga mbere yo kubona icyo ugura, keretse ubyizeye neza." %}</li>
+      <li>{% trans "Niba wumva hari ikitagenda neza, koresha buto yo gutanga raporo ku gicuruzwa cyangwa k'ucuruza." %}</li>
+    </ul>
+
+    <p class="text-muted mt-4">
+      {% trans "Ukoresheje KazeB, wemera" %}
+      <a href="{% url 'core:terms' %}">{% trans "amabwiriza y'ikoreshwa" %}</a>
+      {% trans "n'uko dukurikiza" %}
+      <a href="{% url 'core:privacy' %}">{% trans "politiki y'ibanga" %}</a>.
+    </p>
+  </div>
+</div>
+{% endblock %}

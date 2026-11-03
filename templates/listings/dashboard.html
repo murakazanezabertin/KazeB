@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Konti yanjye" %} · KazeB{% endblock %}
+
+{% block content %}
+<h1 class="h3 mb-1">{% trans "Konti yanjye" %}</h1>
+<p class="text-muted mb-4">{% trans "Aha nihoreba ibyo watanze n'ubutumwa abaguzi bakoherereje." %}</p>
+
+<div class="account-card mb-4 d-flex align-items-center gap-3">
+  {% if user.profile_picture %}
+    <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}" class="account-avatar">
+  {% else %}
+    <span class="account-avatar account-avatar-fallback">{{ user.username|first|upper }}</span>
+  {% endif %}
+  <div>
+    <div class="fw-bold">{{ user.username }}</div>
+    {% if user.phone_number %}<div class="small text-muted">📞 {{ user.phone_number }}</div>{% endif %}
+    {% if user.whatsapp_number %}<div class="small text-muted">🟢 {{ user.whatsapp_number }}</div>{% endif %}
+    <div class="small mt-1">
+      <a href="{% url 'trust:seller_reviews' user_id=user.pk %}" class="text-decoration-none">
+        {% trans "Ubusuzumire bwanjye" %}
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3">
+    <div class="stat-card">
+      <div class="stat-number">{{ listings.count }}</div>
+      <div class="stat-label">{% trans "Ibicuruzwa" %}</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card">
+      <div class="stat-number">{{ total_views }}</div>
+      <div class="stat-label">{% trans "Abarebye" %}</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card">
+      <div class="stat-number">{{ unread_count }}</div>
+      <div class="stat-label">{% trans "Ubutumwa butarasomwa" %}</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <a href="{% url 'listings:favorites' %}" class="stat-card stat-card-action text-decoration-none">
+      <div class="stat-number">★</div>
+      <div class="stat-label">{% trans "Ibya kwibuka" %}</div>
+    </a>
+  </div>
+  <div class="col-6 col-md-3">
+    <a href="{% url 'listings:listing_create' %}" class="stat-card stat-card-action text-decoration-none">
+      <div class="stat-number">➕</div>
+      <div class="stat-label">{% trans "Ongeraho igicuruzwa" %}</div>
+    </a>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-7">
+    <h2 class="h5 mb-3">{% trans "Ibicuruzwa byanjye" %}</h2>
+    {% if listings %}
+      <div class="list-group">
+        {% for listing in listings %}
+          <div class="list-group-item d-flex justify-content-between align-items-center gap-2 flex-wrap">
+            <a href="{{ listing.get_absolute_url }}" class="d-flex align-items-center gap-2 text-decoration-none text-body">
+              {% if listing.cover_image %}
+                <img src="{{ listing.cover_image.image.url }}" alt="{{ listing.name }}" class="product-thumb">
+              {% else %}
+                <span class="product-thumb product-thumb-placeholder">🖼</span>
+              {% endif %}
+              <span>
+                <strong>{{ listing.name }}</strong>
+                <br>
+                <small class="text-muted">{{ listing.display_price }} &middot; {{ listing.location }}</small>
+              </span>
+            </a>
+            <span class="d-flex align-items-center gap-2">
+              <span class="text-end small text-muted">
+                👁 {{ listing.views_count }} &middot; 💬 {{ listing.thread_count }}
+                {% if not listing.is_active %}<br><span class="badge bg-secondary">{% trans "Birahishwe" %}</span>{% endif %}
+              </span>
+              <a href="{% url 'listings:listing_edit' pk=listing.pk %}" class="btn btn-sm btn-outline-brand" title="{% trans 'Hindura' %}">✏️</a>
+              <a href="{% url 'listings:listing_delete' pk=listing.pk %}" class="btn btn-sm btn-outline-danger" title="{% trans 'Siba' %}">🗑</a>
+            </span>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-muted">
+        {% trans "Nturigeze wongeraho ikintu cyo kugurisha." %}
+        <a href="{% url 'listings:listing_create' %}">{% trans "Ongeraho icya mbere" %}</a>.
+      </p>
+    {% endif %}
+  </div>
+
+  <div class="col-lg-5">
+    <h2 class="h5 mb-3">{% trans "Ubutumwa buheruka" %}</h2>
+    {% if recent_messages %}
+      <div class="list-group">
+        {% for message in recent_messages %}
+          <a href="{% url 'chat:thread_as_seller' listing_id=message.listing.pk buyer_id=message.sender.pk %}"
+             class="list-group-item list-group-item-action">
+            <div class="d-flex justify-content-between">
+              <strong>{{ message.sender.username }}</strong>
+              <small class="text-muted">{{ message.created_at|date:"d M, H:i" }}</small>
+            </div>
+            <small class="text-muted">{{ message.listing.name }}</small>
+            <div class="text-truncate">{{ message.body }}</div>
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-muted">{% trans "Nta butumwa bwaturutse ku baguzi burahari." %}</p>
+    {% endif %}
+  </div>
+</div>
+
+<div class="text-center mt-5 pt-3 border-top d-flex justify-content-center gap-2">
+  <a href="{% url 'accounts:edit_account' %}" class="account-action-btn account-action-edit">
+    ✏️ {% trans "Hindura konti" %}
+  </a>
+  <a href="{% url 'accounts:delete_account' %}" class="account-action-btn account-action-delete">
+    🗑 {% trans "Siba Konti" %}
+  </a>
+</div>
+{% endblock %}

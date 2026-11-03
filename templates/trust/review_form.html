@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}{% trans "Tanga ubusuzumire" %} · KazeB{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <h1 class="h4 mb-3">
+      {% if editing %}{% trans "Hindura ubusuzumire bwawe kuri" %}{% else %}{% trans "Tanga ubusuzumire kuri" %}{% endif %}
+      {{ seller.username }}
+    </h1>
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label class="form-label d-block">{{ form.rating.label }}</label>
+        <div class="star-rating-picker" id="starRatingPicker">
+          {% for radio in form.rating %}
+            <label class="star-rating-star">
+              {{ radio.tag }}
+              <span aria-hidden="true">★</span>
+            </label>
+          {% endfor %}
+        </div>
+        {% for error in form.rating.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+      </div>
+      <div class="mb-3">
+        <label class="form-label">{{ form.comment.label }}</label>
+        {{ form.comment }}
+        {% for error in form.comment.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+      </div>
+      <button type="submit" class="btn btn-brand">{% trans "Ohereza" %}</button>
+    </form>
+  </div>
+</div>
+<script src="{% static 'js/star-rating.js' %}"></script>
+{% endblock %}

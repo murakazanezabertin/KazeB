@@ -1,0 +1,34 @@
+# Fly.io app configuration. `fly launch` normally generates this file
+# for you interactively -- this one is filled in ahead of time so you
+# can just run `fly deploy` once your app is created with `fly apps create`.
+#
+# Replace "kazeb" below with whatever app name you actually chose
+# (Fly app names must be globally unique, so "kazeb" may already be
+# taken -- try "kazeb-rw" or similar if so).
+
+app = "kazeb"
+primary_region = "cdg"  # Paris -- closest Fly region to Rwanda at time of writing; change if you find a closer one
+
+[build]
+
+[env]
+  PORT = "8080"
+  DJANGO_DEBUG = "False"
+
+# Runs automatically before each new deploy goes live, so your
+# database schema is always up to date without needing to SSH in.
+[deploy]
+  release_command = "python manage.py migrate --noinput"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+[[vm]]
+  memory = "512mb"
+  cpu_kind = "shared"
+  cpus = 1

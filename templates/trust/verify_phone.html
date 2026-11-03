@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Emeza numero yawe" %} · KazeB{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-5">
+    <h1 class="h4 mb-3">{% trans "Emeza numero ya telefone" %}</h1>
+
+    {% if not code_sent %}
+      <p class="text-muted small">
+        {% trans "Kanda hasi kugira ngo twoherereze kode ku numero yawe." %}
+      </p>
+      <form method="post" action="{% url 'trust:request_phone_verification' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-brand w-100">{% trans "Ohereza kode" %}</button>
+      </form>
+    {% else %}
+      <p class="text-muted small">
+        {% trans "Twohereje kode ku numero yawe. Yandike hano kugira ngo tumenye ko ari yo yawe." %}
+      </p>
+
+      <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+          {{ form.code }}
+          {% for error in form.code.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+        </div>
+        <button type="submit" class="btn btn-brand w-100 mb-2">{% trans "Emeza" %}</button>
+      </form>
+
+      <form method="post" action="{% url 'trust:request_phone_verification' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-link btn-sm">{% trans "Ohereza kode nshya" %}</button>
+      </form>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

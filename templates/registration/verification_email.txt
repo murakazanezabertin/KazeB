@@ -1,0 +1,7 @@
+{% load i18n %}{% blocktrans %}Muraho {{ user }},{% endblocktrans %}
+
+{% trans "Kanda kuri uyu murongo kugira ngo wemeze konti yawe kuri KazeB:" %}
+
+{{ verify_url }}
+
+{% trans "Niba atari wowe wasabye iyi konti, wirengagize iyi email." %}

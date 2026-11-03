@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load i18n category_extras %}
+
+{% block title %}{% if category %}{% category_name category %}{% else %}{% trans "Shakisha" %}{% endif %} · KazeB{% endblock %}
+
+{% block content %}
+<h1 class="h3 mb-3">{% if category %}{% category_name category %}{% else %}{% trans "Ibicuruzwa byose" %}{% endif %}</h1>
+
+<form method="get" class="row g-2 mb-4">
+  <div class="col-12 col-md-5">
+    {{ search_form.q }}
+  </div>
+  <div class="col-6 col-md-2">
+    <select name="condition" class="form-select" onchange="this.form.submit()">
+      <option value="">{% trans "Uko bimeze: byose" %}</option>
+      <option value="new" {% if request.GET.condition == "new" %}selected{% endif %}>{% trans "Gishya" %}</option>
+      <option value="used" {% if request.GET.condition == "used" %}selected{% endif %}>{% trans "Gikoreshejwe" %}</option>
+    </select>
+  </div>
+  <div class="col-6 col-md-2">
+    <select name="sort" class="form-select" onchange="this.form.submit()">
+      <option value="newest" {% if not request.GET.sort or request.GET.sort == "newest" %}selected{% endif %}>{% trans "Bishya mbere" %}</option>
+      <option value="oldest" {% if request.GET.sort == "oldest" %}selected{% endif %}>{% trans "Bishaje mbere" %}</option>
+      <option value="most_viewed" {% if request.GET.sort == "most_viewed" %}selected{% endif %}>{% trans "Abarebye benshi" %}</option>
+    </select>
+  </div>
+  <div class="col-6 col-md-2">
+    <select name="price_sort" class="form-select" onchange="this.form.submit()">
+      <option value="">{% trans "Igiciro: byose" %}</option>
+      <option value="asc" {% if request.GET.price_sort == "asc" %}selected{% endif %}>{% trans "Igiciro: gito mbere" %}</option>
+      <option value="desc" {% if request.GET.price_sort == "desc" %}selected{% endif %}>{% trans "Igiciro: kinini mbere" %}</option>
+    </select>
+  </div>
+  <div class="col-6 col-md-1">
+    <button type="submit" class="btn btn-brand w-100">{% trans "Shakisha" %}</button>
+  </div>
+</form>
+
+{% if page_obj %}
+<div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4">
+  {% for listing in page_obj %}
+    {% include "listings/_listing_card.html" %}
+  {% endfor %}
+</div>
+
+{% if page_obj.has_other_pages %}
+<nav class="mt-4">
+  <ul class="pagination justify-content-center">
+    {% if page_obj.has_previous %}
+      <li class="page-item"><a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}{% if request.GET.condition %}condition={{ request.GET.condition }}&{% endif %}{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}{% if request.GET.price_sort %}price_sort={{ request.GET.price_sort }}&{% endif %}page={{ page_obj.previous_page_number }}">{% trans "Ibibanziriza" %}</a></li>
+    {% endif %}
+    <li class="page-item disabled"><span class="page-link">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span></li>
+    {% if page_obj.has_next %}
+      <li class="page-item"><a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}{% if request.GET.condition %}condition={{ request.GET.condition }}&{% endif %}{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}{% if request.GET.price_sort %}price_sort={{ request.GET.price_sort }}&{% endif %}page={{ page_obj.next_page_number }}">{% trans "Ibikurikira" %}</a></li>
+    {% endif %}
+  </ul>
+</nav>
+{% endif %}
+
+{% else %}
+<p class="text-muted">{% trans "Nta gicuruzwa gihuye n'ushaka." %}</p>
+{% endif %}
+{% endblock %}

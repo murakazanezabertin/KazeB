@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}{% trans "Twandikire" %} · KazeB{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <h1 class="h3 mb-4">{% trans "Twandikire" %}</h1>
+
+    <p class="text-muted mb-4">
+      {% trans "Uzabona ubufasha bwihuse iyo utwandikiye kuri WhatsApp." %}
+    </p>
+
+    {% trans "Muraho KazeB, mfite ikibazo nifuza kubaza." as whatsapp_message %}
+    <a href="https://wa.me/250796926760?text={{ whatsapp_message|urlencode }}"
+       target="_blank" rel="noopener" class="btn btn-success btn-lg d-inline-flex align-items-center gap-2">
+      <img src="{% static 'images/icons/whatsapp.svg' %}" alt="" class="whatsapp-icon">
+      0796 926 760
+    </a>
+  </div>
+</div>
+{% endblock %}

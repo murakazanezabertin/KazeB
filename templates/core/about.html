@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Abo turi bo" %} · KazeB{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <h1 class="h3 mb-4">{% trans "Abo turi bo" %}</h1>
+
+    <p>
+      {% trans "KazeB ni ikiraro gihuza abaguzi n'abagurisha kugira ngo babonane vuba kandi byoroshye. Abagurisha bashyiraho ibicuruzwa byabo, abaguzi bakabishakisha bakabona ubicuruza." %}
+    </p>
+
+    <h2 class="h5 mt-4">{% trans "Icyo KazeB ikora" %}</h2>
+    <ul>
+      <li>{% trans "Itanga urubuga rwo gushyiraho no gushakisha ibicuruzwa." %}</li>
+      <li>{% trans "Ihuza abaguzi n'abagurisha binyuze mu butumwa, WhatsApp, cyangwa telefone." %}</li>
+    </ul>
+
+    <h2 class="h5 mt-4">{% trans "Icyo KazeB idakora" %}</h2>
+    <ul>
+      <li>{% trans "Ntabwo yishyurira cyangwa yakira amafaranga hagati y'abaguzi n'abagurisha." %}</li>
+      <li>{% trans "Ntabwo yohereza cyangwa igenzura ibicuruzwa mu buryo bw'umubiri." %}</li>
+      <li>{% trans "Ntabwo ari umuhuza wemewe mu byerekeye amasezerano hagati y'abaguzi n'abagurisha." %}</li>
+    </ul>
+
+    <h2 class="h5 mt-4">{% trans "Umutekano wawe" %}</h2>
+    <ul>
+      <li>{% trans "Hura n'ucuruza ahantu hafunguriwe abantu benshi kandi umenye neza icyo ugura mbere yo kwishyura." %}</li>
+      <li>{% trans "Ntiwohereza amafaranga mbere yo kubona icyo ugura, keretse ubyizeye neza." %}</li>
+      <li>{% trans "Niba wumva hari ikitagenda neza, koresha buto yo gutanga raporo ku gicuruzwa cyangwa k'ucuruza." %}</li>
+    </ul>
+
+    <hr class="my-4">
+
+    <h2 class="h4 mb-3">{% trans "Amabwiriza y'ikoreshwa" %}</h2>
+
+    <p class="text-muted small">
+      {% trans "Aya mabwiriza ni urugero rusanzwe (template) rutanga inkomoko y'ibisobanuro -- ntabwo ari inama z'amategeko. Reba umunyamategeko mbere yo gutangiza urubuga rwawe ku mugaragaro." %}
+    </p>
+
+    <h3 class="h6 mt-4">1. {% trans "Konti" %}</h3>
+    <p>{% trans "Ugomba gutanga amakuru y'ukuri igihe wiyandikisha, harimo numero yawe ya telefone n'iya WhatsApp. Uri wenyine ubazwa ibikorwa byose bikorerwa kuri konti yawe." %}</p>
+
+    <h3 class="h6 mt-4">2. {% trans "Ibicuruzwa" %}</h3>
+    <p>{% trans "Ushobora gushyiraho gusa ibintu wemerewe n'amategeko kugurisha. KazeB ishobora gukuraho icyo ugurisha icyo ari cyo cyose kitubahiriza aya mabwiriza, nta menyesha mbere." %}</p>
+
+    <h3 class="h6 mt-4">3. {% trans "Ibyerekeye ivunjisha" %}</h3>
+    <p>{% trans "KazeB ntabwo igira uruhare mu kwishyura cyangwa gutwara ibicuruzwa. Amasezerano yose ni hagati y'umuguzi n'ucuruza." %}</p>
+
+    <h3 class="h6 mt-4">4. {% trans "Gukuraho konti" %}</h3>
+    <p>{% trans "Ushobora gusiba konti yawe igihe cyose ubishaka. Iki gikorwa gisiba burundu ibicuruzwa byawe n'ubutumwa bwawe." %}</p>
+
+    <h3 class="h6 mt-4">5. {% trans "Impinduka" %}</h3>
+    <p>{% trans "Aya mabwiriza ashobora guhinduka igihe cyose. Gukomeza gukoresha urubuga bisobanura ko wemeye impinduka." %}</p>
+
+    <p class="text-muted mt-4">
+      {% trans "Reba na" %} <a href="{% url 'core:privacy' %}">{% trans "politiki y'ibanga" %}</a>.
+    </p>
+  </div>
+</div>
+{% endblock %}

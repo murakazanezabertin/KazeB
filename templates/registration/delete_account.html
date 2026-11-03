@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Siba Konti" %} · KazeB{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <h1 class="h4 mb-3">{% trans "Siba Konti" %}</h1>
+
+    <p class="text-danger">
+      {% trans "Iyi gikorwa gisiba burundu konti yawe, hamwe n'ibicuruzwa byose wagurishaga, amafoto yabyo, n'ubutumwa bwawe bwose. Ntibishobora gusubizwa inyuma." %}
+    </p>
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label class="form-label" for="{{ form.password.id_for_label }}">
+          {% trans "Andika ijambobanga ryawe kugira ngo wemeze" %}
+        </label>
+        {{ form.password }}
+        {% for error in form.password.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+      </div>
+
+      <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-danger">{% trans "Yego, siba konti yanjye" %}</button>
+        <a href="{% url 'listings:dashboard' %}" class="btn btn-outline-secondary">{% trans "Reka" %}</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

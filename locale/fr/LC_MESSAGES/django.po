@@ -1,0 +1,797 @@
+# French translations for KazeB.
+# Copyright (C) 2026 ORGANIZATION
+# This file is distributed under the same license as the KazeB project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr "Project-Id-Version: KazeB 1.0\nReport-Msgid-Bugs-To: EMAIL@ADDRESS\nPOT-Creation-Date: 2026-07-31 22:52+0000\nPO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\nLast-Translator: FULL NAME <EMAIL@ADDRESS>\nLanguage: fr\nLanguage-Team: fr <LL@li.org>\nPlural-Forms: nplurals=2; plural=(n > 1);\nMIME-Version: 1.0\nContent-Type: text/plain; charset=utf-8\nContent-Transfer-Encoding: 8bit\nGenerated-By: Babel 2.18.0\n"
+
+msgid "Abagurisha bashyiraho ibicuruzwa byabo, abaguzi bakabishakisha bakabona ubigurisha binyuze mu butumwa, WhatsApp, cyangwa telefone."
+msgstr "Les vendeurs publient leurs produits, et les acheteurs les recherchent et trouvent le vendeur via la messagerie du site, WhatsApp ou le téléphone."
+
+msgid "Abaguzi bazabona buto yo 'Kuvugana kuri WhatsApp' hakoreshejwe iyi numero."
+msgstr "Les acheteurs auront un bouton « Discuter sur WhatsApp » utilisant ce numéro."
+
+msgid "Abarebye"
+msgstr "Vues"
+
+msgid "Abarebye benshi"
+msgstr "Les plus vus"
+
+msgid "Abo turi bo"
+msgstr "À propos de nous"
+
+msgid "Aha nihoreba ibyo watanze n'ubutumwa abaguzi bakoherereje."
+msgstr "Voici ce que vous avez publié et les messages envoyés par les acheteurs."
+
+msgid "Ahabanza"
+msgstr "Accueil"
+
+msgid "Akarere"
+msgstr "District"
+
+msgid "Akarere: kose"
+msgstr "District : tous"
+
+msgid "Amabwiriza"
+msgstr "Conditions"
+
+msgid "Amabwiriza y'ikoreshwa"
+msgstr "Conditions d'utilisation"
+
+msgid "Amafoto"
+msgstr "Photos"
+
+msgid "Amafoto asanzwe"
+msgstr "Photos existantes"
+
+msgid "Amakuru dukusanya"
+msgstr "Informations que nous collectons"
+
+msgid "Amakuru ku bicuruzwa washyizeho: ubwoko, ibisobanuro, aho biherereye, ifoto, n'igiciro."
+msgstr "Informations sur les produits que vous publiez : catégorie, description, lieu, photos et prix."
+
+msgid "Amakuru yo kutuvugisha azashyirwa hano vuba."
+msgstr "Les coordonnées seront ajoutées ici bientôt."
+
+msgid "Amanota"
+msgstr "Note"
+
+msgid "Andika ijambobanga rimwe ryemeza uko waryanditse haruguru."
+msgstr "Saisissez à nouveau le même mot de passe pour vérification."
+
+msgid "Andika ijambobanga ryawe kugira ngo wemeze"
+msgstr "Saisissez votre mot de passe pour confirmer"
+
+msgid "Andika ubutumwa..."
+msgstr "Écrivez un message..."
+
+msgid "Aya mabwiriza ashobora guhinduka igihe cyose. Gukomeza gukoresha urubuga bisobanura ko wemeye impinduka."
+msgstr "Ces conditions peuvent changer à tout moment. Continuer à utiliser le site signifie que vous acceptez les modifications."
+
+msgid "Aya mabwiriza ni urugero rusanzwe (template) rutanga inkomoko y'ibisobanuro -- ntabwo ari inama z'amategeko. Reba umunyamategeko mbere yo gutangiza urubuga rwawe ku mugaragaro."
+msgstr "Ces conditions sont un modèle de base, pas un conseil juridique. Consultez un avocat avant de lancer votre site publiquement."
+
+msgid "Bika impinduka"
+msgstr "Enregistrer les modifications"
+
+msgid "Bika ku bya kwibuka"
+msgstr "Ajouter aux favoris"
+
+msgid "Birahishwe"
+msgstr "Masquée"
+
+msgid "Biraza vuba"
+msgstr "Bientôt disponible"
+
+msgid "Bishaje mbere"
+msgstr "Plus ancien d'abord"
+
+msgid "Bishya mbere"
+msgstr "Plus récents d'abord"
+
+msgid "Bona umuguzi cyangwa umugurisha byoroshye kandi vuba."
+msgstr "Trouvez un acheteur ou un vendeur facilement et rapidement."
+
+msgid "Byamaze kugurwa"
+msgstr "Déjà vendu"
+
+msgid "Dukurikire kuri"
+msgstr "Suivez-nous sur"
+
+msgid "Emeza"
+msgstr "Confirmer"
+
+msgid "Emeza ijambobanga"
+msgstr "Confirmer le mot de passe"
+
+msgid "Emeza konti yawe kuri KazeB"
+msgstr "Confirmez votre compte KazeB"
+
+msgid "Emeza numero ya telefone"
+msgstr "Vérifier le numéro de téléphone"
+
+msgid "Emeza numero yawe"
+msgstr "Vérifiez votre numéro"
+
+msgid "Fungura konti"
+msgstr "Créer un compte"
+
+msgid "Fungura konti yawe"
+msgstr "Créez votre compte"
+
+msgid "Gikoreshejwe"
+msgstr "Occasion"
+
+msgid "Gishya"
+msgstr "Neuf"
+
+msgid "Gukuraho konti"
+msgstr "Suppression du compte"
+
+msgid "Hari konti isanzwe ikoresha iyi imeli."
+msgstr "Un compte utilise déjà cet e-mail."
+
+msgid "Hindura"
+msgstr "Modifier"
+
+msgid "Hindura Ururimi"
+msgstr "Changer de langue"
+
+msgid "Hindura igicuruzwa"
+msgstr "Modifier le produit"
+
+msgid "Hindura ijambobanga"
+msgstr "Changer le mot de passe"
+
+msgid "Hindura ijambobanga ryawe"
+msgstr "Réinitialisez votre mot de passe"
+
+msgid "Hindura konti"
+msgstr "Modifier le compte"
+
+msgid "Hindura konti yawe"
+msgstr "Modifier votre compte"
+
+msgid "Hindura ubusuzumire bwawe kuri"
+msgstr "Modifier votre avis sur"
+
+msgid "Hura n'ucuruza ahantu hafunguriwe abantu benshi kandi umenye neza icyo ugura mbere yo kwishyura."
+msgstr "Rencontrez le vendeur dans un lieu public et vérifiez ce que vous achetez avant de payer."
+
+msgid "Ibanga"
+msgstr "Confidentialité"
+
+msgid "Ibibanziriza"
+msgstr "Précédent"
+
+msgid "Ibibazo bikunze kubazwa"
+msgstr "Questions fréquentes"
+
+msgid "Ibicuruzwa"
+msgstr "Annonces"
+
+msgid "Ibicuruzwa byanjye"
+msgstr "Mes produits"
+
+msgid "Ibicuruzwa byose"
+msgstr "Toutes les annonces"
+
+msgid "Ibiherutse kwandikwa"
+msgstr "Récemment ajoutés"
+
+msgid "Ibikurikira"
+msgstr "Suivant"
+
+msgid "Ibindi"
+msgstr "Plus"
+
+msgid "Ibisobanuro"
+msgstr "Description"
+
+msgid "Ibisobanuro birambuye (si ngombwa)"
+msgstr "Plus de détails (facultatif)"
+
+msgid "Ibya kwibuka"
+msgstr "Favoris"
+
+msgid "Ibyerekeye ivunjisha"
+msgstr "À propos des paiements"
+
+msgid "Icyo KazeB idakora"
+msgstr "Ce que KazeB ne fait pas"
+
+msgid "Icyo KazeB ikora"
+msgstr "Ce que KazeB fait"
+
+msgid "Icyo ugurisha cyashyizwe ahagaragara."
+msgstr "Votre annonce a été publiée."
+
+msgid "Icyo wavuga (si ngombwa)"
+msgstr "Votre commentaire (facultatif)"
+
+msgid "Ifaranga"
+msgstr "Devise"
+
+msgid "Ifoto"
+msgstr "Photo"
+
+msgid "Ifoto igaragara ku ishusho y'ubwoko ku rupapuro rw'ibanze."
+msgstr "Une image affichée dans l'icône de la catégorie sur la page d'accueil."
+
+msgid "Ifoto yawe"
+msgstr "Votre photo"
+
+msgid "Igaragara ku baguzi ku byo ugurisha, urugero: +250788123456"
+msgstr "Affiché aux acheteurs sur vos annonces, ex. +250788123456"
+
+msgid "Igiciro"
+msgstr "Prix"
+
+msgid "Igiciro: byose"
+msgstr "Prix : tous"
+
+msgid "Igiciro: gito mbere"
+msgstr "Prix : croissant"
+
+msgid "Igiciro: kinini mbere"
+msgstr "Prix : décroissant"
+
+msgid "Igicuruzwa cyasibwe."
+msgstr "Produit supprimé."
+
+msgid "Igicuruzwa cyongewe ku bya kwibuka."
+msgstr "Annonce ajoutée aux favoris."
+
+msgid "Ihuza abaguzi n'abagurisha binyuze mu butumwa, WhatsApp, cyangwa telefone."
+msgstr "Met en relation acheteurs et vendeurs par messagerie, WhatsApp ou téléphone."
+
+msgid "Ijambobanga"
+msgstr "Mot de passe"
+
+msgid "Ijambobanga ntabwo ari ryo."
+msgstr "Mot de passe incorrect."
+
+msgid "Ijambobanga rigomba kuba rifite nibura inyuguti 8, ntirigomba kuba azwi cyane kandi ntirigomba kuba ari imibare gusa."
+msgstr "Votre mot de passe doit comporter au moins 8 caractères, ne doit pas être trop courant et ne doit pas être entièrement numérique."
+
+msgid "Ijambobanga ryawe ryahinduwe. Ushobora kwinjira ubu."
+msgstr "Votre mot de passe a été défini. Vous pouvez vous connecter maintenant."
+
+msgid "Ikiganiro"
+msgstr "Conversation"
+
+msgid "Ikiganiro na"
+msgstr "Conversation avec"
+
+msgid "Ikindi"
+msgstr "Autre"
+
+msgid "Ikiraro gihuza abaguzi n'abagurisha"
+msgstr "Le pont qui relie acheteurs et vendeurs"
+
+msgid "Ikiraro gihuza abaguzi n'abagurisha. Shakisha cyangwa ugurishe ibintu byawe kuri KazeB."
+msgstr "Le pont qui relie acheteurs et vendeurs. Recherchez ou vendez vos articles sur KazeB."
+
+msgid "Imeli"
+msgstr "E-mail"
+
+msgid "Imeli yawe yemejwe. Murakaza neza kuri KazeB!"
+msgstr "Votre e-mail est vérifié. Bienvenue sur KazeB !"
+
+msgid "Impamvu"
+msgstr "Raison"
+
+msgid "Impinduka"
+msgstr "Modifications"
+
+msgid "Impinduka ku konti yawe zabitswe."
+msgstr "Les modifications de votre compte ont été enregistrées."
+
+msgid "Impinduka zabitswe."
+msgstr "Modifications enregistrées."
+
+msgid "Injira"
+msgstr "Connexion"
+
+msgid "Injira kugira ngo uvugane n'ucuruza"
+msgstr "Connectez-vous pour contacter le vendeur"
+
+msgid "Itanga urubuga rwo gushyiraho no gushakisha ibicuruzwa."
+msgstr "Fournit une plateforme pour publier et rechercher des produits."
+
+msgid "Iyandikishe"
+msgstr "S'inscrire"
+
+msgid "Iyandikishe, hanyuma ukande 'Ongeraho igicuruzwa' ushyiremo amafoto, igiciro, n'ibisobanuro."
+msgstr "Inscrivez-vous, puis cliquez sur « Ajouter un produit » et renseignez les photos, le prix et la description."
+
+msgid "Iyi gikorwa gisiba burundu konti yawe, hamwe n'ibicuruzwa byose wagurishaga, amafoto yabyo, n'ubutumwa bwawe bwose. Ntibishobora gusubizwa inyuma."
+msgstr "Cette action supprime définitivement votre compte, ainsi que tous les produits que vous avez publiés, leurs photos et tous vos messages. Cette action est irréversible."
+
+msgid "Iyi telefone/porogaramu ntishobora kwerekana iyi videwo."
+msgstr "Cet appareil/navigateur ne peut pas afficher cette vidéo."
+
+msgid "Izina"
+msgstr "Nom"
+
+msgid "Izina ukoresha"
+msgstr "Nom d'utilisateur"
+
+msgid "Izina, numero ya telefone, numero ya WhatsApp, n'ifoto (niba wayishyizeho)."
+msgstr "Votre nom, numéro de téléphone, numéro WhatsApp et photo (si vous en avez ajouté une)."
+
+msgid "Kanda hano uyikurure"
+msgstr "Cliquez ici pour la télécharger"
+
+msgid "Kanda hasi kugira ngo twoherereze kode ku numero yawe."
+msgstr "Cliquez ci-dessous et nous enverrons un code à votre numéro."
+
+msgid "Kanda kuri 'Ongeraho amafoto' inshuro nyinshi kugira ngo ushyireho amafoto menshi. Ifoto ya mbere niyo izagaragara imbere."
+msgstr "Cliquez sur « Ajouter des photos » autant de fois que nécessaire pour ajouter plusieurs photos. La première devient la photo de couverture."
+
+msgid "Kanda kuri ifoto kugira ngo uyimenyeshe ko igomba gusibwa, hanyuma ubike impinduka."
+msgstr "Cliquez sur une photo pour la marquer à supprimer, puis enregistrez vos modifications."
+
+msgid "Kanda kuri ifoto kugira ngo uyisibe."
+msgstr "Cliquez sur une photo pour la supprimer."
+
+msgid "Kanda kuri uyu murongo kugira ngo wemeze konti yawe kuri KazeB:"
+msgstr "Cliquez sur ce lien pour confirmer votre compte KazeB :"
+
+msgid "KazeB ikora ite?"
+msgstr "Comment fonctionne KazeB ?"
+
+msgid "KazeB ni ikiraro gihuza abaguzi n'abagurisha kugira ngo babonane vuba kandi byoroshye. Abagurisha bashyiraho ibicuruzwa byabo, abaguzi bakabishakisha bakabona ubicuruza."
+msgstr "KazeB est un pont qui relie acheteurs et vendeurs pour qu'ils se trouvent rapidement et facilement. Les vendeurs publient leurs produits, et les acheteurs les recherchent pour trouver qui vend quoi."
+
+msgid "KazeB ntabwo igira uruhare mu kwishyura cyangwa gutwara ibicuruzwa. Amasezerano yose ni hagati y'umuguzi n'ucuruza."
+msgstr "KazeB n'intervient pas dans le paiement ou la livraison des produits. Tous les accords se font entre l'acheteur et le vendeur."
+
+msgid "Kode ntabwo ari yo."
+msgstr "Code incorrect."
+
+msgid "Kode wahawe"
+msgstr "Code reçu"
+
+msgid "Kode yarangiye igihe. Saba indi."
+msgstr "Le code a expiré. Demandez-en un autre."
+
+msgid "Kode yoherejwe. Reba ubutumwa bwawe."
+msgstr "Code envoyé. Consultez vos messages."
+
+msgid "Konti"
+msgstr "Compte"
+
+msgid "Konti yanjye"
+msgstr "Mon compte"
+
+msgid "Konti yawe yasibwe burundu."
+msgstr "Votre compte a été définitivement supprimé."
+
+msgid "Koporora numero ya telefone"
+msgstr "Copier le numéro de téléphone"
+
+msgid "Koporora umurongo"
+msgstr "Copier le lien"
+
+msgid "Ku bya kwibuka"
+msgstr "Dans les favoris"
+
+msgid "Kugufasha guhuza n'abaguzi cyangwa abagurisha."
+msgstr "Pour vous mettre en relation avec des acheteurs ou des vendeurs."
+
+msgid "Kurinda urubuga no kwirinda uburiganya."
+msgstr "Pour protéger le site et prévenir la fraude."
+
+msgid "Kwerekana numero yawe ku bicuruzwa washyizeho, kugira ngo abaguzi bagushakishe."
+msgstr "Pour afficher votre numéro sur les produits que vous publiez, afin que les acheteurs puissent vous contacter."
+
+msgid "Kwirinda uburiganya"
+msgstr "Éviter les arnaques"
+
+msgid "Kwiyandikisha birahenda?"
+msgstr "L'inscription est-elle payante ?"
+
+msgid "Muraho"
+msgstr "Bonjour"
+
+msgid "Muraho KazeB, mfite ikibazo nifuza kubaza."
+msgstr "Bonjour KazeB, j'ai une question à poser."
+
+msgid "Muraho {{ user }},"
+msgstr "Bonjour {{ user }},"
+
+msgid "Murakazaneza kuri KazeB"
+msgstr "Bienvenue sur KazeB"
+
+msgid "Murakoze. Twakiriye raporo yanyu."
+msgstr "Merci. Nous avons reçu votre signalement."
+
+msgid "Nabona uko nirinda uburiganya?"
+msgstr "Comment puis-je éviter de me faire arnaquer ?"
+
+msgid "Nemeye <a href=\"%(terms_url)s\" target=\"_blank\">amabwiriza n'amategeko</a> n'<a href=\"%(privacy_url)s\" target=\"_blank\">politiki y'ibanga</a> bya KazeB."
+msgstr "J'accepte les <a href=\"%(terms_url)s\" target=\"_blank\">conditions d'utilisation</a> et la <a href=\"%(privacy_url)s\" target=\"_blank\">politique de confidentialité</a> de KazeB."
+
+msgid "Ni gute mvugana n'ucuruza?"
+msgstr "Comment puis-je contacter un vendeur ?"
+
+msgid "Ni gute nagurisha ikintu?"
+msgstr "Comment puis-je vendre quelque chose ?"
+
+msgid "Niba atari wowe wasabye iyi konti, wirengagize iyi email."
+msgstr "Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer cet e-mail."
+
+msgid "Niba hari konti ifite iyi email, twakoherereje uburyo bwo guhindura ijambobanga."
+msgstr "Si un compte existe avec cet e-mail, un lien de réinitialisation a été envoyé."
+
+msgid "Niba igiciro kiri hasi cyane ugereranyije n'ibisanzwe, icyo ni ikimenyetso cy'uburiganya."
+msgstr "Si le prix est beaucoup plus bas que d'habitude, c'est un signe d'arnaque."
+
+msgid "Niba wumva hari ikitagenda neza, koresha buto yo gutanga raporo ku gicuruzwa cyangwa k'ucuruza."
+msgstr "Si quelque chose vous semble suspect, utilisez le bouton de signalement sur le produit ou le vendeur."
+
+msgid "Nta busuzumire burahari"
+msgstr "Aucun avis pour le moment"
+
+msgid "Nta busuzumire burahari."
+msgstr "Aucun avis pour le moment."
+
+msgid "Nta butumwa bwaturutse ku baguzi burahari."
+msgstr "Aucun message des acheteurs pour le moment."
+
+msgid "Nta bwoko burahari. Koresha"
+msgstr "Aucune catégorie pour le moment. Exécutez"
+
+msgid "Nta foto ihari"
+msgstr "Aucune photo"
+
+msgid "Nta gicuruzwa gihuye n'ushaka."
+msgstr "Aucune annonce ne correspond à votre recherche."
+
+msgid "Nta kiganiro kirahari."
+msgstr "Aucune conversation pour le moment."
+
+msgid "Nta kintu urabika ku bya kwibuka."
+msgstr "Vous n'avez encore rien ajouté aux favoris."
+
+msgid "Ntabwo ari umuhuza wemewe mu byerekeye amasezerano hagati y'abaguzi n'abagurisha."
+msgstr "Ce n'est pas un intermédiaire agréé pour les accords entre acheteurs et vendeurs."
+
+msgid "Ntabwo wabonye imeli? Reba mu 'Spam', cyangwa usabe indi hepfo."
+msgstr "Vous n'avez pas reçu l'e-mail ? Vérifiez votre dossier Spam, ou demandez-en un nouveau ci-dessous."
+
+msgid "Ntabwo yishyurira cyangwa yakira amafaranga hagati y'abaguzi n'abagurisha."
+msgstr "Il ne paie ni ne détient d'argent entre acheteurs et vendeurs."
+
+msgid "Ntabwo yohereza cyangwa igenzura ibicuruzwa mu buryo bw'umubiri."
+msgstr "Il n'expédie ni n'inspecte physiquement les produits."
+
+msgid "Ntibyemewe"
+msgstr "Non autorisé"
+
+msgid "Ntiwohereza amafaranga mbere yo kubona icyo ugura, keretse ubyizeye neza."
+msgstr "N'envoyez pas d'argent avant de voir ce que vous achetez, sauf si vous avez entièrement confiance."
+
+msgid "Nturigeze wongeraho ikintu cyo kugurisha."
+msgstr "Vous n'avez publié aucune annonce pour le moment."
+
+msgid "Ntushobora kwisuzuma wenyine."
+msgstr "Vous ne pouvez pas vous évaluer vous-même."
+
+msgid "Ntuzigere utanga amakuru bwite nka nomero z'ikarita cyangwa amabanga ya konti."
+msgstr "Ne partagez jamais d'informations personnelles telles que les numéros de carte ou les mots de passe de compte."
+
+msgid "Numero ya WhatsApp"
+msgstr "Numéro WhatsApp"
+
+msgid "Numero ya telefone"
+msgstr "Numéro de téléphone"
+
+msgid "Numero yawe yarahamagawe."
+msgstr "Votre numéro a déjà été vérifié."
+
+msgid "Numero yawe yemejwe neza!"
+msgstr "Votre numéro a été vérifié avec succès !"
+
+msgid "Numero yemejwe"
+msgstr "Numéro vérifié"
+
+msgid "Ohereza"
+msgstr "Envoyer"
+
+msgid "Ohereza indi email yo kwemeza"
+msgstr "Renvoyer l'e-mail de vérification"
+
+msgid "Ohereza kode"
+msgstr "Envoyer le code"
+
+msgid "Ohereza kode nshya"
+msgstr "Envoyer un nouveau code"
+
+msgid "Ohereza raporo"
+msgstr "Envoyer le signalement"
+
+msgid "Ohereza uburyo bwo guhindura"
+msgstr "Envoyer le lien de réinitialisation"
+
+msgid "Ohereza ubutumwa kuri KazeB"
+msgstr "Envoyer un message sur KazeB"
+
+msgid "Ongeraho amafoto"
+msgstr "Ajouter des photos"
+
+msgid "Ongeraho andi mafoto"
+msgstr "Ajouter plus de photos"
+
+msgid "Ongeraho icya mbere"
+msgstr "Ajoutez la première"
+
+msgid "Ongeraho icyo ugurisha"
+msgstr "Ajouter une annonce"
+
+msgid "Ongeraho igicuruzwa"
+msgstr "Ajouter un produit"
+
+msgid "Oya, kwiyandikisha no gushyiraho ibicuruzwa ni ubuntu."
+msgstr "Non, l'inscription et la publication de produits sont gratuites."
+
+msgid "Politiki y'ibanga"
+msgstr "Politique de confidentialité"
+
+msgid "Reba"
+msgstr "Voir"
+
+msgid "Reba icyo bagurisha"
+msgstr "Voir l'annonce"
+
+msgid "Reba imeli yawe"
+msgstr "Consultez votre e-mail"
+
+msgid "Reba na"
+msgstr "Voir aussi"
+
+msgid "Reba ubusuzumire bw'ucuruza mbere yo kumwizera."
+msgstr "Consultez les avis du vendeur avant de lui faire confiance."
+
+msgid "Reka"
+msgstr "Annuler"
+
+msgid "Sangiza abandi icyo ugurisha"
+msgstr "Partager cette annonce"
+
+msgid "Sangiza kuri Facebook"
+msgstr "Partager sur Facebook"
+
+msgid "Sangiza kuri Telegram"
+msgstr "Partager sur Telegram"
+
+msgid "Sangiza kuri WhatsApp"
+msgstr "Partager sur WhatsApp"
+
+msgid "Shakisha"
+msgstr "Rechercher"
+
+msgid "Shakisha ukurikije aho biherereye..."
+msgstr "Rechercher par lieu..."
+
+msgid "Shakisha ukurikije ubwoko"
+msgstr "Rechercher par catégorie"
+
+msgid "Shakisha..."
+msgstr "Rechercher..."
+
+msgid "Shyiraho ijambobanga rishya"
+msgstr "Définir un nouveau mot de passe"
+
+msgid "Siba"
+msgstr "Supprimer"
+
+msgid "Siba Konti"
+msgstr "Supprimer le compte"
+
+msgid "Siba igicuruzwa"
+msgstr "Supprimer le produit"
+
+msgid "Siba iki gicuruzwa"
+msgstr "Supprimer ce produit"
+
+msgid "Siba iyi videwo"
+msgstr "Supprimer cette vidéo"
+
+msgid "Simbuza videwo"
+msgstr "Remplacer la vidéo"
+
+msgid "Sohoka"
+msgstr "Déconnexion"
+
+msgid "Subira ku butumwa"
+msgstr "Retour aux messages"
+
+msgid "Tanga raporo"
+msgstr "Signaler"
+
+msgid "Tanga raporo kuri iki gicuruzwa"
+msgstr "Signaler ce produit"
+
+msgid "Tanga ubusuzumire"
+msgstr "Laisser un avis"
+
+msgid "Tanga ubusuzumire kuri"
+msgstr "Laisser un avis sur"
+
+msgid "Tangira ikiganiro."
+msgstr "Dites bonjour pour commencer la conversation."
+
+msgid "Twakoherereje umurongo wo kwemeza konti yawe. Kanda kuri wo kugira ngo winjire kuri KazeB."
+msgstr "Nous avons envoyé un lien pour confirmer votre compte. Cliquez dessus pour vous connecter à KazeB."
+
+msgid "Twandikire"
+msgstr "Contactez-nous"
+
+msgid "Twandikire & Sitemap"
+msgstr "Contact et plan du site"
+
+msgid "Twohereje kode ku numero yawe. Yandike hano kugira ngo tumenye ko ari yo yawe."
+msgstr "Nous avons envoyé un code à votre numéro. Saisissez-le ici pour confirmer qu'il vous appartient."
+
+msgid "Uburenganzira bwawe"
+msgstr "Vos droits"
+
+msgid "Uburiganya"
+msgstr "Arnaque"
+
+msgid "Ubusuzumire"
+msgstr "Avis"
+
+msgid "Ubusuzumire bwanjye"
+msgstr "Mes avis"
+
+msgid "Ubusuzumire bwawe bwabitswe."
+msgstr "Votre avis a été enregistré."
+
+msgid "Ubutumwa"
+msgstr "Messages"
+
+msgid "Ubutumwa buheruka"
+msgstr "Messages récents"
+
+msgid "Ubutumwa butarasomwa"
+msgstr "Messages non lus"
+
+msgid "Ubutumwa hagati yawe n'abandi bakoresha urubuga."
+msgstr "Messages entre vous et les autres utilisateurs du site."
+
+msgid "Ubwoko"
+msgstr "Catégorie"
+
+msgid "Ubwoko butariho"
+msgstr "Mauvaise catégorie"
+
+msgid "Ugomba gutanga amakuru y'ukuri igihe wiyandikisha, harimo numero yawe ya telefone n'iya WhatsApp. Uri wenyine ubazwa ibikorwa byose bikorerwa kuri konti yawe."
+msgstr "Vous devez fournir des informations exactes lors de votre inscription, y compris vos numéros de téléphone et WhatsApp. Vous êtes seul responsable de toute activité sur votre compte."
+
+msgid "Ugomba kwemera amabwiriza n'amategeko mbere yo kwiyandikisha."
+msgstr "Vous devez accepter les conditions d'utilisation avant de vous inscrire."
+
+msgid "Ugomba kwemeza imeli yawe mbere yo kwinjira. Reba imeli twakoherereje, cyangwa usabe indi nk'iyo hepfo."
+msgstr "Vous devez vérifier votre e-mail avant de vous connecter. Consultez l'e-mail que nous vous avons envoyé, ou demandez-en un nouveau ci-dessous."
+
+msgid "Uko KazeB ikora"
+msgstr "Comment fonctionne KazeB"
+
+msgid "Uko bimeze"
+msgstr "État"
+
+msgid "Uko bimeze: byose"
+msgstr "État : tous"
+
+msgid "Uko dukoresha aya makuru"
+msgstr "Comment nous utilisons ces informations"
+
+msgid "Uko ikora"
+msgstr "Comment ça marche"
+
+msgid "Ukoresheje KazeB, wemera"
+msgstr "En utilisant KazeB, vous acceptez"
+
+msgid "Umubare muto ugaragara mbere."
+msgstr "Les nombres les plus petits apparaissent en premier."
+
+msgid "Umurenge"
+msgstr "Secteur"
+
+msgid "Umurongo ntukora"
+msgstr "Ce lien ne fonctionne pas"
+
+msgid "Umutekano wawe"
+msgstr "Votre sécurité"
+
+msgid "Uri mushya kuri KazeB?"
+msgstr "Nouveau sur KazeB ?"
+
+msgid "Urifuza gusiba iki gicuruzwa? Iki gikorwa ntikigaruka -- amafoto n'ubutumwa bufitanye isano na cyo na byo bizasibwa."
+msgstr "Voulez-vous supprimer ce produit ? Cette action est irréversible -- ses photos et les messages associés seront également supprimés."
+
+msgid "Usanzwe ufite konti?"
+msgstr "Vous avez déjà un compte ?"
+
+msgid "Ushobora guhindura cyangwa gusiba amakuru yawe igihe cyose uherereye kuri Konti yanjye. Gusiba konti bisiba burundu amakuru yawe yose, ibicuruzwa byawe, n'ubutumwa bwawe."
+msgstr "Vous pouvez modifier ou supprimer vos informations à tout moment depuis Mon compte. La suppression de votre compte efface définitivement toutes vos informations, produits et messages."
+
+msgid "Ushobora gushyiraho gusa ibintu wemerewe n'amategeko kugurisha. KazeB ishobora gukuraho icyo ugurisha icyo ari cyo cyose kitubahiriza aya mabwiriza, nta menyesha mbere."
+msgstr "Vous ne pouvez publier que des articles que vous êtes légalement autorisé à vendre. KazeB peut supprimer toute annonce qui ne respecte pas ces conditions, sans préavis."
+
+msgid "Ushobora gusiba konti yawe igihe cyose ubishaka. Iki gikorwa gisiba burundu ibicuruzwa byawe n'ubutumwa bwawe."
+msgstr "Vous pouvez supprimer votre compte à tout moment. Cette action supprime définitivement vos produits et messages."
+
+msgid "Ushobora kumwandikira binyuze mu butumwa bwa KazeB, WhatsApp, cyangwa guhamagara nimero ye."
+msgstr "Vous pouvez lui écrire via la messagerie KazeB, WhatsApp, ou l'appeler directement."
+
+msgid "Uyu murongo wo guhindura ijambobanga ntabwo ukora, wenda kubera ko wamaze gukoreshwa."
+msgstr "Ce lien de réinitialisation du mot de passe n'est pas valide, peut-être parce qu'il a déjà été utilisé."
+
+msgid "Uyu murongo wo kwemeza ntabwo ukora, wenda kubera ko wamaze gukoreshwa cyangwa warengeje igihe. Sabe undi hepfo."
+msgstr "Ce lien de vérification ne fonctionne pas -- il a peut-être déjà été utilisé, ou a expiré. Demandez-en un nouveau ci-dessous."
+
+msgid "Uzabona ubufasha bwihuse iyo utwandikiye kuri WhatsApp."
+msgstr "Vous obtiendrez de l'aide plus rapidement en nous écrivant sur WhatsApp."
+
+msgid "Videwo"
+msgstr "Vidéo"
+
+msgid "Videwo (si ngombwa)"
+msgstr "Vidéo (facultatif)"
+
+msgid "Videwo imwe ishoboka (si ngombwa)."
+msgstr "Une vidéo est autorisée (facultatif)."
+
+msgid "Videwo isanzwe"
+msgstr "Vidéo existante"
+
+msgid "Vugana n'ucuruza"
+msgstr "Contacter le vendeur"
+
+msgid "Vugana n'ucuruza kuri WhatsApp"
+msgstr "Discuter avec le vendeur sur WhatsApp"
+
+msgid "Wagerageje inshuro nyinshi. Saba kode nshya."
+msgstr "Vous avez essayé trop de fois. Demandez un nouveau code."
+
+msgid "Wasabye kode nyinshi. Tegereza gato hanyuma ugerageze."
+msgstr "Vous avez demandé trop de codes. Attendez un peu et réessayez."
+
+msgid "Wavanyeho iki gicuruzwa ku bya kwibuka."
+msgstr "Annonce retirée des favoris."
+
+msgid "Wibagiwe ijambobanga?"
+msgstr "Mot de passe oublié ?"
+
+msgid "Yashyizweho na"
+msgstr "Publié par"
+
+msgid "Yego, siba"
+msgstr "Oui, supprimer"
+
+msgid "Yego, siba konti yanjye"
+msgstr "Oui, supprimer mon compte"
+
+msgid "amabwiriza y'ikoreshwa"
+msgstr "conditions d'utilisation"
+
+msgid "amabwiriza yo kwirinda uburiganya"
+msgstr "conseils pour éviter les arnaques"
+
+msgid "kugira ngo ukore ibyifuzo by'ibanze."
+msgstr "pour créer l'ensemble de départ."
+
+msgid "n'uko dukurikiza"
+msgstr "et que nous respectons notre"
+
+msgid "na"
+msgstr "avec"
+
+msgid "politiki y'ibanga"
+msgstr "politique de confidentialité"

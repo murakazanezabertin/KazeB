@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Reba imeli yawe" %}{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6 text-center">
+    <h1 class="h3 mb-4">{% trans "Reba imeli yawe" %}</h1>
+    <p>
+      {% trans "Twakoherereje umurongo wo kwemeza konti yawe. Kanda kuri wo kugira ngo winjire kuri KazeB." %}
+    </p>
+    <p class="text-muted small">
+      {% trans "Ntabwo wabonye imeli? Reba mu 'Spam', cyangwa usabe indi hepfo." %}
+    </p>
+    <a href="{% url 'accounts:resend_verification' %}" class="btn btn-outline-brand">
+      {% trans "Ohereza indi email yo kwemeza" %}
+    </a>
+  </div>
+</div>
+{% endblock %}

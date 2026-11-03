@@ -1,0 +1,212 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}KazeB{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}{% trans "Bona umuguzi cyangwa umugurisha byoroshye kandi vuba." %}{% endblock %}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon-32x32.png' %}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon-16x16.png' %}">
+  <link rel="icon" href="{% static 'images/favicon.ico' %}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/apple-touch-icon.png' %}">
+  <meta property="og:site_name" content="KazeB">
+  <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+  <meta property="og:title" content="{% block og_title %}KazeB{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}{% trans "Ikiraro gihuza abaguzi n'abagurisha" %}{% endblock %}">
+  <meta property="og:url" content="{{ request.build_absolute_uri }}">
+  {% block og_image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo.png' %}">{% endblock %}
+
+  <link rel="stylesheet" href="{% static 'vendor/bootstrap/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=20261029-hero-layout">
+  <script>
+    // Safety net for the case someone runs the dev server without ever
+    // having run `python manage.py vendor_assets` (e.g. a fresh clone).
+    // Checked synchronously in <head> so it runs before first paint --
+    // if our local stylesheet 404'd, Bootstrap's own CSS variables
+    // won't be defined on :root, and we fall back to the CDN so the
+    // page still looks right instead of silently rendering unstyled.
+    (function () {
+      var probe = getComputedStyle(document.documentElement).getPropertyValue('--bs-body-bg');
+      if (!probe) {
+        var fallback = document.createElement('link');
+        fallback.rel = 'stylesheet';
+        fallback.href = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css';
+        document.head.appendChild(fallback);
+      }
+    })();
+  </script>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top">
+  <div class="container flex-wrap">
+    <a class="navbar-brand fw-bold" href="{% url 'core:home' %}">Kaze<span class="text-brand">B</span></a>
+
+    <form action="{% url 'listings:search' %}" method="get" class="nav-search-box order-lg-0 flex-grow-1 mx-lg-3 my-2 my-lg-0">
+      <div class="input-group">
+        <span class="input-group-text bg-white border-end-0">🔍</span>
+        <input type="search" name="q" class="form-control border-start-0" placeholder="{% trans 'Shakisha ukurikije aho biherereye...' %}" value="{{ request.GET.q }}">
+        <button type="submit" class="btn btn-brand">{% trans "Shakisha" %}</button>
+      </div>
+    </form>
+
+    <button class="navbar-toggler order-lg-1" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse order-lg-2" id="navMain">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 nav-icons">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'core:home' %}" title="{% trans 'Ahabanza' %}">
+            🏠 {% trans "Ahabanza" %}
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'listings:listing_create' %}" title="{% trans 'Ongeraho igicuruzwa' %}">
+            ➕ {% trans "Ongeraho igicuruzwa" %}
+          </a>
+        </li>
+        {% if user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'listings:dashboard' %}" title="{% trans 'Konti yanjye' %}">
+            👤 {% trans "Konti yanjye" %}
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link position-relative" href="{% url 'chat:inbox' %}" title="{% trans 'Ubutumwa' %}">
+            💬 {% trans "Ubutumwa" %}
+            {% if unread_message_count %}
+              <span class="unread-badge">{{ unread_message_count }}</span>
+            {% endif %}
+          </a>
+        </li>
+        {% endif %}
+      </ul>
+
+      <ul class="navbar-nav align-items-lg-center gap-lg-2">
+        <li class="nav-item">
+          <form action="{% url 'set_language' %}" method="post" class="d-flex align-items-center">
+            {% csrf_token %}
+            <input name="next" type="hidden" value="{{ request.get_full_path }}">
+            <select name="language" class="form-select form-select-sm" onchange="this.form.submit()" title="{% trans 'Hindura Ururimi' %}">
+              {% get_current_language as CURRENT_LANGUAGE %}
+              {% get_available_languages as AVAILABLE_LANGUAGES %}
+              {% for code, name in AVAILABLE_LANGUAGES %}
+                <option value="{{ code }}" {% if code == CURRENT_LANGUAGE %}selected{% endif %}>{{ name }}</option>
+              {% endfor %}
+            </select>
+          </form>
+        </li>
+        {% if user.is_authenticated %}
+          <li class="nav-item">
+            <form action="{% url 'logout' %}" method="post" class="d-inline">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans "Sohoka" %}</button>
+            </form>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="btn btn-sm btn-outline-brand" href="{% url 'login' %}">{% trans "Injira" %}</a>
+          </li>
+          <li class="nav-item">
+            <a class="btn btn-sm btn-brand" href="{% url 'accounts:register' %}">{% trans "Iyandikishe" %}</a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main class="container py-4">
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags|default:'info' }}">{{ message }}</div>
+  {% endfor %}
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="mt-5">
+  <div class="footer-highlight py-5">
+    <div class="container">
+      <div class="row gy-4">
+        <div class="col-6 col-md-3">
+          <h2 class="h6 text-uppercase mb-3">{% trans "Abo turi bo" %}</h2>
+          <ul class="list-unstyled footer-links">
+            <li><a href="{% url 'core:about' %}">{% trans "Abo turi bo" %}</a></li>
+            <li><a href="{% url 'core:faq' %}">{% trans "Ibibazo bikunze kubazwa" %}</a></li>
+            <li><a href="{% url 'core:anti_scam' %}">{% trans "Kwirinda uburiganya" %}</a></li>
+            <li><a href="{% url 'core:terms' %}">{% trans "Amabwiriza" %}</a></li>
+            <li><a href="{% url 'core:privacy' %}">{% trans "Ibanga" %}</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-md-3">
+          <h2 class="h6 text-uppercase mb-3">{% trans "Twandikire" %}</h2>
+          <ul class="list-unstyled footer-links">
+            <li><a href="{% url 'core:contact' %}">{% trans "Twandikire" %}</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-md-3">
+          <h2 class="h6 text-uppercase mb-3">{% trans "Konti yanjye" %}</h2>
+          <ul class="list-unstyled footer-links">
+            {% if user.is_authenticated %}
+              <li><a href="{% url 'listings:dashboard' %}">{% trans "Konti yanjye" %}</a></li>
+            {% else %}
+              <li><a href="{% url 'login' %}">{% trans "Injira" %}</a></li>
+              <li><a href="{% url 'accounts:register' %}">{% trans "Iyandikishe" %}</a></li>
+            {% endif %}
+          </ul>
+        </div>
+        <div class="col-6 col-md-3">
+          <h2 class="h6 text-uppercase mb-3">{% trans "Dukurikire kuri" %}</h2>
+          <div class="d-flex flex-wrap gap-2">
+            <a href="https://www.tiktok.com/@kazeb57?_r=1&amp;_t=ZS-99CeOPSb12T" class="footer-social-icon" target="_blank" rel="noopener" aria-label="TikTok" title="TikTok">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M16.6 5.82c-.9-.88-1.46-2.06-1.6-3.32h-3.06v13.44c0 1.63-1.32 2.95-2.95 2.95a2.95 2.95 0 0 1 0-5.9c.28 0 .55.04.8.12V9.98a6.08 6.08 0 0 0-.8-.05A6.08 6.08 0 1 0 15.03 16V9.4a9.14 9.14 0 0 0 5.35 1.72V8.06a5.98 5.98 0 0 1-3.78-2.24z"/>
+              </svg>
+            </a>
+            <a href="https://www.instagram.com/kazeb.rw?igsi=MWxiODNidWpjeWljeQ==" class="footer-social-icon" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="5"/>
+                <circle cx="12" cy="12" r="4"/>
+                <circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/>
+              </svg>
+            </a>
+            <a href="https://www.facebook.com/share/1EUuLs9Mha/" class="footer-social-icon" target="_blank" rel="noopener" aria-label="Facebook" title="Facebook">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5 3.66 9.15 8.44 9.94v-7.03H7.9v-2.9h2.54V9.85c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.9h-2.34V22c4.78-.79 8.44-4.94 8.44-9.94z"/>
+              </svg>
+            </a>
+            <a href="https://youtube.com/@kazebrwanda?si=woGH50aq8c8CkiEk" class="footer-social-icon" target="_blank" rel="noopener" aria-label="YouTube" title="YouTube">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M23 12s0-3.5-.45-5.15a2.87 2.87 0 0 0-2-2C18.9 4.4 12 4.4 12 4.4s-6.9 0-8.55.45a2.87 2.87 0 0 0-2 2C1 8.5 1 12 1 12s0 3.5.45 5.15a2.87 2.87 0 0 0 2 2c1.65.45 8.55.45 8.55.45s6.9 0 8.55-.45a2.87 2.87 0 0 0 2-2C23 15.5 23 12 23 12z" fill="currentColor" stroke="none"/>
+                <path d="M9.75 15.5V8.5L15.5 12l-5.75 3.5z" fill="white" stroke="none"/>
+              </svg>
+            </a>
+            <a href="https://whatsapp.com/channel/0029VbDSEdp7tkjFMCr2Jm34" class="footer-social-icon" target="_blank" rel="noopener" aria-label="WhatsApp" title="WhatsApp">
+              <img src="{% static 'images/icons/whatsapp.svg' %}" alt="" width="20" height="20">
+            </a>
+            <a href="https://x.com/KazeBrwanda" class="footer-social-icon" target="_blank" rel="noopener" aria-label="X" title="X">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M18.9 3H22l-7.6 8.68L23.3 21h-6.7l-5.2-6.6L5.4 21H2.3l8.1-9.27L1.4 3h6.9l4.7 6.02L18.9 3zm-1.2 16h1.8L7.4 5H5.5l12.2 14z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center text-muted py-3 border-top">
+    <small>&copy; {% now "Y" %} KazeB &mdash; {% trans "Ikiraro gihuza abaguzi n'abagurisha" %}</small>
+  </div>
+</footer>
+
+{# Same local-first, CDN-fallback approach as the stylesheet above. #}
+<script src="{% static 'vendor/bootstrap/bootstrap.bundle.min.js' %}" onerror="
+  var s = document.createElement('script');
+  s.src = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js';
+  document.body.appendChild(s);
+"></script>
+<script src="{% static 'js/kazeb.js' %}"></script>
+</body>
+</html>

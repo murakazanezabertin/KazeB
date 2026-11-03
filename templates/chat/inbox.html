@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Ubutumwa" %} · KazeB{% endblock %}
+
+{% block content %}
+<h1 class="h3 mb-4">{% trans "Ubutumwa" %}</h1>
+
+{% if conversations %}
+<div class="list-group">
+  {% for conv in conversations %}
+    <a href="{% if request.user == conv.listing.seller %}{% url 'chat:thread_as_seller' listing_id=conv.listing.pk buyer_id=conv.buyer.pk %}{% else %}{% url 'chat:thread_as_buyer' listing_id=conv.listing.pk %}{% endif %}"
+       class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+      <span>
+        <strong>{{ conv.listing.name }}</strong>
+        <span class="text-muted"> — {% trans "na" %} {{ conv.other_party.username }}</span>
+        <br>
+        <small class="text-muted">{{ conv.last_message.body|truncatechars:70 }}</small>
+      </span>
+      <small class="text-muted">{{ conv.last_message.created_at|date:"d M, H:i" }}</small>
+    </a>
+  {% endfor %}
+</div>
+{% else %}
+<p class="text-muted">{% trans "Nta kiganiro kirahari." %}</p>
+{% endif %}
+{% endblock %}

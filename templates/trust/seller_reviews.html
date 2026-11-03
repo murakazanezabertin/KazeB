@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{{ seller.username }} · {% trans "Ubusuzumire" %} · KazeB{% endblock %}
+
+{% block content %}
+<h1 class="h4 mb-1">{{ seller.username }}</h1>
+{% if average %}
+  <p class="text-brand fw-bold mb-3">{{ average|floatformat:1 }} ★ <span class="text-muted fw-normal small">({{ reviews|length }})</span></p>
+{% else %}
+  <p class="text-muted mb-3">{% trans "Nta busuzumire burahari." %}</p>
+{% endif %}
+
+{% if user.is_authenticated and user != seller %}
+  <a href="{% url 'trust:add_review' user_id=seller.pk %}" class="btn btn-outline-brand btn-sm mb-4">
+    {% trans "Tanga ubusuzumire" %}
+  </a>
+{% endif %}
+
+<div class="list-group">
+  {% for review in reviews %}
+    <div class="list-group-item">
+      <div class="d-flex justify-content-between">
+        <strong>{{ review.reviewer.username }}</strong>
+        <span class="text-brand">{{ review.rating }} ★</span>
+      </div>
+      {% if review.comment %}<p class="mb-1 small">{{ review.comment }}</p>{% endif %}
+      <small class="text-muted">{{ review.created_at|date:"d M Y" }}</small>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

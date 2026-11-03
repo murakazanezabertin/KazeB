@@ -1,0 +1,314 @@
+{% extends "base.html" %}
+{% load static i18n category_extras %}
+
+{% block content %}
+
+<!-- =========================
+     KAZEB HERO CAROUSEL
+     ========================= -->
+<section class="kazeb-hero mb-5" aria-label="KazeB promotion">
+
+  <div class="kazeb-hero-inner">
+
+    <!-- =========================
+         LEFT SIDE — TEXT
+         ========================= -->
+    <div class="kazeb-hero-content">
+
+      <h1 class="kazeb-hero-title">
+        {% blocktrans %}Bona umuguzi<br>cyangwa<br>umugurisha<br>vuba kandi<br>byoroshye.{% endblocktrans %}
+      </h1>
+
+      <div class="kazeb-hero-actions">
+
+        <!-- BUTTON ONE -->
+        <a
+          href="{% url 'listings:listing_create' %}"
+          class="btn btn-brand kazeb-hero-primary"
+        >
+          {% trans "Shaka umuguzi nonaha" %}
+        </a>
+
+        <!-- BUTTON TWO -->
+        <a
+          href="#categories"
+          class="btn btn-outline-brand kazeb-hero-secondary"
+        >
+          {% trans "Shaka umugurisha nonaha" %}
+        </a>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         RIGHT SIDE — PICTURES
+         ========================= -->
+    <div class="kazeb-hero-visual">
+
+      <div
+        class="kazeb-hero-slides"
+        data-kazeb-carousel
+      >
+
+        <!-- 1. CAR -->
+        <div class="kazeb-hero-slide is-active">
+          <img
+            src="{% static 'images/hero/car.png' %}"
+            alt="Car"
+            loading="eager"
+          >
+        </div>
+
+        <!-- 2. HOUSE -->
+        <div class="kazeb-hero-slide">
+          <img
+            src="{% static 'images/hero/house.png' %}"
+            alt="House"
+            loading="lazy"
+          >
+        </div>
+
+        <!-- 3. SMARTPHONE -->
+        <div class="kazeb-hero-slide">
+          <img
+            src="{% static 'images/hero/smartphone.png' %}"
+            alt="Smartphone"
+            loading="lazy"
+          >
+        </div>
+
+        <!-- 4. MOTORCYCLE -->
+        <div class="kazeb-hero-slide">
+          <img
+            src="{% static 'images/hero/motorcycle.png' %}"
+            alt="Motorcycle"
+            loading="lazy"
+          >
+        </div>
+
+        <!-- 5. LAPTOP -->
+        <div class="kazeb-hero-slide">
+          <img
+            src="{% static 'images/hero/laptop.png' %}"
+            alt="Laptop"
+            loading="lazy"
+          >
+        </div>
+
+        <!-- 6. SOFA -->
+        <div class="kazeb-hero-slide">
+          <img
+            src="{% static 'images/hero/sofa.png' %}"
+            alt="Sofa"
+            loading="lazy"
+          >
+        </div>
+
+        <!-- 7. SHOES -->
+        <div class="kazeb-hero-slide">
+          <img
+            src="{% static 'images/hero/shoes.png' %}"
+            alt="Shoes"
+            loading="lazy"
+          >
+        </div>
+
+        <!-- 8. CLOTHES -->
+        <div class="kazeb-hero-slide">
+          <img
+            src="{% static 'images/hero/clothes.png' %}"
+            alt="Clothes"
+            loading="lazy"
+          >
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         CAROUSEL DOTS
+         ========================= -->
+    <div
+      class="kazeb-hero-dots"
+      role="tablist"
+      aria-label="KazeB promotions"
+    >
+
+      <button
+        type="button"
+        class="kazeb-hero-dot is-active"
+        data-slide="0"
+        aria-label="Car"
+        aria-selected="true"
+      ></button>
+
+      <button
+        type="button"
+        class="kazeb-hero-dot"
+        data-slide="1"
+        aria-label="House"
+        aria-selected="false"
+      ></button>
+
+      <button
+        type="button"
+        class="kazeb-hero-dot"
+        data-slide="2"
+        aria-label="Smartphone"
+        aria-selected="false"
+      ></button>
+
+      <button
+        type="button"
+        class="kazeb-hero-dot"
+        data-slide="3"
+        aria-label="Motorcycle"
+        aria-selected="false"
+      ></button>
+
+      <button
+        type="button"
+        class="kazeb-hero-dot"
+        data-slide="4"
+        aria-label="Laptop"
+        aria-selected="false"
+      ></button>
+
+      <button
+        type="button"
+        class="kazeb-hero-dot"
+        data-slide="5"
+        aria-label="Sofa"
+        aria-selected="false"
+      ></button>
+
+      <button
+        type="button"
+        class="kazeb-hero-dot"
+        data-slide="6"
+        aria-label="Shoes"
+        aria-selected="false"
+      ></button>
+
+      <button
+        type="button"
+        class="kazeb-hero-dot"
+        data-slide="7"
+        aria-label="Clothes"
+        aria-selected="false"
+      ></button>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     CATEGORIES
+     ========================= -->
+<section id="categories" class="mb-5">
+
+  <h2 class="find-by-category">
+    {% trans "Shakisha ukurikije ubwoko" %}
+  </h2>
+
+  <div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-4 mt-2">
+
+    {% for category in nav_categories %}
+
+      <div class="col">
+
+        <a
+          href="{{ category.get_absolute_url }}"
+          class="category-card text-decoration-none"
+        >
+
+          <div class="category-icon">
+
+            {% category_name category as localized_name %}
+
+            {% if category.icon %}
+
+              <img
+                src="{{ category.icon.url }}"
+                alt="{{ localized_name }}"
+              >
+
+            {% else %}
+
+              {% category_default_icon category as default_icon %}
+
+              {% if default_icon %}
+
+                <img
+                  src="{{ default_icon }}"
+                  alt="{{ localized_name }}"
+                >
+
+              {% else %}
+
+                <span class="category-icon-fallback">
+                  {{ localized_name|first }}
+                </span>
+
+              {% endif %}
+
+            {% endif %}
+
+          </div>
+
+          <div class="category-name">
+            {{ localized_name }}
+          </div>
+
+        </a>
+
+      </div>
+
+    {% empty %}
+
+      <p class="text-muted">
+        {% trans "Nta bwoko burahari. Koresha" %}
+        <code>python manage.py seed_categories</code>
+        {% trans "kugira ngo ukore ibyifuzo by'ibanze." %}
+      </p>
+
+    {% endfor %}
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     RECENT LISTINGS
+     ========================= -->
+{% if recent_listings %}
+
+<section>
+
+  <h2 class="h4 mb-3">
+    {% trans "Ibiherutse kwandikwa" %}
+  </h2>
+
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4">
+
+    {% for listing in recent_listings %}
+
+      {% include "listings/_listing_card.html" %}
+
+    {% endfor %}
+
+  </div>
+
+</section>
+
+{% endif %}
+
+{% endblock %}

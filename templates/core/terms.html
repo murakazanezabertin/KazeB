@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Amabwiriza y'ikoreshwa" %} · KazeB{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <h1 class="h3 mb-4">{% trans "Amabwiriza y'ikoreshwa" %}</h1>
+
+    <p class="text-muted small">
+      {% trans "Aya mabwiriza ni urugero rusanzwe (template) rutanga inkomoko y'ibisobanuro -- ntabwo ari inama z'amategeko. Reba umunyamategeko mbere yo gutangiza urubuga rwawe ku mugaragaro." %}
+    </p>
+
+    <h2 class="h5 mt-4">1. {% trans "Konti" %}</h2>
+    <p>{% trans "Ugomba gutanga amakuru y'ukuri igihe wiyandikisha, harimo numero yawe ya telefone n'iya WhatsApp. Uri wenyine ubazwa ibikorwa byose bikorerwa kuri konti yawe." %}</p>
+
+    <h2 class="h5 mt-4">2. {% trans "Ibicuruzwa" %}</h2>
+    <p>{% trans "Ushobora gushyiraho gusa ibintu wemerewe n'amategeko kugurisha. KazeB ishobora gukuraho icyo ugurisha icyo ari cyo cyose kitubahiriza aya mabwiriza, nta menyesha mbere." %}</p>
+
+    <h2 class="h5 mt-4">3. {% trans "Ibyerekeye ivunjisha" %}</h2>
+    <p>{% trans "KazeB ntabwo igira uruhare mu kwishyura cyangwa gutwara ibicuruzwa. Amasezerano yose ni hagati y'umuguzi n'ucuruza." %}</p>
+
+    <h2 class="h5 mt-4">4. {% trans "Gukuraho konti" %}</h2>
+    <p>{% trans "Ushobora gusiba konti yawe igihe cyose ubishaka. Iki gikorwa gisiba burundu ibicuruzwa byawe n'ubutumwa bwawe." %}</p>
+
+    <h2 class="h5 mt-4">5. {% trans "Impinduka" %}</h2>
+    <p>{% trans "Aya mabwiriza ashobora guhinduka igihe cyose. Gukomeza gukoresha urubuga bisobanura ko wemeye impinduka." %}</p>
+  </div>
+</div>
+{% endblock %}

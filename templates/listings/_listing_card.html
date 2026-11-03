@@ -1,0 +1,17 @@
+{% load i18n %}
+<div class="col">
+  <a href="{{ listing.get_absolute_url }}" class="text-decoration-none text-body">
+    <div class="card listing-card h-100">
+      {% if listing.cover_image %}
+        <img src="{{ listing.cover_image.image.url }}" class="card-img-top listing-card-img" alt="{{ listing.name }}">
+      {% else %}
+        <div class="listing-card-img listing-card-img-placeholder">{% trans "Nta foto ihari" %}</div>
+      {% endif %}
+      <div class="card-body">
+        <h3 class="h6 mb-1 text-truncate">{{ listing.name }}</h3>
+        <p class="fw-bold text-brand mb-1">{{ listing.display_price }}</p>
+        <p class="small text-muted mb-0">{{ listing.location }}</p>
+      </div>
+    </div>
+  </a>
+</div>

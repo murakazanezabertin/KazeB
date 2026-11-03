@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Ibya kwibuka" %} · KazeB{% endblock %}
+
+{% block content %}
+<h1 class="h3 mb-4">{% trans "Ibya kwibuka" %}</h1>
+
+{% if favorites %}
+<div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4">
+  {% for favorite in favorites %}
+    {% with listing=favorite.listing %}
+      {% include "listings/_listing_card.html" %}
+    {% endwith %}
+  {% endfor %}
+</div>
+{% else %}
+  <p class="text-muted">{% trans "Nta kintu urabika ku bya kwibuka." %}</p>
+{% endif %}
+{% endblock %}

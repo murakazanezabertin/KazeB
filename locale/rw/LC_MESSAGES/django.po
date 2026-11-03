@@ -1,0 +1,797 @@
+# Kinyarwanda translations for KazeB.
+# Copyright (C) 2026 ORGANIZATION
+# This file is distributed under the same license as the KazeB project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr "Project-Id-Version: KazeB 1.0\nReport-Msgid-Bugs-To: EMAIL@ADDRESS\nPOT-Creation-Date: 2026-08-01 11:34+0000\nPO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\nLast-Translator: FULL NAME <EMAIL@ADDRESS>\nLanguage: rw\nLanguage-Team: rw <LL@li.org>\nPlural-Forms: nplurals=2; plural=(n != 1);\nMIME-Version: 1.0\nContent-Type: text/plain; charset=utf-8\nContent-Transfer-Encoding: 8bit\nGenerated-By: Babel 2.18.0\n"
+
+msgid "Abagurisha bashyiraho ibicuruzwa byabo, abaguzi bakabishakisha bakabona ubigurisha binyuze mu butumwa, WhatsApp, cyangwa telefone."
+msgstr "Abagurisha bashyiraho ibicuruzwa byabo, abaguzi bakabishakisha bakabona ubigurisha binyuze mu butumwa, WhatsApp, cyangwa telefone."
+
+msgid "Abaguzi bazabona buto yo 'Kuvugana kuri WhatsApp' hakoreshejwe iyi numero."
+msgstr "Abaguzi bazabona buto yo 'Kuvugana kuri WhatsApp' hakoreshejwe iyi numero."
+
+msgid "Abarebye"
+msgstr "Abarebye"
+
+msgid "Abarebye benshi"
+msgstr "Abarebye benshi"
+
+msgid "Abo turi bo"
+msgstr "Abo turi bo"
+
+msgid "Aha nihoreba ibyo watanze n'ubutumwa abaguzi bakoherereje."
+msgstr "Aha nihoreba ibyo watanze n'ubutumwa abaguzi bakoherereje."
+
+msgid "Ahabanza"
+msgstr "Ahabanza"
+
+msgid "Akarere"
+msgstr "Akarere"
+
+msgid "Akarere: kose"
+msgstr "Akarere: kose"
+
+msgid "Amabwiriza"
+msgstr "Amabwiriza"
+
+msgid "Amabwiriza y'ikoreshwa"
+msgstr "Amabwiriza y'ikoreshwa"
+
+msgid "Amafoto"
+msgstr "Amafoto"
+
+msgid "Amafoto asanzwe"
+msgstr "Amafoto asanzwe"
+
+msgid "Amakuru dukusanya"
+msgstr "Amakuru dukusanya"
+
+msgid "Amakuru ku bicuruzwa washyizeho: ubwoko, ibisobanuro, aho biherereye, ifoto, n'igiciro."
+msgstr "Amakuru ku bicuruzwa washyizeho: ubwoko, ibisobanuro, aho biherereye, ifoto, n'igiciro."
+
+msgid "Amakuru yo kutuvugisha azashyirwa hano vuba."
+msgstr "Amakuru yo kutuvugisha azashyirwa hano vuba."
+
+msgid "Amanota"
+msgstr "Amanota"
+
+msgid "Andika ijambobanga rimwe ryemeza uko waryanditse haruguru."
+msgstr "Andika ijambobanga rimwe ryemeza uko waryanditse haruguru."
+
+msgid "Andika ijambobanga ryawe kugira ngo wemeze"
+msgstr "Andika ijambobanga ryawe kugira ngo wemeze"
+
+msgid "Andika ubutumwa..."
+msgstr "Andika ubutumwa..."
+
+msgid "Aya mabwiriza ashobora guhinduka igihe cyose. Gukomeza gukoresha urubuga bisobanura ko wemeye impinduka."
+msgstr "Aya mabwiriza ashobora guhinduka igihe cyose. Gukomeza gukoresha urubuga bisobanura ko wemeye impinduka."
+
+msgid "Aya mabwiriza ni urugero rusanzwe (template) rutanga inkomoko y'ibisobanuro -- ntabwo ari inama z'amategeko. Reba umunyamategeko mbere yo gutangiza urubuga rwawe ku mugaragaro."
+msgstr "Aya mabwiriza ni urugero rusanzwe (template) rutanga inkomoko y'ibisobanuro -- ntabwo ari inama z'amategeko. Reba umunyamategeko mbere yo gutangiza urubuga rwawe ku mugaragaro."
+
+msgid "Bika impinduka"
+msgstr "Bika impinduka"
+
+msgid "Bika ku bya kwibuka"
+msgstr "Bika ku bya kwibuka"
+
+msgid "Birahishwe"
+msgstr "Birahishwe"
+
+msgid "Biraza vuba"
+msgstr "Biraza vuba"
+
+msgid "Bishaje mbere"
+msgstr "Bishaje mbere"
+
+msgid "Bishya mbere"
+msgstr "Bishya mbere"
+
+msgid "Bona umuguzi cyangwa umugurisha byoroshye kandi vuba."
+msgstr "Bona umuguzi cyangwa umugurisha byoroshye kandi vuba."
+
+msgid "Byamaze kugurwa"
+msgstr "Byamaze kugurwa"
+
+msgid "Dukurikire kuri"
+msgstr "Dukurikire kuri"
+
+msgid "Emeza"
+msgstr "Emeza"
+
+msgid "Emeza ijambobanga"
+msgstr "Emeza ijambobanga"
+
+msgid "Emeza konti yawe kuri KazeB"
+msgstr "Emeza konti yawe kuri KazeB"
+
+msgid "Emeza numero ya telefone"
+msgstr "Emeza numero ya telefone"
+
+msgid "Emeza numero yawe"
+msgstr "Emeza numero yawe"
+
+msgid "Fungura konti"
+msgstr "Fungura konti"
+
+msgid "Fungura konti yawe"
+msgstr "Fungura konti yawe"
+
+msgid "Gikoreshejwe"
+msgstr "Gikoreshejwe"
+
+msgid "Gishya"
+msgstr "Gishya"
+
+msgid "Gukuraho konti"
+msgstr "Gukuraho konti"
+
+msgid "Hari konti isanzwe ikoresha iyi imeli."
+msgstr "Hari konti isanzwe ikoresha iyi imeli."
+
+msgid "Hindura"
+msgstr "Hindura"
+
+msgid "Hindura Ururimi"
+msgstr "Hindura Ururimi"
+
+msgid "Hindura igicuruzwa"
+msgstr "Hindura igicuruzwa"
+
+msgid "Hindura ijambobanga"
+msgstr "Hindura ijambobanga"
+
+msgid "Hindura ijambobanga ryawe"
+msgstr "Hindura ijambobanga ryawe"
+
+msgid "Hindura konti"
+msgstr "Hindura konti"
+
+msgid "Hindura konti yawe"
+msgstr "Hindura konti yawe"
+
+msgid "Hindura ubusuzumire bwawe kuri"
+msgstr "Hindura ubusuzumire bwawe kuri"
+
+msgid "Hura n'ucuruza ahantu hafunguriwe abantu benshi kandi umenye neza icyo ugura mbere yo kwishyura."
+msgstr "Hura n'ucuruza ahantu hafunguriwe abantu benshi kandi umenye neza icyo ugura mbere yo kwishyura."
+
+msgid "Ibanga"
+msgstr "Ibanga"
+
+msgid "Ibibanziriza"
+msgstr "Ibibanziriza"
+
+msgid "Ibibazo bikunze kubazwa"
+msgstr "Ibibazo bikunze kubazwa"
+
+msgid "Ibicuruzwa"
+msgstr "Ibicuruzwa"
+
+msgid "Ibicuruzwa byanjye"
+msgstr "Ibicuruzwa byanjye"
+
+msgid "Ibicuruzwa byose"
+msgstr "Ibicuruzwa byose"
+
+msgid "Ibiherutse kwandikwa"
+msgstr "Ibiherutse kwandikwa"
+
+msgid "Ibikurikira"
+msgstr "Ibikurikira"
+
+msgid "Ibindi"
+msgstr "Ibindi"
+
+msgid "Ibisobanuro"
+msgstr "Ibisobanuro"
+
+msgid "Ibisobanuro birambuye (si ngombwa)"
+msgstr "Ibisobanuro birambuye (si ngombwa)"
+
+msgid "Ibya kwibuka"
+msgstr "Ibya kwibuka"
+
+msgid "Ibyerekeye ivunjisha"
+msgstr "Ibyerekeye ivunjisha"
+
+msgid "Icyo KazeB idakora"
+msgstr "Icyo KazeB idakora"
+
+msgid "Icyo KazeB ikora"
+msgstr "Icyo KazeB ikora"
+
+msgid "Icyo ugurisha cyashyizwe ahagaragara."
+msgstr "Icyo ugurisha cyashyizwe ahagaragara."
+
+msgid "Icyo wavuga (si ngombwa)"
+msgstr "Icyo wavuga (si ngombwa)"
+
+msgid "Ifaranga"
+msgstr "Ifaranga"
+
+msgid "Ifoto"
+msgstr "Ifoto"
+
+msgid "Ifoto igaragara ku ishusho y'ubwoko ku rupapuro rw'ibanze."
+msgstr "Ifoto igaragara ku ishusho y'ubwoko ku rupapuro rw'ibanze."
+
+msgid "Ifoto yawe"
+msgstr "Ifoto yawe"
+
+msgid "Igaragara ku baguzi ku byo ugurisha, urugero: +250788123456"
+msgstr "Igaragara ku baguzi ku byo ugurisha, urugero: +250788123456"
+
+msgid "Igiciro"
+msgstr "Igiciro"
+
+msgid "Igiciro: byose"
+msgstr "Igiciro: byose"
+
+msgid "Igiciro: gito mbere"
+msgstr "Igiciro: gito mbere"
+
+msgid "Igiciro: kinini mbere"
+msgstr "Igiciro: kinini mbere"
+
+msgid "Igicuruzwa cyasibwe."
+msgstr "Igicuruzwa cyasibwe."
+
+msgid "Igicuruzwa cyongewe ku bya kwibuka."
+msgstr "Igicuruzwa cyongewe ku bya kwibuka."
+
+msgid "Ihuza abaguzi n'abagurisha binyuze mu butumwa, WhatsApp, cyangwa telefone."
+msgstr "Ihuza abaguzi n'abagurisha binyuze mu butumwa, WhatsApp, cyangwa telefone."
+
+msgid "Ijambobanga"
+msgstr "Ijambobanga"
+
+msgid "Ijambobanga ntabwo ari ryo."
+msgstr "Ijambobanga ntabwo ari ryo."
+
+msgid "Ijambobanga rigomba kuba rifite nibura inyuguti 8, ntirigomba kuba azwi cyane kandi ntirigomba kuba ari imibare gusa."
+msgstr "Ijambobanga rigomba kuba rifite nibura inyuguti 8, ntirigomba kuba azwi cyane kandi ntirigomba kuba ari imibare gusa."
+
+msgid "Ijambobanga ryawe ryahinduwe. Ushobora kwinjira ubu."
+msgstr "Ijambobanga ryawe ryahinduwe. Ushobora kwinjira ubu."
+
+msgid "Ikiganiro"
+msgstr "Ikiganiro"
+
+msgid "Ikiganiro na"
+msgstr "Ikiganiro na"
+
+msgid "Ikindi"
+msgstr "Ikindi"
+
+msgid "Ikiraro gihuza abaguzi n'abagurisha"
+msgstr "Ikiraro gihuza abaguzi n'abagurisha"
+
+msgid "Ikiraro gihuza abaguzi n'abagurisha. Shakisha cyangwa ugurishe ibintu byawe kuri KazeB."
+msgstr "Ikiraro gihuza abaguzi n'abagurisha. Shakisha cyangwa ugurishe ibintu byawe kuri KazeB."
+
+msgid "Imeli"
+msgstr "Imeli"
+
+msgid "Imeli yawe yemejwe. Murakaza neza kuri KazeB!"
+msgstr "Imeli yawe yemejwe. Murakaza neza kuri KazeB!"
+
+msgid "Impamvu"
+msgstr "Impamvu"
+
+msgid "Impinduka"
+msgstr "Impinduka"
+
+msgid "Impinduka ku konti yawe zabitswe."
+msgstr "Impinduka ku konti yawe zabitswe."
+
+msgid "Impinduka zabitswe."
+msgstr "Impinduka zabitswe."
+
+msgid "Injira"
+msgstr "Injira"
+
+msgid "Injira kugira ngo uvugane n'ucuruza"
+msgstr "Injira kugira ngo uvugane n'ucuruza"
+
+msgid "Itanga urubuga rwo gushyiraho no gushakisha ibicuruzwa."
+msgstr "Itanga urubuga rwo gushyiraho no gushakisha ibicuruzwa."
+
+msgid "Iyandikishe"
+msgstr "Iyandikishe"
+
+msgid "Iyandikishe, hanyuma ukande 'Ongeraho igicuruzwa' ushyiremo amafoto, igiciro, n'ibisobanuro."
+msgstr "Iyandikishe, hanyuma ukande 'Ongeraho igicuruzwa' ushyiremo amafoto, igiciro, n'ibisobanuro."
+
+msgid "Iyi gikorwa gisiba burundu konti yawe, hamwe n'ibicuruzwa byose wagurishaga, amafoto yabyo, n'ubutumwa bwawe bwose. Ntibishobora gusubizwa inyuma."
+msgstr "Iyi gikorwa gisiba burundu konti yawe, hamwe n'ibicuruzwa byose wagurishaga, amafoto yabyo, n'ubutumwa bwawe bwose. Ntibishobora gusubizwa inyuma."
+
+msgid "Iyi telefone/porogaramu ntishobora kwerekana iyi videwo."
+msgstr "Iyi telefone/porogaramu ntishobora kwerekana iyi videwo."
+
+msgid "Izina"
+msgstr "Izina"
+
+msgid "Izina ukoresha"
+msgstr "Izina ukoresha"
+
+msgid "Izina, numero ya telefone, numero ya WhatsApp, n'ifoto (niba wayishyizeho)."
+msgstr "Izina, numero ya telefone, numero ya WhatsApp, n'ifoto (niba wayishyizeho)."
+
+msgid "Kanda hano uyikurure"
+msgstr "Kanda hano uyikurure"
+
+msgid "Kanda hasi kugira ngo twoherereze kode ku numero yawe."
+msgstr "Kanda hasi kugira ngo twoherereze kode ku numero yawe."
+
+msgid "Kanda kuri 'Ongeraho amafoto' inshuro nyinshi kugira ngo ushyireho amafoto menshi. Ifoto ya mbere niyo izagaragara imbere."
+msgstr "Kanda kuri 'Ongeraho amafoto' inshuro nyinshi kugira ngo ushyireho amafoto menshi. Ifoto ya mbere niyo izagaragara imbere."
+
+msgid "Kanda kuri ifoto kugira ngo uyimenyeshe ko igomba gusibwa, hanyuma ubike impinduka."
+msgstr "Kanda kuri ifoto kugira ngo uyimenyeshe ko igomba gusibwa, hanyuma ubike impinduka."
+
+msgid "Kanda kuri ifoto kugira ngo uyisibe."
+msgstr "Kanda kuri ifoto kugira ngo uyisibe."
+
+msgid "Kanda kuri uyu murongo kugira ngo wemeze konti yawe kuri KazeB:"
+msgstr "Kanda kuri uyu murongo kugira ngo wemeze konti yawe kuri KazeB:"
+
+msgid "KazeB ikora ite?"
+msgstr "KazeB ikora ite?"
+
+msgid "KazeB ni ikiraro gihuza abaguzi n'abagurisha kugira ngo babonane vuba kandi byoroshye. Abagurisha bashyiraho ibicuruzwa byabo, abaguzi bakabishakisha bakabona ubicuruza."
+msgstr "KazeB ni ikiraro gihuza abaguzi n'abagurisha kugira ngo babonane vuba kandi byoroshye. Abagurisha bashyiraho ibicuruzwa byabo, abaguzi bakabishakisha bakabona ubicuruza."
+
+msgid "KazeB ntabwo igira uruhare mu kwishyura cyangwa gutwara ibicuruzwa. Amasezerano yose ni hagati y'umuguzi n'ucuruza."
+msgstr "KazeB ntabwo igira uruhare mu kwishyura cyangwa gutwara ibicuruzwa. Amasezerano yose ni hagati y'umuguzi n'ucuruza."
+
+msgid "Kode ntabwo ari yo."
+msgstr "Kode ntabwo ari yo."
+
+msgid "Kode wahawe"
+msgstr "Kode wahawe"
+
+msgid "Kode yarangiye igihe. Saba indi."
+msgstr "Kode yarangiye igihe. Saba indi."
+
+msgid "Kode yoherejwe. Reba ubutumwa bwawe."
+msgstr "Kode yoherejwe. Reba ubutumwa bwawe."
+
+msgid "Konti"
+msgstr "Konti"
+
+msgid "Konti yanjye"
+msgstr "Konti yanjye"
+
+msgid "Konti yawe yasibwe burundu."
+msgstr "Konti yawe yasibwe burundu."
+
+msgid "Koporora numero ya telefone"
+msgstr "Koporora numero ya telefone"
+
+msgid "Koporora umurongo"
+msgstr "Koporora umurongo"
+
+msgid "Ku bya kwibuka"
+msgstr "Ku bya kwibuka"
+
+msgid "Kugufasha guhuza n'abaguzi cyangwa abagurisha."
+msgstr "Kugufasha guhuza n'abaguzi cyangwa abagurisha."
+
+msgid "Kurinda urubuga no kwirinda uburiganya."
+msgstr "Kurinda urubuga no kwirinda uburiganya."
+
+msgid "Kwerekana numero yawe ku bicuruzwa washyizeho, kugira ngo abaguzi bagushakishe."
+msgstr "Kwerekana numero yawe ku bicuruzwa washyizeho, kugira ngo abaguzi bagushakishe."
+
+msgid "Kwirinda uburiganya"
+msgstr "Kwirinda uburiganya"
+
+msgid "Kwiyandikisha birahenda?"
+msgstr "Kwiyandikisha birahenda?"
+
+msgid "Muraho"
+msgstr "Muraho"
+
+msgid "Muraho KazeB, mfite ikibazo nifuza kubaza."
+msgstr "Muraho KazeB, mfite ikibazo nifuza kubaza."
+
+msgid "Muraho {{ user }},"
+msgstr "Muraho {{ user }},"
+
+msgid "Murakazaneza kuri KazeB"
+msgstr "Murakazaneza kuri KazeB"
+
+msgid "Murakoze. Twakiriye raporo yanyu."
+msgstr "Murakoze. Twakiriye raporo yanyu."
+
+msgid "Nabona uko nirinda uburiganya?"
+msgstr "Nabona uko nirinda uburiganya?"
+
+msgid "Nemeye <a href=\"%(terms_url)s\" target=\"_blank\">amabwiriza n'amategeko</a> n'<a href=\"%(privacy_url)s\" target=\"_blank\">politiki y'ibanga</a> bya KazeB."
+msgstr "Nemeye <a href=\"%(terms_url)s\" target=\"_blank\">amabwiriza n'amategeko</a> n'<a href=\"%(privacy_url)s\" target=\"_blank\">politiki y'ibanga</a> bya KazeB."
+
+msgid "Ni gute mvugana n'ucuruza?"
+msgstr "Ni gute mvugana n'ucuruza?"
+
+msgid "Ni gute nagurisha ikintu?"
+msgstr "Ni gute nagurisha ikintu?"
+
+msgid "Niba atari wowe wasabye iyi konti, wirengagize iyi email."
+msgstr "Niba atari wowe wasabye iyi konti, wirengagize iyi email."
+
+msgid "Niba hari konti ifite iyi email, twakoherereje uburyo bwo guhindura ijambobanga."
+msgstr "Niba hari konti ifite iyi email, twakoherereje uburyo bwo guhindura ijambobanga."
+
+msgid "Niba igiciro kiri hasi cyane ugereranyije n'ibisanzwe, icyo ni ikimenyetso cy'uburiganya."
+msgstr "Niba igiciro kiri hasi cyane ugereranyije n'ibisanzwe, icyo ni ikimenyetso cy'uburiganya."
+
+msgid "Niba wumva hari ikitagenda neza, koresha buto yo gutanga raporo ku gicuruzwa cyangwa k'ucuruza."
+msgstr "Niba wumva hari ikitagenda neza, koresha buto yo gutanga raporo ku gicuruzwa cyangwa k'ucuruza."
+
+msgid "Nta busuzumire burahari"
+msgstr "Nta busuzumire burahari"
+
+msgid "Nta busuzumire burahari."
+msgstr "Nta busuzumire burahari."
+
+msgid "Nta butumwa bwaturutse ku baguzi burahari."
+msgstr "Nta butumwa bwaturutse ku baguzi burahari."
+
+msgid "Nta bwoko burahari. Koresha"
+msgstr "Nta bwoko burahari. Koresha"
+
+msgid "Nta foto ihari"
+msgstr "Nta foto ihari"
+
+msgid "Nta gicuruzwa gihuye n'ushaka."
+msgstr "Nta gicuruzwa gihuye n'ushaka."
+
+msgid "Nta kiganiro kirahari."
+msgstr "Nta kiganiro kirahari."
+
+msgid "Nta kintu urabika ku bya kwibuka."
+msgstr "Nta kintu urabika ku bya kwibuka."
+
+msgid "Ntabwo ari umuhuza wemewe mu byerekeye amasezerano hagati y'abaguzi n'abagurisha."
+msgstr "Ntabwo ari umuhuza wemewe mu byerekeye amasezerano hagati y'abaguzi n'abagurisha."
+
+msgid "Ntabwo wabonye imeli? Reba mu 'Spam', cyangwa usabe indi hepfo."
+msgstr "Ntabwo wabonye imeli? Reba mu 'Spam', cyangwa usabe indi hepfo."
+
+msgid "Ntabwo yishyurira cyangwa yakira amafaranga hagati y'abaguzi n'abagurisha."
+msgstr "Ntabwo yishyurira cyangwa yakira amafaranga hagati y'abaguzi n'abagurisha."
+
+msgid "Ntabwo yohereza cyangwa igenzura ibicuruzwa mu buryo bw'umubiri."
+msgstr "Ntabwo yohereza cyangwa igenzura ibicuruzwa mu buryo bw'umubiri."
+
+msgid "Ntibyemewe"
+msgstr "Ntibyemewe"
+
+msgid "Ntiwohereza amafaranga mbere yo kubona icyo ugura, keretse ubyizeye neza."
+msgstr "Ntiwohereza amafaranga mbere yo kubona icyo ugura, keretse ubyizeye neza."
+
+msgid "Nturigeze wongeraho ikintu cyo kugurisha."
+msgstr "Nturigeze wongeraho ikintu cyo kugurisha."
+
+msgid "Ntushobora kwisuzuma wenyine."
+msgstr "Ntushobora kwisuzuma wenyine."
+
+msgid "Ntuzigere utanga amakuru bwite nka nomero z'ikarita cyangwa amabanga ya konti."
+msgstr "Ntuzigere utanga amakuru bwite nka nomero z'ikarita cyangwa amabanga ya konti."
+
+msgid "Numero ya WhatsApp"
+msgstr "Numero ya WhatsApp"
+
+msgid "Numero ya telefone"
+msgstr "Numero ya telefone"
+
+msgid "Numero yawe yarahamagawe."
+msgstr "Numero yawe yarahamagawe."
+
+msgid "Numero yawe yemejwe neza!"
+msgstr "Numero yawe yemejwe neza!"
+
+msgid "Numero yemejwe"
+msgstr "Numero yemejwe"
+
+msgid "Ohereza"
+msgstr "Ohereza"
+
+msgid "Ohereza indi email yo kwemeza"
+msgstr "Ohereza indi email yo kwemeza"
+
+msgid "Ohereza kode"
+msgstr "Ohereza kode"
+
+msgid "Ohereza kode nshya"
+msgstr "Ohereza kode nshya"
+
+msgid "Ohereza raporo"
+msgstr "Ohereza raporo"
+
+msgid "Ohereza uburyo bwo guhindura"
+msgstr "Ohereza uburyo bwo guhindura"
+
+msgid "Ohereza ubutumwa kuri KazeB"
+msgstr "Ohereza ubutumwa kuri KazeB"
+
+msgid "Ongeraho amafoto"
+msgstr "Ongeraho amafoto"
+
+msgid "Ongeraho andi mafoto"
+msgstr "Ongeraho andi mafoto"
+
+msgid "Ongeraho icya mbere"
+msgstr "Ongeraho icya mbere"
+
+msgid "Ongeraho icyo ugurisha"
+msgstr "Ongeraho icyo ugurisha"
+
+msgid "Ongeraho igicuruzwa"
+msgstr "Ongeraho igicuruzwa"
+
+msgid "Oya, kwiyandikisha no gushyiraho ibicuruzwa ni ubuntu."
+msgstr "Oya, kwiyandikisha no gushyiraho ibicuruzwa ni ubuntu."
+
+msgid "Politiki y'ibanga"
+msgstr "Politiki y'ibanga"
+
+msgid "Reba"
+msgstr "Reba"
+
+msgid "Reba icyo bagurisha"
+msgstr "Reba icyo bagurisha"
+
+msgid "Reba imeli yawe"
+msgstr "Reba imeli yawe"
+
+msgid "Reba na"
+msgstr "Reba na"
+
+msgid "Reba ubusuzumire bw'ucuruza mbere yo kumwizera."
+msgstr "Reba ubusuzumire bw'ucuruza mbere yo kumwizera."
+
+msgid "Reka"
+msgstr "Reka"
+
+msgid "Sangiza abandi icyo ugurisha"
+msgstr "Sangiza abandi icyo ugurisha"
+
+msgid "Sangiza kuri Facebook"
+msgstr "Sangiza kuri Facebook"
+
+msgid "Sangiza kuri Telegram"
+msgstr "Sangiza kuri Telegram"
+
+msgid "Sangiza kuri WhatsApp"
+msgstr "Sangiza kuri WhatsApp"
+
+msgid "Shakisha"
+msgstr "Shakisha"
+
+msgid "Shakisha ukurikije aho biherereye..."
+msgstr "Shakisha ukurikije aho biherereye..."
+
+msgid "Shakisha ukurikije ubwoko"
+msgstr "Shakisha ukurikije ubwoko"
+
+msgid "Shakisha..."
+msgstr "Shakisha..."
+
+msgid "Shyiraho ijambobanga rishya"
+msgstr "Shyiraho ijambobanga rishya"
+
+msgid "Siba"
+msgstr "Siba"
+
+msgid "Siba Konti"
+msgstr "Siba Konti"
+
+msgid "Siba igicuruzwa"
+msgstr "Siba igicuruzwa"
+
+msgid "Siba iki gicuruzwa"
+msgstr "Siba iki gicuruzwa"
+
+msgid "Siba iyi videwo"
+msgstr "Siba iyi videwo"
+
+msgid "Simbuza videwo"
+msgstr "Simbuza videwo"
+
+msgid "Sohoka"
+msgstr "Sohoka"
+
+msgid "Subira ku butumwa"
+msgstr "Subira ku butumwa"
+
+msgid "Tanga raporo"
+msgstr "Tanga raporo"
+
+msgid "Tanga raporo kuri iki gicuruzwa"
+msgstr "Tanga raporo kuri iki gicuruzwa"
+
+msgid "Tanga ubusuzumire"
+msgstr "Tanga ubusuzumire"
+
+msgid "Tanga ubusuzumire kuri"
+msgstr "Tanga ubusuzumire kuri"
+
+msgid "Tangira ikiganiro."
+msgstr "Tangira ikiganiro."
+
+msgid "Twakoherereje umurongo wo kwemeza konti yawe. Kanda kuri wo kugira ngo winjire kuri KazeB."
+msgstr "Twakoherereje umurongo wo kwemeza konti yawe. Kanda kuri wo kugira ngo winjire kuri KazeB."
+
+msgid "Twandikire"
+msgstr "Twandikire"
+
+msgid "Twandikire & Sitemap"
+msgstr "Twandikire & Sitemap"
+
+msgid "Twohereje kode ku numero yawe. Yandike hano kugira ngo tumenye ko ari yo yawe."
+msgstr "Twohereje kode ku numero yawe. Yandike hano kugira ngo tumenye ko ari yo yawe."
+
+msgid "Uburenganzira bwawe"
+msgstr "Uburenganzira bwawe"
+
+msgid "Uburiganya"
+msgstr "Uburiganya"
+
+msgid "Ubusuzumire"
+msgstr "Ubusuzumire"
+
+msgid "Ubusuzumire bwanjye"
+msgstr "Ubusuzumire bwanjye"
+
+msgid "Ubusuzumire bwawe bwabitswe."
+msgstr "Ubusuzumire bwawe bwabitswe."
+
+msgid "Ubutumwa"
+msgstr "Ubutumwa"
+
+msgid "Ubutumwa buheruka"
+msgstr "Ubutumwa buheruka"
+
+msgid "Ubutumwa butarasomwa"
+msgstr "Ubutumwa butarasomwa"
+
+msgid "Ubutumwa hagati yawe n'abandi bakoresha urubuga."
+msgstr "Ubutumwa hagati yawe n'abandi bakoresha urubuga."
+
+msgid "Ubwoko"
+msgstr "Ubwoko"
+
+msgid "Ubwoko butariho"
+msgstr "Ubwoko butariho"
+
+msgid "Ugomba gutanga amakuru y'ukuri igihe wiyandikisha, harimo numero yawe ya telefone n'iya WhatsApp. Uri wenyine ubazwa ibikorwa byose bikorerwa kuri konti yawe."
+msgstr "Ugomba gutanga amakuru y'ukuri igihe wiyandikisha, harimo numero yawe ya telefone n'iya WhatsApp. Uri wenyine ubazwa ibikorwa byose bikorerwa kuri konti yawe."
+
+msgid "Ugomba kwemera amabwiriza n'amategeko mbere yo kwiyandikisha."
+msgstr "Ugomba kwemera amabwiriza n'amategeko mbere yo kwiyandikisha."
+
+msgid "Ugomba kwemeza imeli yawe mbere yo kwinjira. Reba imeli twakoherereje, cyangwa usabe indi nk'iyo hepfo."
+msgstr "Ugomba kwemeza imeli yawe mbere yo kwinjira. Reba imeli twakoherereje, cyangwa usabe indi nk'iyo hepfo."
+
+msgid "Uko KazeB ikora"
+msgstr "Uko KazeB ikora"
+
+msgid "Uko bimeze"
+msgstr "Uko bimeze"
+
+msgid "Uko bimeze: byose"
+msgstr "Uko bimeze: byose"
+
+msgid "Uko dukoresha aya makuru"
+msgstr "Uko dukoresha aya makuru"
+
+msgid "Uko ikora"
+msgstr "Uko ikora"
+
+msgid "Ukoresheje KazeB, wemera"
+msgstr "Ukoresheje KazeB, wemera"
+
+msgid "Umubare muto ugaragara mbere."
+msgstr "Umubare muto ugaragara mbere."
+
+msgid "Umurenge"
+msgstr "Umurenge"
+
+msgid "Umurongo ntukora"
+msgstr "Umurongo ntukora"
+
+msgid "Umutekano wawe"
+msgstr "Umutekano wawe"
+
+msgid "Uri mushya kuri KazeB?"
+msgstr "Uri mushya kuri KazeB?"
+
+msgid "Urifuza gusiba iki gicuruzwa? Iki gikorwa ntikigaruka -- amafoto n'ubutumwa bufitanye isano na cyo na byo bizasibwa."
+msgstr "Urifuza gusiba iki gicuruzwa? Iki gikorwa ntikigaruka -- amafoto n'ubutumwa bufitanye isano na cyo na byo bizasibwa."
+
+msgid "Usanzwe ufite konti?"
+msgstr "Usanzwe ufite konti?"
+
+msgid "Ushobora guhindura cyangwa gusiba amakuru yawe igihe cyose uherereye kuri Konti yanjye. Gusiba konti bisiba burundu amakuru yawe yose, ibicuruzwa byawe, n'ubutumwa bwawe."
+msgstr "Ushobora guhindura cyangwa gusiba amakuru yawe igihe cyose uherereye kuri Konti yanjye. Gusiba konti bisiba burundu amakuru yawe yose, ibicuruzwa byawe, n'ubutumwa bwawe."
+
+msgid "Ushobora gushyiraho gusa ibintu wemerewe n'amategeko kugurisha. KazeB ishobora gukuraho icyo ugurisha icyo ari cyo cyose kitubahiriza aya mabwiriza, nta menyesha mbere."
+msgstr "Ushobora gushyiraho gusa ibintu wemerewe n'amategeko kugurisha. KazeB ishobora gukuraho icyo ugurisha icyo ari cyo cyose kitubahiriza aya mabwiriza, nta menyesha mbere."
+
+msgid "Ushobora gusiba konti yawe igihe cyose ubishaka. Iki gikorwa gisiba burundu ibicuruzwa byawe n'ubutumwa bwawe."
+msgstr "Ushobora gusiba konti yawe igihe cyose ubishaka. Iki gikorwa gisiba burundu ibicuruzwa byawe n'ubutumwa bwawe."
+
+msgid "Ushobora kumwandikira binyuze mu butumwa bwa KazeB, WhatsApp, cyangwa guhamagara nimero ye."
+msgstr "Ushobora kumwandikira binyuze mu butumwa bwa KazeB, WhatsApp, cyangwa guhamagara nimero ye."
+
+msgid "Uyu murongo wo guhindura ijambobanga ntabwo ukora, wenda kubera ko wamaze gukoreshwa."
+msgstr "Uyu murongo wo guhindura ijambobanga ntabwo ukora, wenda kubera ko wamaze gukoreshwa."
+
+msgid "Uyu murongo wo kwemeza ntabwo ukora, wenda kubera ko wamaze gukoreshwa cyangwa warengeje igihe. Sabe undi hepfo."
+msgstr "Uyu murongo wo kwemeza ntabwo ukora, wenda kubera ko wamaze gukoreshwa cyangwa warengeje igihe. Sabe undi hepfo."
+
+msgid "Uzabona ubufasha bwihuse iyo utwandikiye kuri WhatsApp."
+msgstr "Uzabona ubufasha bwihuse iyo utwandikiye kuri WhatsApp."
+
+msgid "Videwo"
+msgstr "Videwo"
+
+msgid "Videwo (si ngombwa)"
+msgstr "Videwo (si ngombwa)"
+
+msgid "Videwo imwe ishoboka (si ngombwa)."
+msgstr "Videwo imwe ishoboka (si ngombwa)."
+
+msgid "Videwo isanzwe"
+msgstr "Videwo isanzwe"
+
+msgid "Vugana n'ucuruza"
+msgstr "Vugana n'ucuruza"
+
+msgid "Vugana n'ucuruza kuri WhatsApp"
+msgstr "Vugana n'ucuruza kuri WhatsApp"
+
+msgid "Wagerageje inshuro nyinshi. Saba kode nshya."
+msgstr "Wagerageje inshuro nyinshi. Saba kode nshya."
+
+msgid "Wasabye kode nyinshi. Tegereza gato hanyuma ugerageze."
+msgstr "Wasabye kode nyinshi. Tegereza gato hanyuma ugerageze."
+
+msgid "Wavanyeho iki gicuruzwa ku bya kwibuka."
+msgstr "Wavanyeho iki gicuruzwa ku bya kwibuka."
+
+msgid "Wibagiwe ijambobanga?"
+msgstr "Wibagiwe ijambobanga?"
+
+msgid "Yashyizweho na"
+msgstr "Yashyizweho na"
+
+msgid "Yego, siba"
+msgstr "Yego, siba"
+
+msgid "Yego, siba konti yanjye"
+msgstr "Yego, siba konti yanjye"
+
+msgid "amabwiriza y'ikoreshwa"
+msgstr "amabwiriza y'ikoreshwa"
+
+msgid "amabwiriza yo kwirinda uburiganya"
+msgstr "amabwiriza yo kwirinda uburiganya"
+
+msgid "kugira ngo ukore ibyifuzo by'ibanze."
+msgstr "kugira ngo ukore ibyifuzo by'ibanze."
+
+msgid "n'uko dukurikiza"
+msgstr "n'uko dukurikiza"
+
+msgid "na"
+msgstr "na"
+
+msgid "politiki y'ibanga"
+msgstr "politiki y'ibanga"

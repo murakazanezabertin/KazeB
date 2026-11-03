@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}{% if editing %}{% trans "Hindura igicuruzwa" %}{% else %}{% trans "Ongeraho igicuruzwa" %}{% endif %} · KazeB{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+    <h1 class="h3 mb-4">{% if editing %}{% trans "Hindura igicuruzwa" %}{% else %}{% trans "Ongeraho icyo ugurisha" %}{% endif %}</h1>
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      {% for field in form %}
+        {% if field.name == "price" %}
+          <div class="mb-3">
+            <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+            <div class="input-group">
+              <span class="input-group-text px-2">{{ form.currency }}</span>
+              {{ field }}
+            </div>
+            {% for error in field.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+            {% for error in form.currency.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+        {% elif field.name == "currency" %}
+          {# rendered together with price above #}
+        {% else %}
+          <div class="mb-3">
+            <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+            {% for error in field.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+        {% endif %}
+      {% endfor %}
+
+      {% if editing and listing.images.all %}
+        <div class="mb-3">
+          <label class="form-label">{% trans "Amafoto asanzwe" %}</label>
+          <div class="photo-picker-grid" id="existingPhotoGrid">
+            {% for image in listing.images.all %}
+              <div class="photo-picker-tile existing-photo-tile" data-image-id="{{ image.pk }}">
+                <img src="{{ image.image.url }}" alt="">
+                <input type="checkbox" name="remove_images" value="{{ image.pk }}" class="existing-photo-remove" id="removeImage{{ image.pk }}" hidden>
+                <span class="existing-photo-remove-mark">🗑</span>
+              </div>
+            {% endfor %}
+          </div>
+          <div class="form-text">{% trans "Kanda kuri ifoto kugira ngo uyimenyeshe ko igomba gusibwa, hanyuma ubike impinduka." %}</div>
+        </div>
+      {% endif %}
+
+      <div class="mb-3">
+        <label class="form-label">{% if editing %}{% trans "Ongeraho andi mafoto" %}{% else %}{% trans "Amafoto" %}{% endif %}</label>
+        <div id="photoPreviewGrid" class="photo-picker-grid"></div>
+        <input type="file" id="photoPickerInput" accept="image/*" multiple hidden>
+        <input type="file" name="images" id="id_images" multiple hidden>
+        <button type="button" id="addPhotosBtn" class="btn btn-outline-brand btn-sm mt-2">
+          ➕ {% trans "Ongeraho amafoto" %}
+        </button>
+        <div class="form-text">{% trans "Kanda kuri 'Ongeraho amafoto' inshuro nyinshi kugira ngo ushyireho amafoto menshi. Ifoto ya mbere niyo izagaragara imbere." %}</div>
+      </div>
+
+      <button type="submit" class="btn btn-brand w-100">{% if editing %}{% trans "Bika impinduka" %}{% else %}{% trans "Ohereza" %}{% endif %}</button>
+    </form>
+
+    {% if editing %}
+      <div class="text-center mt-3">
+        <a href="{% url 'listings:listing_delete' pk=listing.pk %}" class="text-danger small">
+          🗑 {% trans "Siba iki gicuruzwa" %}
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+<script src="{% static 'js/photo-picker.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Ibibazo bikunze kubazwa" %} · KazeB{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <h1 class="h3 mb-4">{% trans "Ibibazo bikunze kubazwa" %}</h1>
+
+    <div class="mb-4">
+      <h2 class="h6">{% trans "KazeB ikora ite?" %}</h2>
+      <p class="text-muted">{% trans "Abagurisha bashyiraho ibicuruzwa byabo, abaguzi bakabishakisha bakabona ubigurisha binyuze mu butumwa, WhatsApp, cyangwa telefone." %}</p>
+    </div>
+
+    <div class="mb-4">
+      <h2 class="h6">{% trans "Kwiyandikisha birahenda?" %}</h2>
+      <p class="text-muted">{% trans "Oya, kwiyandikisha no gushyiraho ibicuruzwa ni ubuntu." %}</p>
+    </div>
+
+    <div class="mb-4">
+      <h2 class="h6">{% trans "Ni gute nagurisha ikintu?" %}</h2>
+      <p class="text-muted">{% trans "Iyandikishe, hanyuma ukande 'Ongeraho igicuruzwa' ushyiremo amafoto, igiciro, n'ibisobanuro." %}</p>
+    </div>
+
+    <div class="mb-4">
+      <h2 class="h6">{% trans "Ni gute mvugana n'ucuruza?" %}</h2>
+      <p class="text-muted">{% trans "Ushobora kumwandikira binyuze mu butumwa bwa KazeB, WhatsApp, cyangwa guhamagara nimero ye." %}</p>
+    </div>
+
+    <div class="mb-4">
+      <h2 class="h6">{% trans "Nabona uko nirinda uburiganya?" %}</h2>
+      <p class="text-muted">
+        {% trans "Reba" %} <a href="{% url 'core:anti_scam' %}">{% trans "amabwiriza yo kwirinda uburiganya" %}</a>.
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

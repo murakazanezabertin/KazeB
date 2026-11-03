@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Umurongo ntukora" %}{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6 text-center">
+    <h1 class="h3 mb-4">{% trans "Umurongo ntukora" %}</h1>
+    <p>
+      {% trans "Uyu murongo wo kwemeza ntabwo ukora, wenda kubera ko wamaze gukoreshwa cyangwa warengeje igihe. Sabe undi hepfo." %}
+    </p>
+    <a href="{% url 'accounts:resend_verification' %}" class="btn btn-brand">
+      {% trans "Ohereza indi email yo kwemeza" %}
+    </a>
+  </div>
+</div>
+{% endblock %}

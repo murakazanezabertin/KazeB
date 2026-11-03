@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% load static i18n category_extras %}
+
+{% block title %}{{ listing.name }} · KazeB{% endblock %}
+{% block meta_description %}{{ listing.description|truncatechars:160 }}{% endblock %}
+{% block og_type %}product{% endblock %}
+{% block og_title %}{{ listing.name }} · KazeB{% endblock %}
+{% block og_description %}{{ listing.description|truncatechars:160 }}{% endblock %}
+{% block og_image %}
+  {% if listing.cover_image %}
+    <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ listing.cover_image.image.url }}">
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="listing-top-meta mb-3">
+  <span>🗓 {{ listing.created_at|date:"d M Y" }}</span>
+  <span class="mx-1">&middot;</span>
+  <a href="{% url 'trust:seller_reviews' user_id=listing.seller.pk %}" class="text-decoration-none">
+    {% if seller_rating %}
+      <span class="text-brand fw-bold">⭐ {{ seller_rating|floatformat:1 }}</span>
+      <span class="text-muted">({{ seller_review_count }})</span>
+    {% else %}
+      <span class="text-muted">{% trans "Nta busuzumire burahari" %}</span>
+    {% endif %}
+  </a>
+  <span class="mx-1">&middot;</span>
+  <span>
+    {% trans "Yashyizweho na" %}
+    <a href="{% url 'trust:seller_reviews' user_id=listing.seller.pk %}" class="text-decoration-none">{{ listing.seller.username }}</a>
+  </span>
+  {% if listing.seller.is_phone_verified %}
+    <span class="badge bg-success-subtle text-success-emphasis ms-1">✅ {% trans "Numero yemejwe" %}</span>
+  {% endif %}
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-7">
+    {% if listing.images.all %}
+      <div id="listingCarousel" class="carousel slide mb-3" data-bs-ride="carousel">
+        <div class="carousel-inner rounded">
+          {% for image in listing.images.all %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+              <img src="{{ image.image.url }}" class="d-block w-100 listing-photo" alt="{{ listing.name }}">
+            </div>
+          {% endfor %}
+        </div>
+        {% if listing.images.count > 1 %}
+          <button class="carousel-control-prev" type="button" data-bs-target="#listingCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#listingCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+          </button>
+        {% endif %}
+      </div>
+    {% else %}
+      <div class="listing-photo listing-card-img-placeholder mb-3">{% trans "Nta foto ihari" %}</div>
+    {% endif %}
+  </div>
+
+  <div class="col-lg-5">
+    <span class="badge bg-secondary-subtle text-secondary-emphasis mb-2">{% category_name listing.category %}</span>
+    <h1 class="h3">{{ listing.name }}</h1>
+    <p class="fs-4 fw-bold text-brand">{{ listing.display_price }}</p>
+    <p class="text-muted mb-1">📍 {{ listing.location }}</p>
+    <p class="text-muted mb-3">{{ listing.get_condition_display }}</p>
+    <p>{{ listing.description|linebreaks }}</p>
+
+    {% if user != listing.seller %}
+      <form method="post" action="{% url 'listings:toggle_favorite' pk=listing.pk %}" class="mb-3">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <button type="submit" class="favorite-btn {% if is_favorited %}is-favorited{% endif %}">
+          {% if is_favorited %}★{% else %}☆{% endif %}
+          {% if is_favorited %}{% trans "Ku bya kwibuka" %}{% else %}{% trans "Bika ku bya kwibuka" %}{% endif %}
+        </button>
+      </form>
+    {% endif %}
+
+    {% if user != listing.seller %}
+      <a href="{% url 'trust:report_listing' pk=listing.pk %}" class="report-link d-inline-flex align-items-center gap-1 mb-2">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="13"></line>
+          <line x1="12" y1="16.5" x2="12.01" y2="16.5"></line>
+        </svg>
+        {% trans "Tanga raporo kuri iki gicuruzwa" %}
+      </a>
+    {% endif %}
+
+    <hr>
+    {% if user == listing.seller %}
+      <h2 class="h6">{% trans "Sangiza abandi icyo ugurisha" %}</h2>
+      {% url 'listings:listing_detail' pk=listing.pk as listing_path %}
+      <div class="d-grid gap-2 contact-options">
+        <a href="https://wa.me/?text=Reba%20icyo%20ngurisha%20%22{{ listing.name|urlencode }}%22%20kuri%20Kaze%20B%3A%20{{ request.scheme }}%3A%2F%2F{{ request.get_host }}{{ listing_path|urlencode }}"
+           target="_blank" rel="noopener" class="btn btn-success">
+          <img src="{% static 'images/icons/whatsapp.svg' %}" alt="" class="whatsapp-icon"> {% trans "Sangiza kuri WhatsApp" %}
+        </a>
+        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.scheme }}%3A%2F%2F{{ request.get_host }}{{ listing_path|urlencode }}"
+           target="_blank" rel="noopener" class="btn btn-outline-secondary">
+          📘 {% trans "Sangiza kuri Facebook" %}
+        </a>
+        <a href="https://t.me/share/url?url={{ request.scheme }}%3A%2F%2F{{ request.get_host }}{{ listing_path|urlencode }}&text=Reba%20icyo%20ngurisha%20%22{{ listing.name|urlencode }}%22"
+           target="_blank" rel="noopener" class="btn btn-outline-secondary">
+          ✈️ {% trans "Sangiza kuri Telegram" %}
+        </a>
+        <button type="button" class="btn btn-outline-secondary" onclick="copyPhone(this)"
+                data-phone="{{ request.scheme }}://{{ request.get_host }}{{ listing_path }}">
+          🔗 {% trans "Koporora umurongo" %}
+        </button>
+      </div>
+
+      <div class="d-flex gap-2 mt-3">
+        <a href="{% url 'listings:listing_edit' pk=listing.pk %}" class="btn btn-outline-brand flex-fill">
+          ✏️ {% trans "Hindura" %}
+        </a>
+        <a href="{% url 'listings:listing_delete' pk=listing.pk %}" class="btn btn-outline-danger flex-fill">
+          🗑 {% trans "Siba" %}
+        </a>
+      </div>
+    {% else %}
+      <h2 class="h6">{% trans "Vugana n'ucuruza" %}</h2>
+
+      <div class="d-grid gap-2 contact-options">
+        {% if user.is_authenticated %}
+          <a href="{% url 'chat:thread_as_buyer' listing_id=listing.pk %}" class="btn btn-brand">
+            💬 {% trans "Ohereza ubutumwa kuri KazeB" %}
+          </a>
+        {% else %}
+          <a href="{% url 'login' %}?next={% url 'chat:thread_as_buyer' listing_id=listing.pk %}" class="btn btn-brand">
+            💬 {% trans "Injira kugira ngo uvugane n'ucuruza" %}
+          </a>
+        {% endif %}
+
+        {% if listing.seller.whatsapp_number %}
+          <a href="https://wa.me/{{ listing.seller.whatsapp_digits }}?text=Muraho%2C%20nabonye%20icyo%20ugurisha%20%22{{ listing.name|urlencode }}%22%20kuri%20Kaze%20B"
+             target="_blank" rel="noopener" class="btn btn-success">
+            <img src="{% static 'images/icons/whatsapp.svg' %}" alt="" class="whatsapp-icon"> {% trans "Vugana n'ucuruza kuri WhatsApp" %}
+          </a>
+        {% endif %}
+
+        {% if listing.seller.phone_number %}
+          <button type="button" class="btn btn-outline-secondary" onclick="copyPhone(this)" data-phone="{{ listing.seller.phone_number }}">
+            📋 {% trans "Koporora numero ya telefone" %}: {{ listing.seller.phone_number }}
+          </button>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

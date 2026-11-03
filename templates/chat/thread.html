@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}{% trans "Ikiganiro" %} · KazeB{% endblock %}
+
+{% block content %}
+<p class="mb-1">
+  <a href="{% url 'chat:inbox' %}">&larr; {% trans "Subira ku butumwa" %}</a>
+</p>
+<h1 class="h4 mb-1">{{ listing.name }}</h1>
+<p class="text-muted mb-4">
+  {% trans "Ikiganiro na" %} <strong>{{ other_party.username }}</strong> &middot;
+  <a href="{{ listing.get_absolute_url }}">{% trans "Reba icyo bagurisha" %}</a>
+</p>
+
+<div id="chatThread" class="chat-thread mb-3"
+     data-updates-url="{% if buyer.pk == request.user.pk %}{% url 'chat:thread_updates_as_buyer' listing_id=listing.pk %}{% else %}{% url 'chat:thread_updates_as_seller' listing_id=listing.pk buyer_id=buyer.pk %}{% endif %}"
+     data-last-id="{{ thread_messages.last.pk|default:0 }}">
+  {% for message in thread_messages %}
+    <div class="chat-bubble {% if message.sender == request.user %}chat-bubble-mine{% else %}chat-bubble-theirs{% endif %}" data-message-id="{{ message.pk }}">
+      <div>{{ message.body }}</div>
+      <small class="text-muted">{{ message.created_at|date:"d M, H:i" }}</small>
+    </div>
+  {% empty %}
+    <p class="text-muted" id="chatEmptyState">{% trans "Tangira ikiganiro." %}</p>
+  {% endfor %}
+</div>
+
+<form method="post" id="chatForm">
+  {% csrf_token %}
+  <div class="input-group">
+    <input type="text" name="body" class="form-control" placeholder="{% trans 'Andika ubutumwa...' %}" required autofocus>
+    <button type="submit" class="btn btn-brand">{% trans "Ohereza" %}</button>
+  </div>
+</form>
+<script>
+  // Prevent a slow connection + a second tap on "Send" from posting
+  // the same message twice.
+  document.getElementById("chatForm").addEventListener("submit", function (event) {
+    const button = event.target.querySelector('button[type="submit"]');
+    if (button.disabled) {
+      event.preventDefault();
+      return;
+    }
+    button.disabled = true;
+  });
+</script>
+<script src="{% static 'js/chat-poll.js' %}"></script>
+{% endblock %}
