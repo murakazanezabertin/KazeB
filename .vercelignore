@@ -1,9 +1,11 @@
+venv/
+.venv/
+.git/
+.vscode/
+.idea/
+__pycache__/
+*.pyc
+.pytest_cache/
 db.sqlite3
 media/*
 !media/.gitkeep
-__pycache__/
-*.pyc
-Dockerfile
-.dockerignore
-Procfile
-fly.toml
