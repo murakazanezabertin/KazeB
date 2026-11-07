@@ -21,6 +21,8 @@ the full explanation of each of these:
 
 import os
 from pathlib import Path
+from urllib.parse import urlsplit
+from django.core.exceptions import ImproperlyConfigured
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -272,29 +274,52 @@ MEDIA_ROOT = BASE_DIR / "media"
 SUPABASE_STORAGE_BUCKET = os.environ.get("SUPABASE_STORAGE_BUCKET")
 
 if SUPABASE_STORAGE_BUCKET:
+    endpoint_url = os.environ["SUPABASE_STORAGE_ENDPOINT_URL"].rstrip("/")
+    parsed_endpoint = urlsplit(endpoint_url)
+
+    # Convert the Supabase S3 endpoint hostname into
+    # the standard Supabase project API hostname.
+    suffix = ".storage.supabase.co"
+
+    if not parsed_endpoint.hostname or not parsed_endpoint.hostname.endswith(suffix):
+        raise ImproperlyConfigured(
+            "Unexpected Supabase S3 endpoint hostname. "
+            "Expected a hostname ending in .storage.supabase.co."
+        )
+
+    project_ref = parsed_endpoint.hostname.removesuffix(suffix)
+
+    public_domain = (
+        f"{project_ref}.supabase.co/"
+        f"storage/v1/object/public/{SUPABASE_STORAGE_BUCKET}"
+    )
+
     STORAGES["default"] = {
         "BACKEND": "storages.backends.s3.S3Storage",
         "OPTIONS": {
             "bucket_name": SUPABASE_STORAGE_BUCKET,
-            "endpoint_url": os.environ["SUPABASE_STORAGE_ENDPOINT_URL"],
+            "endpoint_url": endpoint_url,
             "access_key": os.environ["SUPABASE_STORAGE_ACCESS_KEY_ID"],
             "secret_key": os.environ["SUPABASE_STORAGE_SECRET_ACCESS_KEY"],
-            "region_name": os.environ.get("SUPABASE_STORAGE_REGION", "us-east-1"),
-            # Supabase's S3-compatible endpoint requires path-style
-            # addressing (bucket in the URL path, not as a subdomain).
+            "region_name": os.environ.get(
+                "SUPABASE_STORAGE_REGION", "us-east-1"
+            ),
             "addressing_style": "path",
-            # The bucket itself is set to public in Supabase (see
-            # README), so files don't need individually-signed,
-            # expiring URLs -- plain permanent public URLs instead.
             "querystring_auth": False,
             "default_acl": None,
             "file_overwrite": False,
+
+            # Generate public Supabase object URLs,
+            # not S3 API URLs.
+            "custom_domain": public_domain,
+            "url_protocol": "https:",
         },
     }
-    MEDIA_URL = (
-        os.environ["SUPABASE_STORAGE_ENDPOINT_URL"].removesuffix("/storage/v1/s3")
-        + f"/storage/v1/object/public/{SUPABASE_STORAGE_BUCKET}/"
-    )
+
+    MEDIA_URL = f"https://{public_domain}/"
+else:
+    MEDIA_URL = "/media/"
+
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
