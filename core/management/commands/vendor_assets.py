@@ -14,7 +14,10 @@ from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 
 BOOTSTRAP_VERSION = "5.3.3"
-CDN_BASE = f"https://cdn.jsdelivr.net/npm/bootstrap@{BOOTSTRAP_VERSION}/dist"
+
+CDN_BASE = (
+    f"https://cdn.jsdelivr.net/npm/bootstrap@{BOOTSTRAP_VERSION}/dist"
+)
 
 ASSETS = {
     "bootstrap.min.css": {
@@ -43,25 +46,32 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         VENDOR_DIR.mkdir(parents=True, exist_ok=True)
 
+        # Download Bootstrap assets and verify their integrity.
         for filename, meta in ASSETS.items():
             dest = VENDOR_DIR / filename
 
             if dest.exists() and not options["force"]:
                 self.stdout.write(
-                    f"Skipping {filename} (already present, use --force to re-download)."
+                    f"Skipping {filename} "
+                    "(already present, use --force to re-download)."
                 )
                 continue
 
-            self.stdout.write(f"Downloading {filename} from {meta['url']} ...")
+            self.stdout.write(
+                f"Downloading {filename} from {meta['url']} ..."
+            )
 
             try:
-                with urllib.request.urlopen(meta["url"], timeout=15) as response:
+                with urllib.request.urlopen(
+                    meta["url"], timeout=15
+                ) as response:
                     content = response.read()
+
             except (urllib.error.URLError, TimeoutError) as exc:
                 raise CommandError(
                     f"Could not download {filename}: {exc}\n"
                     "Check your internet connection and try again."
-                )
+                ) from exc
 
             digest = hashlib.sha384(content).digest()
             actual_hash = base64.b64encode(digest).decode()
@@ -79,32 +89,52 @@ class Command(BaseCommand):
 
             self.stdout.write(
                 self.style.SUCCESS(
-                    f"Saved {dest} ({len(content):,} bytes, integrity verified)."
+                    f"Saved {dest} "
+                    f"({len(content):,} bytes, integrity verified)."
                 )
             )
 
-        # Remove the optional source-map comment from Bootstrap CSS.
-        # WhiteNoise otherwise tries to collect the missing .map file.
-        css_path = VENDOR_DIR / "bootstrap.min.css"
+        # Remove optional source-map references.
+        # These map files are not needed for production.
+        assets_to_clean = {
+            "bootstrap.min.css": (
+                rb"/\*[#@]\s*sourceMappingURL=.*?\*/\s*$"
+            ),
+            "bootstrap.bundle.min.js": (
+                rb"(?m)^\s*//#\s*sourceMappingURL=.*?(?:\r?\n|$)"
+            ),
+        }
 
-        if not css_path.exists():
-            raise CommandError("Bootstrap CSS file is missing.")
+        for filename, pattern in assets_to_clean.items():
+            file_path = VENDOR_DIR / filename
 
-        css_content = css_path.read_text(encoding="utf-8")
+            if not file_path.exists():
+                raise CommandError(
+                    f"Bootstrap asset is missing: {filename}"
+                )
 
-        cleaned_css = re.sub(
-            r"/\*[#@]\s*sourceMappingURL=[^*]*\*/\s*$",
-            "",
-            css_content,
-        ).rstrip() + "\n"
+            original_content = file_path.read_bytes()
 
-        if cleaned_css != css_content:
-            css_path.write_text(cleaned_css, encoding="utf-8")
-            self.stdout.write(
-                self.style.SUCCESS("Removed optional Bootstrap CSS source-map reference.")
+            cleaned_content = re.sub(
+                pattern,
+                b"",
+                original_content,
+                flags=re.DOTALL if filename.endswith(".css") else 0,
             )
-        else:
-            self.stdout.write("No Bootstrap CSS source-map reference found.")
+
+            if cleaned_content != original_content:
+                file_path.write_bytes(cleaned_content)
+
+                self.stdout.write(
+                    self.style.SUCCESS(
+                        f"Removed optional source-map reference "
+                        f"from {filename}."
+                    )
+                )
+            else:
+                self.stdout.write(
+                    f"No source-map reference found in {filename}."
+                )
 
         self.stdout.write(
             self.style.SUCCESS(
