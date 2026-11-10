@@ -26,11 +26,16 @@ buyer and seller.
   buyers see on a listing page is unaffected).
 - **Edit account**: a ✏️ "Hindura konti" link now sits next to 🗑
   "Siba Konti" on My account, opening a small form to update your
-  picture, phone, WhatsApp number, and email (`/accounts/edit/`).
+  display name, profile picture, location, biography, phone, WhatsApp
+  number, and email (`/accounts/edit/`). Changing the email address
+  requires confirming the new address.
 - **Listing detail page** now shows the date posted and the seller's
-  name/username, plus a ★ "Save to favourites" button for signed-in
-  buyers. Saved listings show up on a new **Ibya kwibuka / Favourites**
-  page linked from My account.
+  linked name and profile picture, plus a ★ "Save to favourites"
+  button for signed-in buyers. Seller names and pictures on listing
+  cards also open the public `/seller/<username>/` profile, which
+  shows seller details and active listings. Public profile data is
+  available at `/api/sellers/<username>/`. Saved listings show up on
+  a new **Ibya kwibuka / Favourites** page linked from My account.
 - **Email is now required at sign-up**, in addition to phone and
   WhatsApp.
 
@@ -70,6 +75,12 @@ buyer and seller.
   remove any photo before publishing), description, condition
   (new/used), location (district + sector), and price with a currency
   selector right next to it (RWF first/default, switchable to $).
+- **Public seller profile** — `/seller/<username>/` shows a seller's
+  public display name, profile picture, location, biography, member
+  date, phone-verification badge when verified, contact options, and
+  only active listings. The JSON endpoint at
+  `/api/sellers/<username>/` returns the same public profile details
+  and paginated active listings without private account fields.
 - **My account** (`/listings/dashboard/`) — a seller's own control
   panel, separate from the buyer browsing pages: account summary
   (avatar, phone, WhatsApp), a **My products** list with a small photo
@@ -234,7 +245,10 @@ English or Français; every label, button, and message updates.
   can't be used to check who's registered). This needs real EMAIL_*
   settings to actually deliver anything -- see above; without them,
   the link just gets printed to your terminal via the console email
-  backend, which is enough to test the whole flow locally.
+  backend, which is enough to test the whole flow locally. Changing
+  the account email resets verification, sends a new link, and signs
+  the user out until the new address is confirmed; resend lookup is
+  case-insensitive.
 - **Bootstrap is vendored locally, not loaded from a CDN.** Templates
   used to pull it straight from `cdn.jsdelivr.net`; if that CDN was
   unreachable — a restricted network, jsDelivr blocked or slow in a

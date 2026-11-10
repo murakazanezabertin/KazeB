@@ -94,7 +94,7 @@ def resend_verification_email(request):
         if form.is_valid():
             try:
                 user = User.objects.get(
-                    email=form.cleaned_data["email"], email_verified=False
+                    email__iexact=form.cleaned_data["email"], email_verified=False
                 )
                 _send_verification_email(request, user)
             except User.DoesNotExist:
@@ -110,15 +110,23 @@ def resend_verification_email(request):
 def edit_account(request):
     """Let a signed-in user update their own profile: picture, phone,
     WhatsApp, and email."""
+    original_email = request.user.email
     if request.method == "POST":
         form = EditAccountForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             user = form.save(commit=False)
+            email_changed = user.email != original_email
+            if email_changed:
+                user.email_verified = False
             if "profile_picture" in request.FILES:
                 user.profile_picture = compress_uploaded_image(
                     request.FILES["profile_picture"], max_dimension=800
                 )
             user.save()
+            if email_changed:
+                _send_verification_email(request, user)
+                logout(request)
+                return redirect("accounts:verification_sent")
             messages.success(request, _("Impinduka ku konti yawe zabitswe."))
             return redirect("listings:dashboard")
     else:

@@ -107,13 +107,29 @@ class ResendVerificationForm(forms.Form):
 
 class EditAccountForm(forms.ModelForm):
     """Lets a signed-in user update their own profile details:
-    picture, phone, WhatsApp, and email."""
+    name, picture, location, biography, phone, WhatsApp, and email."""
 
     class Meta:
         model = User
-        fields = ("profile_picture", "phone_number", "whatsapp_number", "email")
+        fields = (
+            "first_name",
+            "last_name",
+            "profile_picture",
+            "location",
+            "bio",
+            "phone_number",
+            "whatsapp_number",
+            "email",
+        )
         labels = {
+            "first_name": _("Izina"),
+            "last_name": _("Izina ry'umuryango"),
             "email": _("Imeli"),
+            "location": _("Aho uherereye"),
+            "bio": _("Ibyo wivugaho"),
+        }
+        widgets = {
+            "bio": forms.Textarea(attrs={"rows": 4, "maxlength": 500}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -124,6 +140,12 @@ class EditAccountForm(forms.ModelForm):
         self.fields["profile_picture"].widget.attrs.update({"accept": "image/*"})
         for name, field in self.fields.items():
             field.widget.attrs.setdefault("class", "form-control")
+
+    def clean_location(self):
+        return self.cleaned_data["location"].strip()
+
+    def clean_bio(self):
+        return self.cleaned_data["bio"].strip()
 
     def clean_email(self):
         email = self.cleaned_data["email"]

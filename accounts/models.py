@@ -25,6 +25,8 @@ class User(AbstractUser):
         blank=True,
         null=True,
     )
+    location = models.CharField(_("Aho uherereye"), max_length=150, blank=True)
+    bio = models.TextField(_("Ibyo wivugaho"), max_length=500, blank=True)
     phone_number = models.CharField(
         _("Numero ya telefone"),
         max_length=20,

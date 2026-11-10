@@ -25,10 +25,14 @@
     {% endif %}
   </a>
   <span class="mx-1">&middot;</span>
-  <span>
-    {% trans "Yashyizweho na" %}
-    <a href="{% url 'trust:seller_reviews' user_id=listing.seller.pk %}" class="text-decoration-none">{{ listing.seller.username }}</a>
-  </span>
+  <a href="{% url 'seller_profile' username=listing.seller.username %}" class="seller-detail-link">
+    {% if listing.seller.profile_picture %}
+      <img src="{{ listing.seller.profile_picture.url }}" class="seller-avatar-sm" alt="">
+    {% else %}
+      <span class="seller-avatar-sm seller-avatar-fallback" aria-hidden="true">{{ listing.seller.username|first|upper }}</span>
+    {% endif %}
+    <span>{% trans "Yashyizweho na" %} {{ listing.seller.get_full_name|default:listing.seller.username }}</span>
+  </a>
   {% if listing.seller.is_phone_verified %}
     <span class="badge bg-success-subtle text-success-emphasis ms-1">✅ {% trans "Numero yemejwe" %}</span>
   {% endif %}

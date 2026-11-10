@@ -139,6 +139,18 @@ class EmailVerificationTests(TestCase):
         self.assertRedirects(real, reverse("accounts:verification_sent"))
         self.assertRedirects(fake, reverse("accounts:verification_sent"))
 
+    def test_resend_email_lookup_is_case_insensitive(self):
+        from django.core import mail
+
+        response = self.client.post(
+            reverse("accounts:resend_verification"),
+            {"email": "UNVERIFIED@example.com"},
+        )
+
+        self.assertRedirects(response, reverse("accounts:verification_sent"))
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].to, ["unverified@example.com"])
+
 
 class DeleteAccountTests(TestCase):
     def setUp(self):
@@ -196,3 +208,26 @@ class EditAccountTests(TestCase):
         self.user.refresh_from_db()
         self.assertEqual(self.user.email, "new-email@example.com")
         self.assertEqual(self.user.phone_number, "+250788444444")
+
+    def test_email_change_requires_verification_of_new_address(self):
+        from django.core import mail
+
+        self.user.email_verified = True
+        self.user.save(update_fields=["email_verified"])
+        self.client.force_login(self.user)
+        response = self.client.post(
+            reverse("accounts:edit_account"),
+            {
+                "email": "new-email@example.com",
+                "phone_number": "+250788444444",
+                "whatsapp_number": "+250788444444",
+            },
+        )
+
+        self.assertRedirects(response, reverse("accounts:verification_sent"))
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.email, "new-email@example.com")
+        self.assertFalse(self.user.email_verified)
+        self.assertFalse(response.wsgi_request.user.is_authenticated)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].to, ["new-email@example.com"])

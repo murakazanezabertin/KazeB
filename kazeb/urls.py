@@ -7,6 +7,7 @@ from django.urls import include, path
 from django.views.generic import TemplateView
 
 from accounts.forms import LoginForm
+from listings import views as listing_views
 from .sitemaps import CategorySitemap, ListingSitemap, StaticViewSitemap
 
 sitemaps = {
@@ -35,6 +36,12 @@ urlpatterns = [
     path("accounts/login/", LoginView.as_view(authentication_form=LoginForm), name="login"),
     path("accounts/", include("accounts.urls")),
     path("accounts/", include("django.contrib.auth.urls")),  # logout, password reset, etc.
+    path("seller/<str:username>/", listing_views.seller_profile, name="seller_profile"),
+    path(
+        "api/sellers/<str:username>/",
+        listing_views.seller_profile_api,
+        name="seller_profile_api",
+    ),
     path("listings/", include("listings.urls")),
     path("messages/", include("chat.urls")),
     path("trust/", include("trust.urls")),

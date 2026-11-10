@@ -1,7 +1,9 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import get_user_model
 from django.core.paginator import Paginator
 from django.db.models import Count, F, Q
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import gettext as _
 
@@ -10,10 +12,12 @@ from kazeb.imaging import compress_uploaded_image
 from .forms import ListingForm, ListingSearchForm
 from .models import Category, Favorite, Listing, ListingImage
 
+User = get_user_model()
+
 SORT_OPTIONS = {
-    "newest": "-created_at",
-    "oldest": "created_at",
-    "most_viewed": "-views_count",
+    "newest": ("-created_at", "-pk"),
+    "oldest": ("created_at", "pk"),
+    "most_viewed": ("-views_count", "-created_at", "-pk"),
 }
 
 
@@ -45,12 +49,12 @@ def _apply_filters_and_sort(request, qs):
 
     price_sort = request.GET.get("price_sort")
     if price_sort == "asc":
-        qs = qs.order_by("price")
+        qs = qs.order_by("price", "pk")
     elif price_sort == "desc":
-        qs = qs.order_by("-price")
+        qs = qs.order_by("-price", "-pk")
     else:
         sort = request.GET.get("sort")
-        qs = qs.order_by(SORT_OPTIONS.get(sort, SORT_OPTIONS["newest"]))
+        qs = qs.order_by(*SORT_OPTIONS.get(sort, SORT_OPTIONS["newest"]))
 
     return qs
 
@@ -61,7 +65,7 @@ def category_detail(request, slug):
     category = get_object_or_404(Category, slug=slug)
     search_form = ListingSearchForm(request.GET or None)
 
-    listings_qs = Listing.objects.filter(category=category, is_active=True)
+    listings_qs = Listing.objects.filter(category=category, is_active=True).select_related("seller")
     listings_qs = _apply_search(listings_qs, search_form)
     listings_qs = _apply_filters_and_sort(request, listings_qs)
 
@@ -84,7 +88,7 @@ def search(request):
     bar search box -- same text filter, condition filter and sorting
     as a category page, but across every category."""
     search_form = ListingSearchForm(request.GET or None)
-    listings_qs = Listing.objects.filter(is_active=True)
+    listings_qs = Listing.objects.filter(is_active=True).select_related("seller")
     listings_qs = _apply_search(listings_qs, search_form)
     listings_qs = _apply_filters_and_sort(request, listings_qs)
 
@@ -106,7 +110,9 @@ def listing_detail(request, pk):
     """The full detail page: photos, description, price, and the three
     contact options -- in-site message, WhatsApp, and copy phone
     number."""
-    listing = get_object_or_404(Listing, pk=pk, is_active=True)
+    listing = get_object_or_404(
+        Listing.objects.select_related("seller"), pk=pk, is_active=True
+    )
     if request.user != listing.seller:
         Listing.objects.filter(pk=listing.pk).update(views_count=F("views_count") + 1)
         listing.views_count += 1
@@ -135,6 +141,89 @@ def listing_detail(request, pk):
     )
 
 
+def seller_profile(request, username):
+    """Public seller page with only that seller's currently active listings."""
+    seller = get_object_or_404(User, username=username)
+    listings_qs = (
+        Listing.objects.filter(seller=seller, is_active=True)
+        .select_related("seller")
+        .prefetch_related("images")
+    )
+    active_listings_count = listings_qs.count()
+    contact_listing = listings_qs.first()
+    page_obj = Paginator(listings_qs, 12).get_page(request.GET.get("page"))
+
+    return render(
+        request,
+        "listings/seller_profile.html",
+        {
+            "seller": seller,
+            "display_name": seller.get_full_name() or seller.username,
+            "active_listings_count": active_listings_count,
+            "contact_listing": contact_listing,
+            "page_obj": page_obj,
+        },
+    )
+
+
+def seller_profile_api(request, username):
+    """Return a limited public profile payload, never authentication or email data."""
+    try:
+        seller = User.objects.get(username=username)
+    except User.DoesNotExist:
+        return JsonResponse({"detail": "Seller not found."}, status=404)
+
+    listings_qs = (
+        Listing.objects.filter(seller=seller, is_active=True)
+        .prefetch_related("images")
+        .order_by("-created_at")
+    )
+    active_listings_count = listings_qs.count()
+    page_obj = Paginator(listings_qs, 12).get_page(request.GET.get("page"))
+
+    listings = []
+    for listing in page_obj:
+        cover_image = listing.cover_image
+        image_url = (
+            request.build_absolute_uri(cover_image.image.url) if cover_image else None
+        )
+        listings.append(
+            {
+                "id": listing.pk,
+                "title": listing.name,
+                "image": image_url,
+                "price": str(listing.price),
+                "currency": listing.currency,
+                "location": listing.location,
+                "url": listing.get_absolute_url(),
+            }
+        )
+
+    return JsonResponse(
+        {
+            "username": seller.username,
+            "display_name": seller.get_full_name() or seller.username,
+            "profile_picture": (
+                request.build_absolute_uri(seller.profile_picture.url)
+                if seller.profile_picture
+                else None
+            ),
+            "location": seller.location,
+            "bio": seller.bio,
+            "date_joined": seller.date_joined.date().isoformat(),
+            "is_phone_verified": seller.is_phone_verified,
+            "active_listings_count": active_listings_count,
+            "listings": listings,
+            "pagination": {
+                "page": page_obj.number,
+                "pages": page_obj.paginator.num_pages,
+                "has_next": page_obj.has_next(),
+                "has_previous": page_obj.has_previous(),
+            },
+        }
+    )
+
+
 @login_required
 def toggle_favorite(request, pk):
     """Save/un-save a listing to the signed-in user's favourites.
@@ -155,7 +244,7 @@ def favorites(request):
     """The signed-in user's saved/favourited listings."""
     favorite_qs = (
         Favorite.objects.filter(user=request.user)
-        .select_related("listing")
+        .select_related("listing", "listing__seller")
         .prefetch_related("listing__images")
     )
     return render(request, "listings/favorites.html", {"favorites": favorite_qs})

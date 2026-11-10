@@ -1,7 +1,7 @@
 {% load i18n %}
 <div class="col">
-  <a href="{{ listing.get_absolute_url }}" class="text-decoration-none text-body">
-    <div class="card listing-card h-100">
+  <div class="card listing-card h-100">
+    <a href="{{ listing.get_absolute_url }}" class="text-decoration-none text-body">
       {% if listing.cover_image %}
         <img src="{{ listing.cover_image.image.url }}" class="card-img-top listing-card-img" alt="{{ listing.name }}">
       {% else %}
@@ -12,6 +12,16 @@
         <p class="fw-bold text-brand mb-1">{{ listing.display_price }}</p>
         <p class="small text-muted mb-0">{{ listing.location }}</p>
       </div>
+    </a>
+    <div class="card-footer bg-white border-0 pt-0">
+      <a href="{% url 'seller_profile' username=listing.seller.username %}" class="seller-card-link">
+        {% if listing.seller.profile_picture %}
+          <img src="{{ listing.seller.profile_picture.url }}" class="seller-avatar-sm" alt="">
+        {% else %}
+          <span class="seller-avatar-sm seller-avatar-fallback" aria-hidden="true">{{ listing.seller.username|first|upper }}</span>
+        {% endif %}
+        <span>{{ listing.seller.get_full_name|default:listing.seller.username }}</span>
+      </a>
     </div>
-  </a>
+  </div>
 </div>

@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}{{ display_name }} · KazeB{% endblock %}
+{% block meta_description %}{{ seller.bio|default:display_name|truncatechars:160 }}{% endblock %}
+{% block og_title %}{{ display_name }} · KazeB{% endblock %}
+{% block og_description %}{{ seller.bio|default:display_name|truncatechars:160 }}{% endblock %}
+{% block og_image %}
+  {% if seller.profile_picture %}
+    <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ seller.profile_picture.url }}">
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+<section class="seller-profile-card mb-4">
+  <div class="d-flex flex-column flex-sm-row align-items-center align-items-sm-start gap-3">
+    {% if seller.profile_picture %}
+      <img src="{{ seller.profile_picture.url }}" class="seller-avatar-lg" alt="{% blocktrans with name=display_name %}Profile picture of {{ name }}{% endblocktrans %}">
+    {% else %}
+      <span class="seller-avatar-lg seller-avatar-fallback" aria-hidden="true">{{ seller.username|first|upper }}</span>
+    {% endif %}
+    <div class="text-center text-sm-start flex-grow-1">
+      <h1 class="h3 mb-1">{{ display_name }}</h1>
+      <p class="text-muted mb-2">@{{ seller.username }}</p>
+      {% if seller.location %}<p class="mb-2">📍 {{ seller.location }}</p>{% endif %}
+      <p class="small text-muted mb-2">{% trans "Yinjiye kuri KazeB" %} {{ seller.date_joined|date:"d M Y" }}</p>
+      {% if seller.is_phone_verified %}
+        <span class="badge bg-success-subtle text-success-emphasis">✅ {% trans "Numero yemejwe" %}</span>
+      {% endif %}
+    </div>
+    <div class="seller-listing-stat">
+      <strong>{{ active_listings_count }}</strong>
+      <span>{% trans "Ibicuruzwa biri ku isoko" %}</span>
+    </div>
+  </div>
+
+  <hr>
+  <div>
+    <h2 class="h5">{% trans "Ibyo umucuruzi yivugaho" %}</h2>
+    {% if seller.bio %}
+      <p class="mb-0 seller-bio">{{ seller.bio|linebreaksbr }}</p>
+    {% else %}
+      <p class="text-muted mb-0">{% trans "Uyu mucuruzi ntiyashyizeho ibisobanuro." %}</p>
+    {% endif %}
+  </div>
+
+  {% if user != seller %}
+    <hr>
+    <div>
+      <h2 class="h5">{% trans "Vugana n'ucuruza" %}</h2>
+      <div class="d-flex flex-wrap gap-2">
+        {% if contact_listing %}
+          {% if user.is_authenticated %}
+            <a href="{% url 'chat:thread_as_buyer' listing_id=contact_listing.pk %}" class="btn btn-brand">
+              💬 {% trans "Ohereza ubutumwa kuri KazeB" %}
+            </a>
+          {% else %}
+            <a href="{% url 'login' %}?next={% url 'chat:thread_as_buyer' listing_id=contact_listing.pk %}" class="btn btn-brand">
+              💬 {% trans "Injira kugira ngo uvugane n'ucuruza" %}
+            </a>
+          {% endif %}
+        {% endif %}
+        {% if seller.whatsapp_number %}
+          <a href="https://wa.me/{{ seller.whatsapp_digits }}?text={% trans 'Muraho, nabonye urupapuro rwawe kuri KazeB' as contact_message %}{{ contact_message|urlencode }}"
+             target="_blank" rel="noopener" class="btn btn-success">
+            <img src="{% static 'images/icons/whatsapp.svg' %}" alt="" class="whatsapp-icon"> WhatsApp
+          </a>
+        {% endif %}
+        {% if seller.phone_number %}
+          <a href="tel:{{ seller.phone_number }}" class="btn btn-outline-secondary">📞 {% trans "Hamagara" %}</a>
+        {% endif %}
+        {% if not contact_listing and not seller.whatsapp_number and not seller.phone_number %}
+          <p class="text-muted mb-0">{% trans "Uyu mucuruzi nta buryo bwo kuvugana na we yashyize ahagaragara." %}</p>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+</section>
+
+<section>
+  <div class="d-flex justify-content-between align-items-baseline mb-3">
+    <h2 class="h4 mb-0">{% trans "Ibicuruzwa by'uyu mucuruzi" %}</h2>
+    <span class="text-muted small">{{ active_listings_count }} {% trans "ibicuruzwa" %}</span>
+  </div>
+
+  {% if page_obj.object_list %}
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4">
+      {% for listing in page_obj %}
+        {% include "listings/_listing_card.html" %}
+      {% endfor %}
+    </div>
+    {% if page_obj.has_other_pages %}
+      <nav class="mt-4" aria-label="{% trans 'Seller listings pages' %}">
+        <ul class="pagination justify-content-center">
+          {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">{% trans "Ibibanziriza" %}</a></li>
+          {% endif %}
+          <li class="page-item disabled"><span class="page-link">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span></li>
+          {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">{% trans "Ibikurikira" %}</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+    {% endif %}
+  {% else %}
+    <p class="text-muted">{% trans "Uyu mucuruzi nta gicuruzwa kiri ku isoko afite ubu." %}</p>
+  {% endif %}
+</section>
+{% endblock %}
