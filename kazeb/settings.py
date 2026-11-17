@@ -25,7 +25,22 @@ from urllib.parse import urlsplit
 from django.core.exceptions import ImproperlyConfigured
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+# Load local environment variables from the project root .env file.
+env_file = BASE_DIR / ".env"
 
+if env_file.is_file():
+    for line in env_file.read_text(encoding="utf-8-sig").splitlines():
+        line = line.strip()
+
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+
+        key, value = line.split("=", 1)
+        key = key.strip()
+        value = value.strip().strip('"').strip("'")
+
+        if key:
+            os.environ.setdefault(key, value)
 
 def env_bool(name, default=False):
     value = os.environ.get(name)
@@ -74,6 +89,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.humanize",
     "django.contrib.sitemaps",
+    "rest_framework",
     # KazeB apps
     "core",
     "accounts",

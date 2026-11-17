@@ -7,6 +7,7 @@ from django.urls import include, path
 from django.views.generic import TemplateView
 
 from accounts.forms import LoginForm
+from listings import api as listing_api
 from listings import views as listing_views
 from .sitemaps import CategorySitemap, ListingSitemap, StaticViewSitemap
 
@@ -41,6 +42,12 @@ urlpatterns = [
         "api/sellers/<str:username>/",
         listing_views.seller_profile_api,
         name="seller_profile_api",
+    ),
+    path("api/listings/", listing_api.listing_browse_api, name="listing_browse_api"),
+    path(
+        "api/listings/<int:pk>/",
+        listing_api.listing_detail_api,
+        name="listing_detail_api",
     ),
     path("listings/", include("listings.urls")),
     path("messages/", include("chat.urls")),

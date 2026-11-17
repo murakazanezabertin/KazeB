@@ -210,8 +210,11 @@ def seller_profile_api(request, username):
             ),
             "location": seller.location,
             "bio": seller.bio,
+            "phone_number": seller.phone_number,
+            "whatsapp_digits": seller.whatsapp_digits(),
             "date_joined": seller.date_joined.date().isoformat(),
             "is_phone_verified": seller.is_phone_verified,
+            "is_owner": request.user.is_authenticated and request.user.pk == seller.pk,
             "active_listings_count": active_listings_count,
             "listings": listings,
             "pagination": {

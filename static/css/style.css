@@ -30,7 +30,21 @@ body {
   color: #fff;
 }
 
-.navbar-brand span { color: var(--kazeb-brand); }
+.navbar-brand,
+.navbar-brand:hover,
+.navbar-brand:focus {
+  color: #000000;
+}
+.navbar-brand .kazeb-logo-black,
+.navbar-brand:hover .kazeb-logo-black,
+.navbar-brand:focus .kazeb-logo-black {
+  color: #000000 !important;
+}
+.navbar-brand .kazeb-logo-orange,
+.navbar-brand:hover .kazeb-logo-orange,
+.navbar-brand:focus .kazeb-logo-orange {
+  color: var(--kazeb-brand) !important;
+}
 
 /* Never let the search box (which grows to fill space) squeeze the
    logo down to a clipped/wrapped state, on any screen size. */
@@ -286,7 +300,17 @@ body {
   border: 1px solid #eee;
 }
 
-/* Homepage hero: keep the copy on the left and the carousel on the right. */
+/* Homepage welcome heading and hero. */
+.kazeb-welcome-title {
+  margin: 0 0 1.5rem;
+  color: #14213d;
+  font-size: clamp(1.5rem, 3.2vw, 2rem);
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+}
+
+/* Keep the copy on the left and the carousel on the right. */
 .kazeb-hero {
   overflow: hidden;
   border-radius: 1.5rem;
