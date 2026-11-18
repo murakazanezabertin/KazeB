@@ -213,6 +213,65 @@ export interface FavoritesResponse {
   pagination: PaginationData;
 }
 
+export interface SellerDashboardListing {
+  id: number;
+  title: string;
+  url: string;
+  price: string;
+  display_price: string;
+  currency: string;
+  condition: string;
+  condition_display: string;
+  status: "active" | "inactive";
+  is_active: boolean;
+  created_at: string;
+  views_count: number;
+  thread_count: number;
+  cover_image: string | null;
+  category: { id: number; name: string; slug: string; url: string };
+  location: string;
+}
+
+export interface SellerDashboardData {
+  statistics: {
+    total_listings: number;
+    active_listings: number;
+    inactive_listings: number;
+    total_views: number;
+    unread_messages: number;
+  };
+  listings: SellerDashboardListing[];
+  labels: Record<string, string>;
+}
+
+export interface ListingCreateMetadata {
+  categories: Array<{ id: number; name: string; slug: string }>;
+  conditions: Array<{ value: string; label: string }>;
+  currencies: Array<{ value: string; label: string }>;
+  labels: Record<string, string>;
+}
+
+export interface ListingCreateResult {
+  detail: string;
+  listing: { id: number; url: string };
+}
+
+export interface SellerListingEditData extends ListingCreateMetadata {
+  listing: {
+    id: number;
+    category: number;
+    name: string;
+    description: string;
+    condition: string;
+    district: string;
+    sector: string;
+    price: string;
+    currency: string;
+    is_active: boolean;
+    images: Array<{ id: number; url: string; is_cover: boolean }>;
+  };
+}
+
 interface CsrfResponse {
   csrfToken: string;
 }
@@ -324,6 +383,59 @@ export function toggleFavorite(listingId: number): Promise<{ is_favorited: boole
   return submitForm<{ is_favorited: boolean }>(
     `/api/favorites/${listingId}/toggle/`,
     new URLSearchParams(),
+  );
+}
+
+export function getSellerDashboard(): Promise<SellerDashboardData> {
+  return apiRequest<SellerDashboardData>("/api/seller/dashboard/");
+}
+
+export function getListingCreateMetadata(): Promise<ListingCreateMetadata> {
+  return apiRequest<ListingCreateMetadata>("/api/seller/listings/");
+}
+
+export function createSellerListing(body: FormData): Promise<ListingCreateResult> {
+  return apiRequest<ListingCreateResult>("/api/seller/listings/", {
+    method: "POST",
+    body,
+  });
+}
+
+export function getSellerListingEdit(id: number): Promise<SellerListingEditData> {
+  return apiRequest<SellerListingEditData>(`/api/seller/listings/${id}/`);
+}
+
+export function updateSellerListing(id: number, body: FormData): Promise<ListingCreateResult> {
+  return apiRequest<ListingCreateResult>(`/api/seller/listings/${id}/`, {
+    method: "PATCH",
+    body,
+  });
+}
+
+export function updateSellerListingStatus(
+  id: number,
+  isActive: boolean,
+): Promise<{ is_active: boolean; status: "active" | "inactive"; detail: string }> {
+  return apiRequest<{ is_active: boolean; status: "active" | "inactive"; detail: string }>(
+    `/api/seller/listings/${id}/status/`,
+    {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ is_active: isActive }),
+    },
+  );
+}
+
+export function deleteSellerListing(
+  id: number,
+): Promise<{ detail: string; listing_id: number; statistics: SellerDashboardData["statistics"] }> {
+  return apiRequest<{
+    detail: string;
+    listing_id: number;
+    statistics: SellerDashboardData["statistics"];
+  }>(
+    `/api/seller/listings/${id}/`,
+    { method: "DELETE" },
   );
 }
 

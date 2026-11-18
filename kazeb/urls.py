@@ -74,6 +74,26 @@ urlpatterns = [
     ),
     path("api/listings/", listing_api.listing_browse_api, name="listing_browse_api"),
     path(
+        "api/seller/dashboard/",
+        listing_api.seller_dashboard_api,
+        name="seller_dashboard_api",
+    ),
+    path(
+        "api/seller/listings/",
+        listing_api.seller_listing_create_api,
+        name="seller_listing_create_api",
+    ),
+    path(
+        "api/seller/listings/<int:pk>/",
+        listing_api.seller_listing_edit_api,
+        name="seller_listing_edit_api",
+    ),
+    path(
+        "api/seller/listings/<int:pk>/status/",
+        listing_api.seller_listing_status_api,
+        name="seller_listing_status_api",
+    ),
+    path(
         "api/listings/<int:pk>/",
         listing_api.listing_detail_api,
         name="listing_detail_api",

@@ -103,7 +103,7 @@ class Listing(models.Model):
         # .filter()/.first() on the manager) lets this reuse a
         # prefetch_related("images") cache when the caller has one,
         # instead of firing a fresh query per listing.
-        images = list(self.images.all())
+        images = sorted(self.images.all(), key=lambda image: image.pk)
         for image in images:
             if image.is_cover:
                 return image

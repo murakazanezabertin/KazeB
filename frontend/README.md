@@ -1,8 +1,8 @@
 # KazeB React frontend
 
-This Vite app is a development preview of the migrated homepage and marketplace
-browsing pages. It does not replace Django's production homepage or change
-Vercel deployment routing.
+This Vite app is a development preview of the migrated homepage, marketplace
+browsing, and seller-management pages. It does not replace Django's production
+frontend or change Vercel deployment routing.
 
 ## Run locally
 
@@ -41,20 +41,24 @@ details and increments its view count for non-owners, matching the Django
 detail view. The React seller page calls the existing
 `GET /api/sellers/<username>/` endpoint; its public contact fields are additive.
 
-These endpoints read existing Django models and storage URLs; they do not
-create or modify records. Django continues to handle favorite forms, seller
-messaging, login, reporting, and listing edit/delete pages.
+These endpoints read existing Django models and storage URLs. Seller
+management uses `GET /api/seller/dashboard/`, `GET`/`POST /api/seller/listings/`,
+`GET`/`PATCH`/`DELETE /api/seller/listings/<id>/`, and
+`PATCH /api/seller/listings/<id>/status/`. All listing writes remain in Django, including validation, ownership checks,
+database operations, image compression, and storage cleanup. Account and
+favorites pages also call Django's existing session-authenticated APIs.
 
 In the Vite preview, `/listings/search/`, `/listings/category/<slug>/`,
-`/listings/<id>/`, and `/seller/<username>/` are React pages. Listing add,
-dashboard, favorites, edit, delete, and favorite actions continue to proxy to
-Django. Existing Django templates and production public routes remain intact.
+`/listings/<id>/`, `/listings/dashboard/`, `/listings/add/`,
+`/listings/<id>/edit/`, `/listings/favorites/`, account pages, and
+`/seller/<username>/` are React pages. Messaging, reporting, legacy delete
+pages, and other non-migrated pages continue to use Django. Existing Django
+templates and production public routes remain intact.
 
-Both endpoints use Django session authentication. `GET /api/csrf/` issues
+The seller endpoints use Django session authentication. `GET /api/csrf/` issues
 Django's CSRF cookie and returns a token. The frontend API client sends that
-token as `X-CSRFToken` on non-safe API requests. The homepage currently does
-not submit protected API actions; login, registration, listing, and account
-links continue to use Django's existing views and forms.
+token as `X-CSRFToken` on non-safe API requests. Django retains the existing
+session and CSRF protections for all seller actions.
 
 ## Production status
 

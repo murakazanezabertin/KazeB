@@ -328,6 +328,54 @@ msgstr "Click here to download it"
 msgid "Kanda hasi kugira ngo twoherereze kode ku numero yawe."
 msgstr "Click below and we'll send a code to your number."
 
+msgid "Biragaragara"
+msgstr "Active"
+
+msgid "Ibiganiro"
+msgstr "Conversations"
+
+msgid "Byashyizweho"
+msgstr "Created"
+
+msgid "Ntibashoboye gutegura konti y'ibicuruzwa."
+msgstr "Unable to load the seller dashboard."
+
+msgid "Ifoto ya mbere niyo izagaragara imbere."
+msgstr "The first photo will be displayed as the cover image."
+
+msgid "Kuraho ifoto"
+msgstr "Remove photo"
+
+msgid "Reba amakosa y'uburanga iyi nyandiko."
+msgstr "Please review the errors in this form."
+
+msgid "Birimo koherezwa..."
+msgstr "Submitting..."
+
+msgid "Ifoto y'imbere"
+msgstr "Cover"
+
+msgid "Hisha igicuruzwa"
+msgstr "Hide listing"
+
+msgid "Erekana igicuruzwa"
+msgstr "Activate listing"
+
+msgid "Hitamo niba igicuruzwa kigaragara cyangwa gihishwe."
+msgstr "Choose whether the listing should be active or hidden."
+
+msgid "Igicuruzwa kiragaragara ubu."
+msgstr "The listing is now active."
+
+msgid "Igicuruzwa cyahishwe."
+msgstr "The listing is now hidden."
+
+msgid "Birimo kubikwa..."
+msgstr "Updating..."
+
+msgid "Birimo gusibwa..."
+msgstr "Deleting..."
+
 msgid "Kanda kuri 'Ongeraho amafoto' inshuro nyinshi kugira ngo ushyireho amafoto menshi. Ifoto ya mbere niyo izagaragara imbere."
 msgstr "Click \"Add photos\" as many times as you like to add several photos. The first one becomes the cover photo."
 

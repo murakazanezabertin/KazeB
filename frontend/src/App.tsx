@@ -8,6 +8,9 @@ import {
 } from "./api/client";
 import AccountPages from "./Accounts";
 import Marketplace from "./Marketplace";
+import SellerDashboard from "./SellerDashboard";
+import SellerListingCreate from "./SellerListingCreate";
+import SellerListingEdit from "./SellerListingEdit";
 
 const heroSlides = [
   { src: "car.png", alt: "Car" },
@@ -399,6 +402,15 @@ function App() {
       </main>
       ) : isAccountPage(window.location.pathname) ? (
         <AccountPages pathname={window.location.pathname} common={labels} />
+      ) : window.location.pathname === "/listings/dashboard/" ? (
+        <SellerDashboard language={homepage.language} />
+      ) : window.location.pathname === "/listings/add/" ? (
+        <SellerListingCreate language={homepage.language} />
+      ) : /^\/listings\/\d+\/edit\/?$/.test(window.location.pathname) ? (
+        <SellerListingEdit
+          listingId={Number(window.location.pathname.match(/^\/listings\/(\d+)\/edit\/?$/)?.[1])}
+          language={homepage.language}
+        />
       ) : (
         <Marketplace
           labels={labels}

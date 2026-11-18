@@ -2,15 +2,21 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from django.core.paginator import Paginator
+from django.db import transaction
 from django.db.models import Count, F, Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import gettext as _
 
 from chat.models import Message
-from kazeb.imaging import compress_uploaded_image
 from .forms import ListingForm, ListingSearchForm
-from .models import Category, Favorite, Listing, ListingImage
+from .image_uploads import (
+    cleanup_uploaded_listing_images,
+    ensure_listing_cover,
+    save_listing_images,
+    validate_listing_images,
+)
+from .models import Category, Favorite, Listing
 
 User = get_user_model()
 
@@ -261,19 +267,26 @@ def listing_create(request):
         form = ListingForm(request.POST)
         images = request.FILES.getlist("images")
         if form.is_valid():
-            listing = form.save(commit=False)
-            listing.seller = request.user
-            listing.save()
+            image_errors = validate_listing_images(images)
+            if image_errors:
+                for error in image_errors:
+                    form.add_error(None, error)
+            else:
+                created_images = []
+                try:
+                    with transaction.atomic():
+                        listing = form.save(commit=False)
+                        listing.seller = request.user
+                        listing.save()
+                        save_listing_images(
+                            listing, images, created_images, cover_first_image=True
+                        )
+                except Exception:
+                    cleanup_uploaded_listing_images(created_images)
+                    raise
 
-            for index, image_file in enumerate(images):
-                ListingImage.objects.create(
-                    listing=listing,
-                    image=compress_uploaded_image(image_file),
-                    is_cover=(index == 0),
-                )
-
-            messages.success(request, _("Icyo ugurisha cyashyizwe ahagaragara."))
-            return redirect(listing.get_absolute_url())
+                messages.success(request, _("Icyo ugurisha cyashyizwe ahagaragara."))
+                return redirect(listing.get_absolute_url())
     else:
         form = ListingForm()
 
@@ -292,21 +305,31 @@ def listing_edit(request, pk):
         new_images = request.FILES.getlist("images")
         remove_ids = request.POST.getlist("remove_images")
         if form.is_valid():
-            form.save()
+            image_errors = validate_listing_images(new_images)
+            if image_errors:
+                for error in image_errors:
+                    form.add_error(None, error)
+            else:
+                created_images = []
+                try:
+                    with transaction.atomic():
+                        form.save()
+                        if remove_ids:
+                            listing.images.filter(pk__in=remove_ids).delete()
 
-            if remove_ids:
-                listing.images.filter(pk__in=remove_ids).delete()
+                        has_cover = ensure_listing_cover(listing)
+                        save_listing_images(
+                            listing,
+                            new_images,
+                            created_images,
+                            cover_first_image=not has_cover,
+                        )
+                except Exception:
+                    cleanup_uploaded_listing_images(created_images)
+                    raise
 
-            has_cover = listing.images.filter(is_cover=True).exists()
-            for index, image_file in enumerate(new_images):
-                ListingImage.objects.create(
-                    listing=listing,
-                    image=compress_uploaded_image(image_file),
-                    is_cover=(not has_cover and index == 0),
-                )
-
-            messages.success(request, _("Impinduka zabitswe."))
-            return redirect(listing.get_absolute_url())
+                messages.success(request, _("Impinduka zabitswe."))
+                return redirect(listing.get_absolute_url())
     else:
         form = ListingForm(instance=listing)
 

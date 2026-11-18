@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 from django.contrib.auth import get_user_model
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
 
@@ -56,6 +57,7 @@ class ListingModelTests(TestCase):
     def test_cover_image_falls_back_to_first_when_no_flagged_cover(self):
         listing = make_listing(self.seller, self.category)
         first = ListingImage.objects.create(listing=listing, image="listings/a.jpg", is_cover=False)
+        ListingImage.objects.create(listing=listing, image="listings/b.jpg", is_cover=False)
         self.assertEqual(listing.cover_image.pk, first.pk)
 
     def test_cover_image_none_when_no_photos(self):
@@ -94,6 +96,65 @@ class ListingViewAccessTests(TestCase):
         self.client.login(username="owner", password="testpass123")
         response = self.client.get(reverse("listings:listing_edit", args=[self.listing.pk]))
         self.assertEqual(response.status_code, 200)
+
+    def test_edit_rejects_invalid_image_without_removing_existing_photos(self):
+        image = ListingImage.objects.create(
+            listing=self.listing, image="listings/existing.jpg", is_cover=True
+        )
+        self.client.login(username="owner", password="testpass123")
+
+        response = self.client.post(
+            reverse("listings:listing_edit", args=[self.listing.pk]),
+            {
+                "category": self.category.pk,
+                "name": "Changed title",
+                "description": self.listing.description,
+                "condition": self.listing.condition,
+                "district": self.listing.district,
+                "sector": self.listing.sector,
+                "price": str(self.listing.price),
+                "currency": self.listing.currency,
+                "remove_images": str(image.pk),
+                "images": SimpleUploadedFile(
+                    "not-an-image.jpg", b"not an image", content_type="image/jpeg"
+                ),
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Upload a valid image")
+        self.assertTrue(ListingImage.objects.filter(pk=image.pk).exists())
+        self.listing.refresh_from_db()
+        self.assertEqual(self.listing.name, "Test car")
+
+    def test_template_edit_promotes_remaining_image_when_cover_is_removed(self):
+        cover = ListingImage.objects.create(
+            listing=self.listing, image="listings/cover.jpg", is_cover=True
+        )
+        remaining = ListingImage.objects.create(
+            listing=self.listing, image="listings/remaining.jpg", is_cover=False
+        )
+        self.client.login(username="owner", password="testpass123")
+
+        response = self.client.post(
+            reverse("listings:listing_edit", args=[self.listing.pk]),
+            {
+                "category": self.category.pk,
+                "name": self.listing.name,
+                "description": self.listing.description,
+                "condition": self.listing.condition,
+                "district": self.listing.district,
+                "sector": self.listing.sector,
+                "price": str(self.listing.price),
+                "currency": self.listing.currency,
+                "remove_images": str(cover.pk),
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertFalse(ListingImage.objects.filter(pk=cover.pk).exists())
+        remaining.refresh_from_db()
+        self.assertTrue(remaining.is_cover)
 
     def test_delete_rejects_non_owner(self):
         self.client.login(username="other", password="testpass123")

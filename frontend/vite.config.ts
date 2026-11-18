@@ -11,10 +11,10 @@ export default defineConfig(({ mode }) => {
     ...proxyConfig,
     bypass(request) {
       const pathname = (request.url || "/").split("?")[0];
-      const djangoActionPath =
-        /^\/listings\/(?:add|dashboard)(?:\/|$)/.test(pathname) ||
-        /^\/listings\/\d+\/(?:edit|delete|favorite)\/?$/.test(pathname);
-      return djangoActionPath ? undefined : request.url;
+      if (/^\/listings\/\d+\/edit\/?$/.test(pathname)) return request.url;
+      return /^\/listings\/\d+\/(?:delete|favorite)\/?$/.test(pathname)
+        ? undefined
+        : request.url;
     },
   };
   const accountsProxyConfig: ProxyOptions = {

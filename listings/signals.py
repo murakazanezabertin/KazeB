@@ -8,6 +8,7 @@ clean that up for the three image fields in this app: ListingImage,
 Category.icon, and (registered from the accounts app) User.profile_picture.
 """
 
+from django.db import transaction
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 
@@ -21,7 +22,12 @@ def _delete_file_field(file_field):
 
 @receiver(post_delete, sender=ListingImage)
 def delete_listing_image_file(sender, instance, **kwargs):
-    _delete_file_field(instance.image)
+    if not instance.image or not instance.image.name:
+        return
+
+    storage = instance.image.storage
+    name = instance.image.name
+    transaction.on_commit(lambda: storage.delete(name))
 
 
 @receiver(post_delete, sender=Category)

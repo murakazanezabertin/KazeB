@@ -10,6 +10,9 @@
 
     <form method="post" enctype="multipart/form-data">
       {% csrf_token %}
+      {% for error in form.non_field_errors %}
+        <div class="alert alert-danger" role="alert">{{ error }}</div>
+      {% endfor %}
 
       {% for field in form %}
         {% if field.name == "price" %}

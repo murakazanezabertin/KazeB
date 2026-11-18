@@ -328,6 +328,54 @@ msgstr "Kanda hano uyikurure"
 msgid "Kanda hasi kugira ngo twoherereze kode ku numero yawe."
 msgstr "Kanda hasi kugira ngo twoherereze kode ku numero yawe."
 
+msgid "Biragaragara"
+msgstr "Biragaragara"
+
+msgid "Ibiganiro"
+msgstr "Ibiganiro"
+
+msgid "Byashyizweho"
+msgstr "Byashyizweho"
+
+msgid "Ntibashoboye gutegura konti y'ibicuruzwa."
+msgstr "Ntibashoboye gutegura konti y'ibicuruzwa."
+
+msgid "Ifoto ya mbere niyo izagaragara imbere."
+msgstr "Ifoto ya mbere niyo izagaragara imbere."
+
+msgid "Kuraho ifoto"
+msgstr "Kuraho ifoto"
+
+msgid "Reba amakosa y'uburanga iyi nyandiko."
+msgstr "Reba amakosa y'uburanga iyi nyandiko."
+
+msgid "Birimo koherezwa..."
+msgstr "Birimo koherezwa..."
+
+msgid "Ifoto y'imbere"
+msgstr "Ifoto y'imbere"
+
+msgid "Hisha igicuruzwa"
+msgstr "Hisha igicuruzwa"
+
+msgid "Erekana igicuruzwa"
+msgstr "Erekana igicuruzwa"
+
+msgid "Hitamo niba igicuruzwa kigaragara cyangwa gihishwe."
+msgstr "Hitamo niba igicuruzwa kigaragara cyangwa gihishwe."
+
+msgid "Igicuruzwa kiragaragara ubu."
+msgstr "Igicuruzwa kiragaragara ubu."
+
+msgid "Igicuruzwa cyahishwe."
+msgstr "Igicuruzwa cyahishwe."
+
+msgid "Birimo kubikwa..."
+msgstr "Birimo kubikwa..."
+
+msgid "Birimo gusibwa..."
+msgstr "Birimo gusibwa..."
+
 msgid "Kanda kuri 'Ongeraho amafoto' inshuro nyinshi kugira ngo ushyireho amafoto menshi. Ifoto ya mbere niyo izagaragara imbere."
 msgstr "Kanda kuri 'Ongeraho amafoto' inshuro nyinshi kugira ngo ushyireho amafoto menshi. Ifoto ya mbere niyo izagaragara imbere."
 

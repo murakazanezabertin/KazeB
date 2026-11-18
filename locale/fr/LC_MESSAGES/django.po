@@ -328,6 +328,54 @@ msgstr "Cliquez ici pour la télécharger"
 msgid "Kanda hasi kugira ngo twoherereze kode ku numero yawe."
 msgstr "Cliquez ci-dessous et nous enverrons un code à votre numéro."
 
+msgid "Biragaragara"
+msgstr "Actifs"
+
+msgid "Ibiganiro"
+msgstr "Conversations"
+
+msgid "Byashyizweho"
+msgstr "Créé"
+
+msgid "Ntibashoboye gutegura konti y'ibicuruzwa."
+msgstr "Impossible de charger le tableau de bord du vendeur."
+
+msgid "Ifoto ya mbere niyo izagaragara imbere."
+msgstr "La première photo sera utilisée comme image principale."
+
+msgid "Kuraho ifoto"
+msgstr "Retirer la photo"
+
+msgid "Reba amakosa y'uburanga iyi nyandiko."
+msgstr "Veuillez corriger les erreurs du formulaire."
+
+msgid "Birimo koherezwa..."
+msgstr "Envoi en cours..."
+
+msgid "Ifoto y'imbere"
+msgstr "Image principale"
+
+msgid "Hisha igicuruzwa"
+msgstr "Masquer l'annonce"
+
+msgid "Erekana igicuruzwa"
+msgstr "Afficher l'annonce"
+
+msgid "Hitamo niba igicuruzwa kigaragara cyangwa gihishwe."
+msgstr "Choisissez si l'annonce doit être active ou masquée."
+
+msgid "Igicuruzwa kiragaragara ubu."
+msgstr "L'annonce est maintenant active."
+
+msgid "Igicuruzwa cyahishwe."
+msgstr "L'annonce est maintenant masquée."
+
+msgid "Birimo kubikwa..."
+msgstr "Mise à jour..."
+
+msgid "Birimo gusibwa..."
+msgstr "Suppression..."
+
 msgid "Kanda kuri 'Ongeraho amafoto' inshuro nyinshi kugira ngo ushyireho amafoto menshi. Ifoto ya mbere niyo izagaragara imbere."
 msgstr "Cliquez sur « Ajouter des photos » autant de fois que nécessaire pour ajouter plusieurs photos. La première devient la photo de couverture."
 
