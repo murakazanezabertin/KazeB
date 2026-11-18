@@ -63,6 +63,73 @@ body {
 
 .nav-icons .nav-link { font-weight: 500; }
 
+.homepage-navbar {
+  box-shadow: 0 2px 12px rgba(20, 33, 61, 0.06);
+}
+.homepage-navbar .container {
+  max-width: 1440px;
+  padding-inline: clamp(1rem, 3vw, 2.25rem);
+  gap: 0.5rem 1rem;
+}
+.homepage-navbar .navbar-brand {
+  font-size: 1.3rem;
+  letter-spacing: -0.035em;
+}
+.homepage-navbar .nav-search-box {
+  flex: 1 1 240px;
+  max-width: 420px;
+  min-width: 180px;
+}
+.homepage-navbar .nav-search-box .input-group-text {
+  color: #647084;
+}
+.homepage-navbar .nav-search-box .form-control,
+.homepage-navbar .nav-search-box .btn {
+  min-height: 42px;
+}
+.homepage-navbar .nav-search-box .btn {
+  padding-inline: 1rem;
+  font-weight: 600;
+}
+.homepage-navbar .nav-link {
+  color: #14213d;
+  font-size: 0.86rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.homepage-navbar .nav-link:hover,
+.homepage-navbar .nav-link:focus {
+  color: var(--kazeb-brand-dark);
+}
+.homepage-navbar .form-select {
+  border-color: #e2e5e9;
+  color: #14213d;
+}
+
+@media (max-width: 991.98px) {
+  .homepage-navbar .navbar-toggler {
+    order: 1;
+    margin-left: auto;
+  }
+  .homepage-navbar .nav-search-box {
+    order: 2;
+    flex: 0 0 100%;
+    width: 100%;
+    max-width: none;
+    margin: 0 0 0.25rem !important;
+  }
+  .homepage-navbar .navbar-collapse {
+    order: 3;
+    flex-basis: 100%;
+  }
+  .homepage-navbar .navbar-collapse.show {
+    padding-bottom: 0.5rem;
+  }
+  .homepage-navbar .navbar-nav {
+    gap: 0.25rem;
+  }
+}
+
 /* Hero */
 .hero-title {
   font-size: 3rem;
@@ -300,31 +367,35 @@ body {
   border: 1px solid #eee;
 }
 
-/* Homepage welcome heading and hero. */
+/* Homepage-only layout refinements. */
+.kazeb-homepage-content {
+  max-width: 1440px;
+  padding-inline: clamp(1rem, 3vw, 2.25rem);
+}
 .kazeb-welcome-title {
-  margin: 0 0 1.5rem;
+  margin: 0 0 1rem;
   color: #14213d;
-  font-size: clamp(1.5rem, 3.2vw, 2rem);
+  font-size: clamp(1.4rem, 2.6vw, 1.8rem);
   font-weight: 700;
   line-height: 1.2;
   text-align: center;
 }
 
-/* Keep the copy on the left and the carousel on the right. */
 .kazeb-hero {
   overflow: hidden;
-  border-radius: 1.5rem;
+  border: 1px solid rgba(255, 122, 0, 0.08);
+  border-radius: 1.25rem;
   background: linear-gradient(135deg, #fff3e6, #fffaf4);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 8px 24px rgba(20, 33, 61, 0.07);
 }
 .kazeb-hero-inner {
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
   align-items: center;
-  min-height: 520px;
-  padding: 3rem 4rem 4.5rem;
-  gap: 1rem;
+  min-height: 270px;
+  padding: 1.5rem clamp(1.5rem, 5vw, 4rem) 2.75rem;
+  gap: 0.75rem;
 }
 .kazeb-hero-content {
   position: relative;
@@ -333,23 +404,26 @@ body {
   text-align: left;
 }
 .kazeb-hero-title {
-  margin: 0 0 1.5rem;
+  max-width: 12ch;
+  margin: 0 0 1rem;
   color: #14213d;
-  font-size: clamp(2rem, 4.2vw, 4rem);
+  font-size: clamp(1.5rem, 2.4vw, 2.15rem);
   font-weight: 800;
   line-height: 1.08;
 }
 .kazeb-hero-actions {
   display: flex;
-  flex-direction: column;
   align-items: flex-start;
-  gap: 0.75rem;
+  flex-wrap: wrap;
+  gap: 0.65rem;
 }
 .kazeb-hero-actions .btn {
-  width: min(100%, 330px);
-  min-height: 52px;
+  width: auto;
+  min-height: 44px;
+  padding: 0.55rem 0.65rem;
   font-weight: 700;
-  white-space: nowrap;
+  font-size: 0.88rem;
+  line-height: 1.25;
 }
 .kazeb-hero-visual {
   position: absolute;
@@ -400,15 +474,15 @@ body {
   position: absolute;
   z-index: 3;
   right: 0;
-  bottom: 1rem;
+  bottom: 0.85rem;
   left: 0;
   display: flex;
   justify-content: center;
-  gap: 0.55rem;
+  gap: 0.45rem;
 }
 .kazeb-hero-dot {
-  width: 0.7rem;
-  height: 0.7rem;
+  width: 0.55rem;
+  height: 0.55rem;
   padding: 0;
   border: 0;
   border-radius: 50%;
@@ -421,55 +495,274 @@ body {
   transform: scale(1.2);
 }
 
+.homepage-category-section .find-by-category {
+  margin-bottom: 0.75rem;
+  color: #14213d;
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  letter-spacing: 0;
+  text-transform: none;
+}
+.homepage-category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 68px), 1fr));
+  gap: clamp(0.65rem, 1.2vw, 1rem);
+  margin-top: 1rem;
+  align-items: stretch;
+}
+.homepage-category-item {
+  display: flex;
+  min-width: 0;
+}
+.homepage-category-item .category-card {
+  width: 100%;
+  height: 100%;
+  gap: 0.45rem;
+}
+.homepage-category-item .category-icon {
+  flex: 0 0 auto;
+  width: clamp(3.75rem, 6.3vw, 5rem);
+  height: clamp(3.75rem, 6.3vw, 5rem);
+  border-color: #f0f0f0;
+  box-shadow: 0 3px 12px rgba(20, 33, 61, 0.09);
+}
+.homepage-category-item .category-card:hover .category-icon {
+  box-shadow: 0 6px 16px rgba(20, 33, 61, 0.13);
+}
+.homepage-category-item .category-name {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  color: #334155;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.homepage-product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr));
+  gap: 1rem;
+}
+.homepage-product-item {
+  min-width: 0;
+}
+.homepage-product-card {
+  overflow: hidden;
+  border: 1px solid #eceff2;
+  border-radius: 0.75rem;
+  box-shadow: 0 3px 12px rgba(20, 33, 61, 0.07);
+  transition: box-shadow 0.18s ease, transform 0.18s ease;
+}
+.homepage-product-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(20, 33, 61, 0.12);
+}
+.homepage-product-image-wrap {
+  position: relative;
+  aspect-ratio: 1.1;
+  overflow: hidden;
+  background-color: #f4f5f6;
+}
+.homepage-product-image-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.homepage-product-image-wrap .listing-card-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.homepage-favorite-btn {
+  position: absolute;
+  z-index: 2;
+  top: 0.6rem;
+  right: 0.6rem;
+  display: grid;
+  width: 2.4rem;
+  height: 2.4rem;
+  padding: 0;
+  place-items: center;
+  border: 1px solid rgba(20, 33, 61, 0.1);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.94);
+  color: #14213d;
+  box-shadow: 0 2px 8px rgba(20, 33, 61, 0.15);
+  cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
+}
+.homepage-favorite-btn svg {
+  width: 1.2rem;
+  height: 1.2rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.homepage-favorite-btn:hover {
+  transform: scale(1.06);
+}
+.homepage-favorite-btn.is-favorited {
+  color: var(--kazeb-brand);
+}
+.homepage-favorite-btn.is-favorited svg {
+  fill: currentColor;
+}
+.homepage-favorite-btn:focus-visible {
+  outline: 3px solid rgba(255, 122, 0, 0.35);
+  outline-offset: 2px;
+}
+.homepage-favorite-btn:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+.homepage-product-details-link {
+  display: block;
+}
+.homepage-product-card .card-body {
+  padding: 0.75rem;
+}
+.homepage-product-card .card-body h3 {
+  display: -webkit-box;
+  min-height: 2.4em;
+  overflow: hidden;
+  color: #14213d;
+  font-size: 0.9rem;
+  font-weight: 650;
+  line-height: 1.2;
+  white-space: normal;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.homepage-product-card .card-body .text-brand {
+  font-size: 1.02rem;
+  font-weight: 700;
+}
+.homepage-product-card .card-body .text-muted {
+  font-size: 0.78rem;
+}
+.homepage-product-location {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.3rem;
+}
+.homepage-product-location svg {
+  flex: 0 0 0.9rem;
+  width: 0.9rem;
+  height: 0.9rem;
+  margin-top: 0.05rem;
+  color: var(--kazeb-brand);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.homepage-product-location span {
+  min-width: 0;
+}
+.homepage-product-card .card-footer {
+  padding: 0 0.75rem 0.75rem;
+}
+.homepage-product-card .seller-card-link {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  min-height: 2rem;
+  gap: 0.45rem;
+  color: #475569;
+  font-size: 0.78rem;
+}
+.homepage-product-card .seller-card-link span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 @media (max-width: 991.98px) {
   .kazeb-hero {
     border-radius: 1rem;
   }
   .kazeb-hero-inner {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    min-height: 360px;
-    padding: 1.5rem 1rem 3.5rem;
+    min-height: 300px;
+    padding: 1.25rem 1.5rem 2.75rem;
     gap: 0.5rem;
   }
   .kazeb-hero-title {
-    margin-bottom: 1rem;
-    font-size: clamp(1.25rem, 5vw, 2.2rem);
+    margin-bottom: 0.85rem;
+    font-size: clamp(1.5rem, 4vw, 2.3rem);
     line-height: 1.14;
   }
   .kazeb-hero-actions {
-    gap: 0.55rem;
+    flex-direction: column;
+    gap: 0.5rem;
   }
   .kazeb-hero-actions .btn {
-    width: 100%;
-    min-height: 44px;
-    padding: 0.55rem 0.35rem;
-    font-size: clamp(0.58rem, 2.2vw, 0.85rem);
+    width: min(100%, 260px);
+    min-height: 42px;
+    padding: 0.55rem 0.65rem;
+    font-size: clamp(0.75rem, 1.7vw, 0.9rem);
   }
   .kazeb-hero-visual {
     left: 50%;
   }
 }
 
-@media (max-width: 400px) {
+@media (max-width: 575.98px) {
   .kazeb-hero-inner {
-    min-height: 320px;
-    padding: 1.25rem 0.65rem 3rem;
-    gap: 0.35rem;
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+    padding: 1rem 1rem 2.5rem;
+    gap: 0;
+  }
+  .kazeb-hero-content {
+    grid-row: 2;
+    text-align: center;
   }
   .kazeb-hero-title {
-    font-size: 1.2rem;
+    max-width: none;
+    margin: 0 auto 0.75rem;
+    font-size: clamp(1.35rem, 6vw, 1.75rem);
+    line-height: 1.12;
   }
-  .kazeb-hero-visual {
-    left: 50%;
+  .kazeb-hero-actions {
+    align-items: stretch;
+    justify-content: center;
+    flex-direction: row;
+    gap: 0.5rem;
   }
   .kazeb-hero-actions .btn {
-    font-size: 0.55rem;
+    width: auto;
+    min-height: 42px;
+    flex: 1 1 145px;
+    padding: 0.5rem 0.6rem;
+    font-size: clamp(0.72rem, 2.8vw, 0.88rem);
+  }
+  .kazeb-hero-visual {
+    position: relative;
+    inset: auto;
+    grid-row: 1;
+    width: 100%;
+    height: clamp(100px, 32vw, 145px);
+    margin-bottom: 0.5rem;
+  }
+  .homepage-category-grid {
+    grid-template-columns: repeat(auto-fit, minmax(68px, 1fr));
+    gap: 0.75rem 0.55rem;
+  }
+  .homepage-product-grid {
+    gap: 0.75rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .kazeb-hero-slide,
-  .kazeb-hero-dot {
+  .kazeb-hero-dot,
+  .homepage-product-card {
     transition-duration: 0.01ms;
   }
 }
@@ -579,6 +872,58 @@ form input[type="number"] {
 .footer-highlight {
   background-color: var(--kazeb-brand-pale);
   color: var(--kazeb-brand-text);
+}
+.homepage-footer .footer-highlight {
+  background-color: #ffdabf;
+  padding-block: 2.25rem !important;
+}
+.homepage-footer {
+  margin-top: 0;
+}
+.homepage-footer .footer-highlight .container {
+  max-width: 1320px;
+  padding-inline: clamp(1rem, 3vw, 2.25rem);
+}
+.homepage-footer-brand {
+  margin-bottom: 1.75rem;
+}
+.homepage-footer-logo {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0;
+  color: #14213d;
+  font-size: 1.65rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  text-decoration: none;
+}
+.homepage-footer-logo:hover,
+.homepage-footer-logo:focus {
+  color: #14213d;
+}
+.homepage-footer-logo-orange {
+  color: var(--kazeb-brand);
+}
+.homepage-footer-tagline {
+  margin: 0.45rem 0 0;
+  color: #14213d;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+.homepage-footer .footer-highlight .row {
+  --bs-gutter-x: clamp(1.25rem, 3vw, 2.5rem);
+  row-gap: 1.5rem;
+}
+.homepage-footer .footer-highlight h2 {
+  font-size: 0.82rem;
+  letter-spacing: 0.055em;
+}
+.homepage-footer .footer-links li {
+  margin-bottom: 0.4rem;
+}
+.homepage-footer .footer-social-icon {
+  box-shadow: 0 2px 7px rgba(20, 33, 61, 0.08);
 }
 .footer-highlight h2 {
   color: var(--kazeb-brand-text);

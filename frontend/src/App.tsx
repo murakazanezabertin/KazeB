@@ -2,8 +2,10 @@ import { useEffect, useState, type FormEvent } from "react";
 
 import {
   getCsrfToken,
+  getFavorites,
   getHomepage,
   submitForm,
+  toggleFavorite,
   type HomepageData,
 } from "./api/client";
 import AccountPages from "./Accounts";
@@ -37,6 +39,10 @@ function App() {
   const [error, setError] = useState("");
   const [activeSlide, setActiveSlide] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [favoriteIds, setFavoriteIds] = useState<Set<number>>(() => new Set());
+  const [favoriteLoadStatus, setFavoriteLoadStatus] = useState<"loading" | "ready" | "error">("loading");
+  const [pendingFavoriteIds, setPendingFavoriteIds] = useState<Set<number>>(() => new Set());
+  const [favoriteError, setFavoriteError] = useState("");
 
   async function loadHomepage() {
     setError("");
@@ -60,6 +66,50 @@ function App() {
       3000,
     );
     return () => window.clearInterval(timer);
+  }, [homepage]);
+
+  useEffect(() => {
+    if (!homepage) return;
+
+    let cancelled = false;
+    setFavoriteError("");
+    setFavoriteIds(new Set());
+    if (!homepage.user.is_authenticated || homepage.recent_listings.length === 0) {
+      setFavoriteLoadStatus("ready");
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    setFavoriteLoadStatus("loading");
+    async function loadFavoriteIds() {
+      try {
+        const firstPage = await getFavorites();
+        const pages = [firstPage];
+        for (let page = 2; page <= firstPage.pagination.pages; page += 1) {
+          pages.push(await getFavorites(String(page)));
+        }
+        const ids = new Set(
+          pages.flatMap((page) => page.results.map(({ listing }) => listing.id)),
+        );
+        if (!cancelled) {
+          setFavoriteIds(ids);
+          setFavoriteLoadStatus("ready");
+        }
+      } catch (loadError) {
+        if (!cancelled) {
+          setFavoriteError(
+            loadError instanceof Error ? loadError.message : "Unable to load favourites.",
+          );
+          setFavoriteLoadStatus("error");
+        }
+      }
+    }
+    void loadFavoriteIds();
+
+    return () => {
+      cancelled = true;
+    };
   }, [homepage]);
 
   useEffect(() => {
@@ -105,6 +155,53 @@ function App() {
     }
   }
 
+  async function handleHomepageFavoriteToggle(listingId: number) {
+    if (!homepage?.user.is_authenticated) {
+      window.location.assign(
+        `/accounts/login/?next=${encodeURIComponent(window.location.pathname + window.location.search)}`,
+      );
+      return;
+    }
+
+    const wasFavorited = favoriteIds.has(listingId);
+    setFavoriteError("");
+    setFavoriteIds((current) => {
+      const next = new Set(current);
+      if (wasFavorited) next.delete(listingId);
+      else next.add(listingId);
+      return next;
+    });
+    setPendingFavoriteIds((current) => new Set(current).add(listingId));
+
+    try {
+      const response = await toggleFavorite(listingId);
+      setFavoriteIds((current) => {
+        const next = new Set(current);
+        if (response.is_favorited) next.add(listingId);
+        else next.delete(listingId);
+        return next;
+      });
+    } catch (toggleError) {
+      setFavoriteIds((current) => {
+        const next = new Set(current);
+        if (wasFavorited) next.add(listingId);
+        else next.delete(listingId);
+        return next;
+      });
+      setFavoriteError(
+        toggleError instanceof Error
+          ? toggleError.message
+          : "Unable to update favourites.",
+      );
+    } finally {
+      setPendingFavoriteIds((current) => {
+        const next = new Set(current);
+        next.delete(listingId);
+        return next;
+      });
+    }
+  }
+
   if (error) {
     return (
       <main className="container py-5" role="alert">
@@ -128,7 +225,11 @@ function App() {
 
   return (
     <>
-      <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top">
+      <nav
+        className={`navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top${
+          window.location.pathname === "/" ? " homepage-navbar" : ""
+        }`}
+      >
         <div className="container flex-wrap">
           <a className="navbar-brand fw-bold" href="/">
             <span className="kazeb-logo-black">Kaze</span>
@@ -259,7 +360,7 @@ function App() {
       </nav>
 
       {window.location.pathname === "/" ? (
-      <main className="container py-4">
+      <main className="container-fluid pt-4 pb-3 kazeb-homepage-content">
         <h1 className="kazeb-welcome-title">Murakaza neza kuri KazeB!</h1>
         <section className="kazeb-hero mb-5" aria-label="KazeB promotion">
           <div className="kazeb-hero-inner">
@@ -319,12 +420,17 @@ function App() {
           </div>
         </section>
 
-        <section id="categories" className="mb-5">
+        <section
+          id="categories"
+          className={`homepage-category-section${
+            homepage.recent_listings.length > 0 ? " mb-5" : ""
+          }`}
+        >
           <h2 className="find-by-category">{labels.categories}</h2>
           {homepage.categories.length > 0 ? (
-            <div className="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-4 mt-2">
+            <div className="homepage-category-grid">
               {homepage.categories.map((category) => (
-                <div className="col" key={category.id}>
+                <div className="homepage-category-item" key={category.id}>
                   <a href={category.url} className="category-card text-decoration-none">
                     <div className="category-icon">
                       {category.icon ? (
@@ -350,27 +456,63 @@ function App() {
             <h2 className="h4 mb-3" id="recent-listings-title">
               {labels.recent_listings}
             </h2>
-            <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4">
+            <div className="homepage-product-grid">
               {homepage.recent_listings.map((listing) => (
-                <div className="col" key={listing.id}>
-                  <div className="card listing-card h-100">
-                    <a href={listing.url} className="text-decoration-none text-body">
-                      {listing.image ? (
-                        <img
-                          src={listing.image}
-                          className="card-img-top listing-card-img"
-                          alt={listing.name}
-                          loading="lazy"
-                        />
-                      ) : (
-                        <div className="listing-card-img listing-card-img-placeholder">
-                          {labels.empty_image}
-                        </div>
-                      )}
+                <div className="homepage-product-item" key={listing.id}>
+                  <article className="card listing-card homepage-product-card h-100">
+                    <div className="homepage-product-image-wrap">
+                      <a
+                        href={listing.url}
+                        className="homepage-product-image-link"
+                        aria-label={listing.name}
+                      >
+                        {listing.image ? (
+                          <img
+                            src={listing.image}
+                            className="card-img-top listing-card-img"
+                            alt={listing.name}
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div className="listing-card-img listing-card-img-placeholder">
+                            {labels.empty_image}
+                          </div>
+                        )}
+                      </a>
+                      <button
+                        type="button"
+                        className={`homepage-favorite-btn${favoriteIds.has(listing.id) ? " is-favorited" : ""}`}
+                        aria-label={
+                          favoriteIds.has(listing.id)
+                            ? labels.saved_favorite
+                            : labels.save_favorite
+                        }
+                        aria-pressed={favoriteIds.has(listing.id)}
+                        disabled={
+                          (user.is_authenticated && favoriteLoadStatus !== "ready") ||
+                          pendingFavoriteIds.has(listing.id)
+                        }
+                        onClick={() => void handleHomepageFavoriteToggle(listing.id)}
+                      >
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z" />
+                        </svg>
+                      </button>
+                    </div>
+                    <a
+                      href={listing.url}
+                      className="homepage-product-details-link text-decoration-none text-body"
+                    >
                       <div className="card-body">
                         <h3 className="h6 mb-1 text-truncate">{listing.name}</h3>
                         <p className="fw-bold text-brand mb-1">{listing.price}</p>
-                        <p className="small text-muted mb-0">{listing.location}</p>
+                        <p className="homepage-product-location small text-muted mb-0">
+                          <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z" />
+                            <circle cx="12" cy="10" r="2.5" />
+                          </svg>
+                          <span>{listing.location}</span>
+                        </p>
                       </div>
                     </a>
                     <div className="card-footer bg-white border-0 pt-0">
@@ -393,10 +535,15 @@ function App() {
                         <span>{listing.seller.name}</span>
                       </a>
                     </div>
-                  </div>
+                  </article>
                 </div>
               ))}
             </div>
+            {favoriteError && (
+              <p className="alert alert-danger mt-3 mb-0" role="alert">
+                {favoriteError}
+              </p>
+            )}
           </section>
         )}
       </main>
@@ -418,9 +565,18 @@ function App() {
         />
       )}
 
-      <footer className="mt-5">
+      <footer className={window.location.pathname === "/" ? "homepage-footer" : "mt-5"}>
         <div className="footer-highlight py-5">
           <div className="container">
+            {window.location.pathname === "/" && (
+              <div className="homepage-footer-brand">
+                <a href="/" className="homepage-footer-logo" aria-label="KazeB">
+                  <span>Kaze</span>
+                  <span className="homepage-footer-logo-orange">B</span>
+                </a>
+                <p className="homepage-footer-tagline">Gura no kugurisha byoroshye!</p>
+              </div>
+            )}
             <div className="row gy-4">
               <div className="col-6 col-md-3">
                 <h2 className="h6 text-uppercase mb-3">{labels.about}</h2>
