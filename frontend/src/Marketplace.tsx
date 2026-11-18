@@ -4,6 +4,7 @@ import {
   getListing,
   getListings,
   getSeller,
+  toggleFavorite,
   type HomepageData,
   type ListingBrowseData,
   type ListingCardData,
@@ -223,11 +224,9 @@ function ListingBrowse({ labels }: { labels: Labels }) {
 
 function ListingDetail({
   labels,
-  csrfToken,
   isAuthenticated,
 }: {
   labels: Labels;
-  csrfToken: string;
   isAuthenticated: boolean;
 }) {
   const id = Number(window.location.pathname.match(/^\/listings\/(\d+)\/?$/)?.[1]);
@@ -235,12 +234,16 @@ function ListingDetail({
   const [error, setError] = useState("");
   const [activeImage, setActiveImage] = useState(0);
   const [copiedText, setCopiedText] = useState("");
+  const [isFavorited, setIsFavorited] = useState(false);
 
   useEffect(() => {
     let active = true;
     getListing(id)
       .then((response) => {
-        if (active) setListing(response);
+        if (active) {
+          setListing(response);
+          setIsFavorited(response.is_favorited);
+        }
       })
       .catch((loadError: unknown) => {
         if (active) {
@@ -256,6 +259,7 @@ function ListingDetail({
   if (!listing) return <main className="container py-4"><p aria-live="polite">Loading listing…</p></main>;
 
   const seller = listing.seller;
+  const listingId = listing.id;
   const listingUrl = window.location.href;
   const whatsappUrl = seller.whatsapp_digits
     ? `https://wa.me/${seller.whatsapp_digits}?text=${encodeURIComponent(`Muraho, nabonye icyo ugurisha "${listing.name}" kuri KazeB`)}`
@@ -270,6 +274,26 @@ function ListingDetail({
       setCopiedText(value);
     } catch {
       window.prompt(labels.copy_listing_link, value);
+    }
+  }
+
+  async function handleFavoriteToggle() {
+    if (!isAuthenticated) {
+      window.location.assign(
+        `/accounts/login/?next=${encodeURIComponent(window.location.pathname + window.location.search)}`,
+      );
+      return;
+    }
+
+    const previous = isFavorited;
+    setIsFavorited(!previous);
+    setError("");
+    try {
+      const response = await toggleFavorite(listingId);
+      setIsFavorited(response.is_favorited);
+    } catch (toggleError) {
+      setIsFavorited(previous);
+      setError(toggleError instanceof Error ? toggleError.message : "Unable to update favourites.");
     }
   }
 
@@ -338,13 +362,13 @@ function ListingDetail({
           <p className="small text-muted">{labels.listing_views}: {listing.views_count}</p>
 
           {!listing.is_owner && (
-            <form method="post" action={`/listings/${listing.id}/favorite/`} className="mb-3">
-              <input type="hidden" name="csrfmiddlewaretoken" value={csrfToken} />
-              <input type="hidden" name="next" value={window.location.pathname + window.location.search} />
-              <button type="submit" className={`favorite-btn${listing.is_favorited ? " is-favorited" : ""}`}>
-                {listing.is_favorited ? "★" : "☆"} {listing.is_favorited ? labels.saved_favorite : labels.save_favorite}
-              </button>
-            </form>
+            <button
+              type="button"
+              className={`favorite-btn mb-3${isFavorited ? " is-favorited" : ""}`}
+              onClick={() => void handleFavoriteToggle()}
+            >
+              {isFavorited ? "★" : "☆"} {isFavorited ? labels.saved_favorite : labels.save_favorite}
+            </button>
           )}
 
           {!listing.is_owner && (
@@ -514,11 +538,9 @@ function SellerProfile({ labels, isAuthenticated }: { labels: Labels; isAuthenti
 
 export default function Marketplace({
   labels,
-  csrfToken,
   isAuthenticated,
 }: {
   labels: Labels;
-  csrfToken: string;
   isAuthenticated: boolean;
 }) {
   const path = window.location.pathname;
@@ -526,7 +548,7 @@ export default function Marketplace({
     return <ListingBrowse labels={labels} />;
   }
   if (/^\/listings\/\d+\/?$/.test(path)) {
-    return <ListingDetail labels={labels} csrfToken={csrfToken} isAuthenticated={isAuthenticated} />;
+    return <ListingDetail labels={labels} isAuthenticated={isAuthenticated} />;
   }
   if (/^\/seller\/[^/]+\/?$/.test(path)) {
     return <SellerProfile labels={labels} isAuthenticated={isAuthenticated} />;

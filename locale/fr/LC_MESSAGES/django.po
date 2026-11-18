@@ -795,3 +795,51 @@ msgstr "avec"
 
 msgid "politiki y'ibanga"
 msgstr "politique de confidentialité"
+
+msgid "Habaye ikibazo. Ongera ugerageze."
+msgstr "Une erreur s'est produite. Veuillez réessayer."
+
+msgid "Ohereza umurongo wo guhindura ijambobanga"
+msgstr "Envoyer le lien de réinitialisation"
+
+msgid "Ijambobanga rishya"
+msgstr "Nouveau mot de passe"
+
+msgid "Yemejwe"
+msgstr "Vérifié"
+
+msgid "Ntiyemejwe"
+msgstr "Non vérifié"
+
+msgid "Nemeye amabwiriza n'amategeko bya KazeB"
+msgstr "J'accepte les conditions d'utilisation de KazeB"
+
+msgid "Emeza imeli nshya twakoherereje kugira ngo wongere winjire."
+msgstr "Vérifiez votre nouvelle adresse e-mail avant de vous reconnecter."
+
+msgid "Niba imeli ijyanye na konti ihari, twohereje umurongo wo guhindura ijambobanga."
+msgstr "Si un compte correspond à cette adresse, un lien de réinitialisation a été envoyé."
+
+msgid "Niba konti ihari kandi itaremezwa, twakoherereje imeli."
+msgstr "Si le compte existe et n'est pas vérifié, un e-mail a été envoyé."
+
+msgid "Birimo gutegurwa..."
+msgstr "Chargement..."
+
+msgid "Ugomba kwinjira kugira ngo ukomeze."
+msgstr "Vous devez vous connecter pour continuer."
+
+msgid "Igicuruzwa nticyabonetse."
+msgstr "Annonce introuvable."
+
+msgid "Iyandikishe byagenze neza. Reba imeli yawe kugira ngo wemeze konti yawe."
+msgstr "Inscription réussie. Consultez votre e-mail pour vérifier votre compte."
+
+msgid "Winjiye kuri KazeB."
+msgstr "Vous êtes connecté à KazeB."
+
+msgid "Wasohotse kuri KazeB."
+msgstr "Vous êtes déconnecté."
+
+msgid "Iki gicuruzwa ntikiboneka."
+msgstr "Cette annonce n'est plus disponible."

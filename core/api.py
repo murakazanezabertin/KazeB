@@ -28,6 +28,8 @@ class HomepageLabelsSerializer(serializers.Serializer):
     login = serializers.CharField()
     register = serializers.CharField()
     my_account = serializers.CharField()
+    account = serializers.CharField()
+    favorites = serializers.CharField()
     messages = serializers.CharField()
     categories = serializers.CharField()
     recent_listings = serializers.CharField()
@@ -174,6 +176,8 @@ def _homepage_payload(request):
             "login": _("Injira"),
             "register": _("Iyandikishe"),
             "my_account": _("Konti yanjye"),
+            "account": _("Konti"),
+            "favorites": _("Ibya kwibuka"),
             "messages": _("Ubutumwa"),
             "categories": _("Shakisha ukurikije ubwoko"),
             "recent_listings": _("Ibiherutse kwandikwa"),

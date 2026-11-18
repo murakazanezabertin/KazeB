@@ -3,8 +3,10 @@ import { useEffect, useState, type FormEvent } from "react";
 import {
   getCsrfToken,
   getHomepage,
+  submitForm,
   type HomepageData,
 } from "./api/client";
+import AccountPages from "./Accounts";
 import Marketplace from "./Marketplace";
 
 const heroSlides = [
@@ -87,6 +89,16 @@ function App() {
       window.location.assign("/");
     } catch (languageError) {
       setError(languageError instanceof Error ? languageError.message : "Language change failed.");
+    }
+  }
+
+  async function handleLogout() {
+    setError("");
+    try {
+      await submitForm("/api/auth/logout/", new URLSearchParams());
+      window.location.assign("/");
+    } catch (logoutError) {
+      setError(logoutError instanceof Error ? logoutError.message : "Logout failed.");
     }
   }
 
@@ -208,14 +220,22 @@ function App() {
                 </form>
               </li>
               {user.is_authenticated ? (
-                <li className="nav-item">
-                  <form action="/accounts/logout/" method="post" className="d-inline">
-                    <input type="hidden" name="csrfmiddlewaretoken" value={csrfToken} />
-                    <button type="submit" className="btn btn-sm btn-outline-secondary">
+                <>
+                  <li className="nav-item">
+                    <a className="nav-link" href="/accounts/profile/">{labels.account}</a>
+                  </li>
+                  <li className="nav-item">
+                    <a className="nav-link" href="/listings/favorites/">{labels.favorites}</a>
+                  </li>
+                  <li className="nav-item">
+                    <a className="nav-link" href="/listings/dashboard/">{labels.my_account}</a>
+                  </li>
+                  <li className="nav-item">
+                    <button className="btn btn-sm btn-outline-secondary" type="button" onClick={() => void handleLogout()}>
                       {labels.sign_out}
                     </button>
-                  </form>
-                </li>
+                  </li>
+                </>
               ) : (
                 <>
                   <li className="nav-item">
@@ -377,10 +397,11 @@ function App() {
           </section>
         )}
       </main>
+      ) : isAccountPage(window.location.pathname) ? (
+        <AccountPages pathname={window.location.pathname} common={labels} />
       ) : (
         <Marketplace
           labels={labels}
-          csrfToken={csrfToken}
           isAuthenticated={user.is_authenticated}
         />
       )}
@@ -514,6 +535,23 @@ function App() {
         </div>
       </footer>
     </>
+  );
+}
+
+function isAccountPage(pathname: string) {
+  return (
+    pathname === "/accounts/register/" ||
+    pathname === "/accounts/login/" ||
+    pathname === "/accounts/edit/" ||
+    pathname === "/accounts/delete/" ||
+    pathname === "/accounts/profile/" ||
+    pathname === "/accounts/verify/sent/" ||
+    pathname === "/accounts/verify/resend/" ||
+    pathname === "/accounts/password_reset/" ||
+    pathname === "/accounts/password_reset/done/" ||
+    pathname === "/accounts/reset/done/" ||
+    /^\/accounts\/reset\/[^/]+\/[^/]+\/?$/.test(pathname) ||
+    pathname === "/listings/favorites/"
   );
 }
 

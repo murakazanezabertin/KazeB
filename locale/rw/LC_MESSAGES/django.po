@@ -795,3 +795,51 @@ msgstr "na"
 
 msgid "politiki y'ibanga"
 msgstr "politiki y'ibanga"
+
+msgid "Habaye ikibazo. Ongera ugerageze."
+msgstr "Habaye ikibazo. Ongera ugerageze."
+
+msgid "Ohereza umurongo wo guhindura ijambobanga"
+msgstr "Ohereza umurongo wo guhindura ijambobanga"
+
+msgid "Ijambobanga rishya"
+msgstr "Ijambobanga rishya"
+
+msgid "Yemejwe"
+msgstr "Yemejwe"
+
+msgid "Ntiyemejwe"
+msgstr "Ntiyemejwe"
+
+msgid "Nemeye amabwiriza n'amategeko bya KazeB"
+msgstr "Nemeye amabwiriza n'amategeko bya KazeB"
+
+msgid "Emeza imeli nshya twakoherereje kugira ngo wongere winjire."
+msgstr "Emeza imeli nshya twakoherereje kugira ngo wongere winjire."
+
+msgid "Niba imeli ijyanye na konti ihari, twohereje umurongo wo guhindura ijambobanga."
+msgstr "Niba imeli ijyanye na konti ihari, twohereje umurongo wo guhindura ijambobanga."
+
+msgid "Niba konti ihari kandi itaremezwa, twakoherereje imeli."
+msgstr "Niba konti ihari kandi itaremezwa, twakoherereje imeli."
+
+msgid "Birimo gutegurwa..."
+msgstr "Birimo gutegurwa..."
+
+msgid "Ugomba kwinjira kugira ngo ukomeze."
+msgstr "Ugomba kwinjira kugira ngo ukomeze."
+
+msgid "Igicuruzwa nticyabonetse."
+msgstr "Igicuruzwa nticyabonetse."
+
+msgid "Iyandikishe byagenze neza. Reba imeli yawe kugira ngo wemeze konti yawe."
+msgstr "Iyandikishe byagenze neza. Reba imeli yawe kugira ngo wemeze konti yawe."
+
+msgid "Winjiye kuri KazeB."
+msgstr "Winjiye kuri KazeB."
+
+msgid "Wasohotse kuri KazeB."
+msgstr "Wasohotse kuri KazeB."
+
+msgid "Iki gicuruzwa ntikiboneka."
+msgstr "Iki gicuruzwa ntikiboneka."

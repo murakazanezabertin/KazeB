@@ -8,6 +8,8 @@ export interface HomepageData {
     login: string;
     register: string;
     my_account: string;
+    account: string;
+    favorites: string;
     messages: string;
     categories: string;
     recent_listings: string;
@@ -177,6 +179,40 @@ export interface SellerProfileData {
   pagination: PaginationData;
 }
 
+export interface AuthUiData {
+  labels: Record<string, string>;
+  register_fields: Record<string, string>;
+  account_fields: Record<string, string>;
+  terms_url: string;
+  privacy_url: string;
+}
+
+export interface AccountData {
+  username: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  email_verified: boolean;
+  agreed_to_terms: boolean;
+  profile_picture: string | null;
+  location: string;
+  bio: string;
+  phone_number: string;
+  whatsapp_number: string;
+  is_phone_verified: boolean;
+  date_joined: string;
+}
+
+export interface FavoriteData {
+  listing: ListingCardData;
+  is_active: boolean;
+}
+
+export interface FavoritesResponse {
+  results: FavoriteData[];
+  pagination: PaginationData;
+}
+
 interface CsrfResponse {
   csrfToken: string;
 }
@@ -187,6 +223,7 @@ export class ApiError extends Error {
   constructor(
     message: string,
     readonly status: number,
+    readonly fieldErrors: Record<string, string[]> = {},
   ) {
     super(message);
     this.name = "ApiError";
@@ -210,7 +247,23 @@ export async function apiRequest<T>(path: string, init: RequestInit = {}): Promi
   });
 
   if (!response.ok) {
-    throw new ApiError(`Django request failed (${response.status}).`, response.status);
+    let message = `Django request failed (${response.status}).`;
+    let fieldErrors: Record<string, string[]> = {};
+    if (response.headers.get("content-type")?.includes("application/json")) {
+      try {
+        const payload: unknown = await response.json();
+        if (payload && typeof payload === "object") {
+          const errorPayload = payload as { detail?: unknown; errors?: unknown };
+          if (typeof errorPayload.detail === "string") message = errorPayload.detail;
+          if (errorPayload.errors && typeof errorPayload.errors === "object") {
+            fieldErrors = errorPayload.errors as Record<string, string[]>;
+          }
+        }
+      } catch {
+        message = `Django request failed (${response.status}).`;
+      }
+    }
+    throw new ApiError(message, response.status, fieldErrors);
   }
   return response.json() as Promise<T>;
 }
@@ -245,6 +298,32 @@ export function getSeller(username: string, page: string): Promise<SellerProfile
   const suffix = query.toString();
   return apiRequest<SellerProfileData>(
     `/api/sellers/${encodeURIComponent(username)}/${suffix ? `?${suffix}` : ""}`,
+  );
+}
+
+export function getAuthUi(): Promise<AuthUiData> {
+  return apiRequest<AuthUiData>("/api/auth/ui/");
+}
+
+export function getAccount(): Promise<{ account: AccountData }> {
+  return apiRequest<{ account: AccountData }>("/api/account/");
+}
+
+export function getFavorites(page = ""): Promise<FavoritesResponse> {
+  const query = new URLSearchParams();
+  if (page) query.set("page", page);
+  const suffix = query.toString();
+  return apiRequest<FavoritesResponse>(`/api/favorites/${suffix ? `?${suffix}` : ""}`);
+}
+
+export function submitForm<T>(path: string, body: FormData | URLSearchParams): Promise<T> {
+  return apiRequest<T>(path, { method: "POST", body });
+}
+
+export function toggleFavorite(listingId: number): Promise<{ is_favorited: boolean }> {
+  return submitForm<{ is_favorited: boolean }>(
+    `/api/favorites/${listingId}/toggle/`,
+    new URLSearchParams(),
   );
 }
 

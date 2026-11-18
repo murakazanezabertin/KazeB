@@ -795,3 +795,51 @@ msgstr "with"
 
 msgid "politiki y'ibanga"
 msgstr "privacy policy"
+
+msgid "Habaye ikibazo. Ongera ugerageze."
+msgstr "Something went wrong. Please try again."
+
+msgid "Ohereza umurongo wo guhindura ijambobanga"
+msgstr "Send password reset link"
+
+msgid "Ijambobanga rishya"
+msgstr "New password"
+
+msgid "Yemejwe"
+msgstr "Verified"
+
+msgid "Ntiyemejwe"
+msgstr "Not verified"
+
+msgid "Nemeye amabwiriza n'amategeko bya KazeB"
+msgstr "I agree to KazeB's terms and conditions"
+
+msgid "Emeza imeli nshya twakoherereje kugira ngo wongere winjire."
+msgstr "Verify the new email we sent you before signing in again."
+
+msgid "Niba imeli ijyanye na konti ihari, twohereje umurongo wo guhindura ijambobanga."
+msgstr "If an account matches this email, we sent a password reset link."
+
+msgid "Niba konti ihari kandi itaremezwa, twakoherereje imeli."
+msgstr "If the account exists and is not verified, we sent an email."
+
+msgid "Birimo gutegurwa..."
+msgstr "Loading..."
+
+msgid "Ugomba kwinjira kugira ngo ukomeze."
+msgstr "You must sign in to continue."
+
+msgid "Igicuruzwa nticyabonetse."
+msgstr "Listing not found."
+
+msgid "Iyandikishe byagenze neza. Reba imeli yawe kugira ngo wemeze konti yawe."
+msgstr "Registration successful. Check your email to verify your account."
+
+msgid "Winjiye kuri KazeB."
+msgstr "You are signed in to KazeB."
+
+msgid "Wasohotse kuri KazeB."
+msgstr "You are signed out."
+
+msgid "Iki gicuruzwa ntikiboneka."
+msgstr "This listing is no longer available."

@@ -12,14 +12,23 @@ export default defineConfig(({ mode }) => {
     bypass(request) {
       const pathname = (request.url || "/").split("?")[0];
       const djangoActionPath =
-        /^\/listings\/(?:add|dashboard|favorites)(?:\/|$)/.test(pathname) ||
+        /^\/listings\/(?:add|dashboard)(?:\/|$)/.test(pathname) ||
         /^\/listings\/\d+\/(?:edit|delete|favorite)\/?$/.test(pathname);
       return djangoActionPath ? undefined : request.url;
     },
   };
+  const accountsProxyConfig: ProxyOptions = {
+    ...proxyConfig,
+    bypass(request) {
+      const pathname = (request.url || "/").split("?")[0];
+      const reactPage =
+        /^\/accounts\/(?:login|register|edit|delete|profile|password_reset(?:\/done)?|reset\/(?:[^/]+\/[^/]+|done))\/?$/.test(pathname) ||
+        /^\/accounts\/verify\/(?:sent|resend)\/?$/.test(pathname);
+      return reactPage ? request.url : undefined;
+    },
+  };
   const djangoPaths = [
     "/api",
-    "/accounts",
     "/admin",
     "/about",
     "/anti-scam",
@@ -44,6 +53,7 @@ export default defineConfig(({ mode }) => {
       proxy: {
         ...Object.fromEntries(djangoPaths.map((path) => [path, proxyConfig])),
         "/listings": listingsProxyConfig,
+        "/accounts": accountsProxyConfig,
       },
     },
   };

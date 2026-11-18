@@ -75,7 +75,7 @@ def verify_email(request, uidb64, token):
     if user is not None and email_verification_token.check_token(user, token):
         user.email_verified = True
         user.save(update_fields=["email_verified"])
-        login(request, user)
+        login(request, user, backend="django.contrib.auth.backends.ModelBackend")
         messages.success(request, _("Imeli yawe yemejwe. Murakaza neza kuri KazeB!"))
         return redirect("core:home")
 
