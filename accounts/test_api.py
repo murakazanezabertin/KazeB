@@ -1,14 +1,18 @@
 import re
+import smtplib
 from io import BytesIO
 from tempfile import TemporaryDirectory
+from unittest.mock import patch
 
 from django.contrib.auth import get_user_model
 from django.core import mail
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, TestCase, override_settings
 from django.urls import reverse
+
 from PIL import Image
 
+from accounts.models import PasswordResetRateLimit
 from listings.models import Category, Favorite, Listing
 
 User = get_user_model()
@@ -67,6 +71,16 @@ class AccountApiTests(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertIn("whatsapp_number", response.json()["errors"])
         self.assertIn("password2", response.json()["errors"])
+        self.assertFalse(User.objects.filter(username="new-api-user").exists())
+
+    def test_registration_rejects_case_insensitive_duplicate_email(self):
+        response = self.client.post(
+            reverse("auth_register_api"),
+            self.valid_registration(email=self.user.email.upper()),
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("email", response.json()["errors"])
         self.assertFalse(User.objects.filter(username="new-api-user").exists())
 
     def test_registration_requires_terms_acceptance(self):
@@ -189,7 +203,8 @@ class AccountApiTests(TestCase):
         self.user.refresh_from_db()
         self.assertTrue(self.user.check_password("another-strong-passw0rd"))
 
-    def test_password_reset_request_does_not_disclose_unknown_emails(self):
+    def test_password_reset_request_returns_requested_messages(self):
+        self.client.post("/i18n/setlang/", {"language": "en", "next": "/"})
         real = self.client.post(
             reverse("auth_password_reset_api"), {"email": self.user.email}
         )
@@ -197,8 +212,77 @@ class AccountApiTests(TestCase):
             reverse("auth_password_reset_api"), {"email": "unknown@example.com"}
         )
 
-        self.assertEqual(real.json(), unknown.json())
+        self.assertEqual(real.status_code, 200)
+        self.assertEqual(unknown.status_code, 200)
+        self.assertEqual(
+            real.json()["detail"],
+            "A password reset link has been sent to your email address. Please check your inbox.",
+        )
+        self.assertEqual(
+            unknown.json()["detail"],
+            "No account exists with this email address. Please check your email or create an account.",
+        )
         self.assertEqual(len(mail.outbox), 1)
+
+    def test_password_reset_rejects_invalid_email(self):
+        response = self.client.post(
+            reverse("auth_password_reset_api"), {"email": "not-an-email"}
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("email", response.json()["errors"])
+        self.assertEqual(len(mail.outbox), 0)
+
+    def test_password_reset_is_rate_limited_per_email(self):
+        for _ in range(3):
+            response = self.client.post(
+                reverse("auth_password_reset_api"), {"email": self.user.email}
+            )
+            self.assertEqual(response.status_code, 200)
+        blocked = self.client.post(
+            reverse("auth_password_reset_api"), {"email": self.user.email}
+        )
+
+        self.assertEqual(blocked.status_code, 429)
+        self.assertEqual(len(mail.outbox), 3)
+        email_bucket = PasswordResetRateLimit.objects.get(
+            scope=PasswordResetRateLimit.Scope.EMAIL
+        )
+        self.assertNotEqual(email_bucket.fingerprint, self.user.email)
+
+    def test_password_reset_is_rate_limited_per_ip(self):
+        for index in range(10):
+            response = self.client.post(
+                reverse("auth_password_reset_api"),
+                {"email": f"unknown-{index}@example.com"},
+            )
+            self.assertEqual(response.status_code, 200)
+        blocked = self.client.post(
+            reverse("auth_password_reset_api"),
+            {"email": "another-unknown@example.com"},
+        )
+
+        self.assertEqual(blocked.status_code, 429)
+        self.assertEqual(len(mail.outbox), 0)
+
+    def test_password_reset_reports_email_delivery_failure(self):
+        self.client.post("/i18n/setlang/", {"language": "en", "next": "/"})
+        with patch(
+            "accounts.api.PasswordResetForm.save",
+            side_effect=smtplib.SMTPException("SMTP unavailable"),
+        ):
+            with self.assertLogs("accounts.api", level="ERROR"):
+                response = self.client.post(
+                    reverse("auth_password_reset_api"),
+                    {"email": self.user.email},
+                )
+
+        self.assertEqual(response.status_code, 503)
+        self.assertEqual(
+            response.json()["detail"],
+            "Password reset is temporarily unavailable. Please try again later.",
+        )
+        self.assertEqual(len(mail.outbox), 0)
 
     def test_password_reset_rejects_invalid_token(self):
         response = self.client.post(

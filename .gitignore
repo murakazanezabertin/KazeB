@@ -10,6 +10,7 @@ db.sqlite3
 !/media/categories/.gitkeep
 !/media/profiles/.gitkeep
 /staticfiles/
+/static/react/
 # Bootstrap vendor assets are committed for deployment.
 /static/vendor/
 !/static/vendor/

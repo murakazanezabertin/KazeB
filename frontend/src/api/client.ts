@@ -2,6 +2,15 @@ export interface HomepageData {
   language: "rw" | "en" | "fr";
   labels: {
     home: string;
+    welcome_prefix: string;
+    hero_title_line_1: string;
+    hero_title_line_2: string;
+    hero_title_line_3: string;
+    hero_title_line_4: string;
+    hero_title_line_5: string;
+    hero_buyer_cta: string;
+    hero_seller_cta: string;
+    brand_tagline: string;
     add_listing: string;
     search_placeholder: string;
     search: string;
@@ -25,6 +34,8 @@ export interface HomepageData {
     sign_out: string;
     empty_image: string;
     empty_categories: string;
+    page_not_found: string;
+    loading: string;
     all_listings: string;
     all_conditions: string;
     new_condition: string;
@@ -222,8 +233,10 @@ export interface SellerDashboardListing {
   currency: string;
   condition: string;
   condition_display: string;
-  status: "active" | "inactive";
+  status: "active" | "inactive" | "hidden" | "removed";
   is_active: boolean;
+  moderation_status: "visible" | "hidden" | "removed";
+  moderation_reason: string;
   created_at: string;
   views_count: number;
   thread_count: number;
@@ -232,7 +245,28 @@ export interface SellerDashboardListing {
   location: string;
 }
 
+export interface SellerDashboardAccount {
+  id: number;
+  username: string;
+  display_name: string;
+  profile_picture: string | null;
+  phone_number: string;
+  whatsapp_number: string;
+  reviews_url: string;
+}
+
+export interface SellerDashboardMessage {
+  id: number;
+  body: string;
+  created_at: string;
+  is_read: boolean;
+  url: string;
+  listing: { id: number; name: string };
+  sender: { id: number; username: string };
+}
+
 export interface SellerDashboardData {
+  account: SellerDashboardAccount;
   statistics: {
     total_listings: number;
     active_listings: number;
@@ -241,6 +275,7 @@ export interface SellerDashboardData {
     unread_messages: number;
   };
   listings: SellerDashboardListing[];
+  recent_messages: SellerDashboardMessage[];
   labels: Record<string, string>;
 }
 
@@ -270,6 +305,127 @@ export interface SellerListingEditData extends ListingCreateMetadata {
     is_active: boolean;
     images: Array<{ id: number; url: string; is_cover: boolean }>;
   };
+}
+
+export interface AdminPageData<T> {
+  results: T[];
+  pagination: PaginationData;
+}
+
+export interface AdminUser {
+  id: number;
+  username: string;
+  email: string;
+  phone_number: string;
+  date_joined: string;
+  last_login: string | null;
+  email_verified: boolean;
+  is_phone_verified: boolean;
+  is_active: boolean;
+  is_staff: boolean;
+}
+
+export interface AdminListing {
+  id: number;
+  name: string;
+  description: string;
+  price: string;
+  condition: string;
+  category: string;
+  district: string;
+  sector: string;
+  is_active: boolean;
+  moderation_status: "visible" | "hidden" | "removed";
+  moderation_reason: string;
+  moderated_at: string | null;
+  created_at: string;
+  image: string | null;
+  seller: {
+    id: number;
+    username: string;
+    email: string;
+    phone_number: string;
+  };
+}
+
+export interface AdminReport {
+  id: number;
+  reporter: string;
+  reporter_id: number;
+  target: { type: "listing" | "user"; id: number; label: string } | null;
+  reason: string;
+  details: string;
+  evidence: string[];
+  status: "pending" | "under_review" | "resolved" | "rejected";
+  decision_notes: string;
+  handled_by: string | null;
+  handled_at: string | null;
+  created_at: string;
+}
+
+export interface AdminOverviewData {
+  statistics: {
+    users: { total: number; verified: number; unverified: number };
+    listings: { total: number; active: number; hidden: number; inactive: number; removed: number };
+    reports: {
+      total: number;
+      pending: number;
+      under_review: number;
+      resolved: number;
+      rejected: number;
+    };
+    reviews: number;
+    verified_phones: number;
+    unverified_phones: number;
+  };
+  registration_trend: Array<{ date: string; total: number }>;
+  listing_trend: Array<{ date: string; total: number }>;
+  recent_registrations: AdminUser[];
+  recent_listings: AdminListing[];
+  recent_activity: Array<{ type: string; title: string; created_at: string }>;
+  permissions: {
+    users: boolean;
+    suspend_users: boolean;
+    listings: boolean;
+    moderate_listings: boolean;
+    remove_listings: boolean;
+    reports: boolean;
+    manage_reports: boolean;
+    reviews: boolean;
+    phones: boolean;
+    activity: boolean;
+    remove_reviews: boolean;
+  };
+}
+
+export interface AdminReview {
+  id: number;
+  reviewer: string;
+  seller: string;
+  rating: number;
+  comment: string;
+  created_at: string;
+}
+
+export interface AdminPhoneVerification {
+  user: string;
+  phone_number: string;
+  is_verified: boolean;
+  attempts: number;
+  created_at: string;
+  expires_at: string | null;
+}
+
+export interface AdminAuditEntry {
+  id: number;
+  action: string;
+  action_code: string;
+  target_type: string;
+  target_id: string;
+  target_label: string;
+  reason: string;
+  actor: string | null;
+  created_at: string;
 }
 
 interface CsrfResponse {
@@ -415,8 +571,20 @@ export function updateSellerListing(id: number, body: FormData): Promise<Listing
 export function updateSellerListingStatus(
   id: number,
   isActive: boolean,
-): Promise<{ is_active: boolean; status: "active" | "inactive"; detail: string }> {
-  return apiRequest<{ is_active: boolean; status: "active" | "inactive"; detail: string }>(
+): Promise<{
+  is_active: boolean;
+  status: "active" | "inactive" | "hidden" | "removed";
+  moderation_status: "visible" | "hidden" | "removed";
+  moderation_reason: string;
+  detail: string;
+}> {
+  return apiRequest<{
+    is_active: boolean;
+    status: "active" | "inactive" | "hidden" | "removed";
+    moderation_status: "visible" | "hidden" | "removed";
+    moderation_reason: string;
+    detail: string;
+  }>(
     `/api/seller/listings/${id}/status/`,
     {
     method: "PATCH",
@@ -437,6 +605,104 @@ export function deleteSellerListing(
     `/api/seller/listings/${id}/`,
     { method: "DELETE" },
   );
+}
+
+function adminQuery(path: string, values: Record<string, string | number | undefined>): string {
+  const query = new URLSearchParams();
+  Object.entries(values).forEach(([key, value]) => {
+    if (value !== undefined && value !== "") query.set(key, String(value));
+  });
+  const suffix = query.toString();
+  return `${path}${suffix ? `?${suffix}` : ""}`;
+}
+
+export function getAdminOverview(): Promise<AdminOverviewData> {
+  return apiRequest<AdminOverviewData>("/api/admin/overview/");
+}
+
+export function getAdminUsers(
+  query: Record<string, string | number | undefined>,
+): Promise<AdminPageData<AdminUser>> {
+  return apiRequest<AdminPageData<AdminUser>>(adminQuery("/api/admin/users/", query));
+}
+
+export function getAdminListings(
+  query: Record<string, string | number | undefined>,
+): Promise<AdminPageData<AdminListing>> {
+  return apiRequest<AdminPageData<AdminListing>>(adminQuery("/api/admin/listings/", query));
+}
+
+export function getAdminReports(
+  query: Record<string, string | number | undefined>,
+): Promise<AdminPageData<AdminReport>> {
+  return apiRequest<AdminPageData<AdminReport>>(adminQuery("/api/admin/reports/", query));
+}
+
+export function getAdminReviews(
+  query: Record<string, string | number | undefined>,
+): Promise<AdminPageData<AdminReview>> {
+  return apiRequest<AdminPageData<AdminReview>>(adminQuery("/api/admin/reviews/", query));
+}
+
+export function getAdminPhones(
+  query: Record<string, string | number | undefined>,
+): Promise<AdminPageData<AdminPhoneVerification>> {
+  return apiRequest<AdminPageData<AdminPhoneVerification>>(adminQuery("/api/admin/phones/", query));
+}
+
+export function getAdminActivity(
+  query: Record<string, string | number | undefined>,
+): Promise<AdminPageData<AdminAuditEntry>> {
+  return apiRequest<AdminPageData<AdminAuditEntry>>(adminQuery("/api/admin/activity/", query));
+}
+
+export function getAdminUserDetail(userId: number): Promise<{
+  user: AdminUser;
+  statistics: { listings: number; reviews_received: number; reports_received: number };
+  listings: AdminListing[];
+  reports: AdminReport[];
+  activity: Array<{ type: string; title: string; created_at: string }>;
+}> {
+  return apiRequest(`/api/admin/users/${userId}/`);
+}
+
+export function updateAdminUserStatus(
+  userId: number,
+  isActive: boolean,
+  reason: string,
+): Promise<{ user: AdminUser }> {
+  return submitAdminJson(`/api/admin/users/${userId}/status/`, { is_active: isActive, reason });
+}
+
+export function moderateAdminListing(
+  listingId: number,
+  action: "hide" | "restore" | "remove",
+  reason: string,
+): Promise<{ listing: AdminListing }> {
+  return submitAdminJson(`/api/admin/listings/${listingId}/moderation/`, { action, reason });
+}
+
+export function updateAdminReport(
+  reportId: number,
+  status: AdminReport["status"],
+  decisionNotes: string,
+): Promise<{ report: AdminReport }> {
+  return submitAdminJson(`/api/admin/reports/${reportId}/`, {
+    status,
+    decision_notes: decisionNotes,
+  });
+}
+
+export function removeAdminReview(reviewId: number, reason: string): Promise<{ detail: string }> {
+  return submitAdminJson(`/api/admin/reviews/${reviewId}/remove/`, { reason });
+}
+
+function submitAdminJson<T>(path: string, payload: unknown): Promise<T> {
+  return apiRequest<T>(path, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
 }
 
 export async function getCsrfToken(): Promise<string> {

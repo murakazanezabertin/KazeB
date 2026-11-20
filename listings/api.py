@@ -114,7 +114,13 @@ def _seller_dashboard_statistics(user):
 
     listing_stats = Listing.objects.filter(seller=user).aggregate(
         total_listings=Count("pk"),
-        active_listings=Count("pk", filter=Q(is_active=True)),
+        active_listings=Count(
+            "pk",
+            filter=Q(
+                is_active=True,
+                moderation_status=Listing.ModerationStatus.VISIBLE,
+            ),
+        ),
         total_views=Sum("views_count"),
     )
     unread_messages = (
@@ -172,7 +178,10 @@ def listing_browse_api(request):
     )
     categories = [_category_payload(item) for item in Category.objects.all()]
 
-    listings = Listing.objects.filter(is_active=True).select_related(
+    listings = Listing.objects.filter(
+        is_active=True,
+        moderation_status=Listing.ModerationStatus.VISIBLE,
+    ).select_related(
         "seller", "category"
     ).prefetch_related("images")
     if category:
@@ -222,6 +231,7 @@ def listing_detail_api(request, pk):
         Listing.objects.select_related("seller", "category").prefetch_related("images"),
         pk=pk,
         is_active=True,
+        moderation_status=Listing.ModerationStatus.VISIBLE,
     )
     is_owner = request.user.is_authenticated and request.user.pk == listing.seller_id
     if not is_owner:
@@ -277,8 +287,11 @@ def listing_detail_api(request, pk):
 @permission_classes([IsAuthenticated])
 def seller_dashboard_api(request):
     """Return the authenticated seller's listing dashboard data."""
+    from chat.models import Message
+
+    user = request.user
     listings = (
-        Listing.objects.filter(seller=request.user)
+        Listing.objects.filter(seller=user)
         .select_related("category")
         .prefetch_related("images")
         .annotate(thread_count=Count("messages__buyer", distinct=True))
@@ -298,8 +311,14 @@ def seller_dashboard_api(request):
                 "currency": listing.currency,
                 "condition": listing.condition,
                 "condition_display": listing.get_condition_display(),
-                "status": "active" if listing.is_active else "inactive",
+                "status": (
+                    listing.moderation_status
+                    if listing.moderation_status != Listing.ModerationStatus.VISIBLE
+                    else "active" if listing.is_active else "inactive"
+                ),
                 "is_active": listing.is_active,
+                "moderation_status": listing.moderation_status,
+                "moderation_reason": listing.moderation_reason,
                 "created_at": listing.created_at,
                 "views_count": listing.views_count,
                 "thread_count": listing.thread_count,
@@ -313,22 +332,67 @@ def seller_dashboard_api(request):
             }
         )
 
+    recent_messages = (
+        Message.objects.filter(listing__seller=user)
+        .exclude(sender=user)
+        .select_related("listing", "sender")
+        .order_by("-created_at")[:10]
+    )
+    recent_messages_payload = [
+        {
+            "id": message.pk,
+            "body": message.body,
+            "created_at": message.created_at,
+            "is_read": message.is_read,
+            "url": f"/messages/listing/{message.listing_id}/buyer/{message.sender_id}/",
+            "listing": {
+                "id": message.listing_id,
+                "name": message.listing.name,
+            },
+            "sender": {
+                "id": message.sender_id,
+                "username": message.sender.username,
+            },
+        }
+        for message in recent_messages
+    ]
+
     payload = {
-        "statistics": _seller_dashboard_statistics(request.user),
+        "account": {
+            "id": user.pk,
+            "username": user.get_username(),
+            "display_name": user.get_full_name() or user.get_username(),
+            "profile_picture": (
+                request.build_absolute_uri(user.profile_picture.url)
+                if user.profile_picture
+                else None
+            ),
+            "phone_number": user.phone_number,
+            "whatsapp_number": user.whatsapp_number,
+            "reviews_url": f"/trust/seller/{user.pk}/reviews/",
+        },
+        "statistics": _seller_dashboard_statistics(user),
         "listings": listings_payload,
+        "recent_messages": recent_messages_payload,
         "labels": {
             "title": _("Konti yanjye"),
             "subtitle": _("Aha nihoreba ibyo watanze n'ubutumwa abaguzi bakoherereje."),
             "add_listing": _("Ongeraho igicuruzwa"),
+            "favorites": _("Ibya kwibuka"),
+            "my_reviews": _("Ubusuzumire bwanjye"),
             "total_listings": _("Ibicuruzwa"),
             "active_listings": _("Biragaragara"),
             "inactive_listings": _("Birahishwe"),
             "total_views": _("Abarebye"),
             "unread_messages": _("Ubutumwa butarasomwa"),
             "my_listings": _("Ibicuruzwa byanjye"),
+            "recent_messages": _("Ubutumwa buheruka"),
             "no_listings": _("Nturigeze wongeraho ikintu cyo kugurisha."),
+            "no_messages": _("Nta butumwa bwaturutse ku baguzi burahari."),
             "active": _("Biragaragara"),
             "inactive": _("Birahishwe"),
+            "moderation_hidden": _("This listing is hidden by a moderator."),
+            "moderation_removed": _("This listing was removed by a moderator."),
             "views": _("Abarebye"),
             "conversations": _("Ibiganiro"),
             "created": _("Byashyizweho"),
@@ -336,6 +400,8 @@ def seller_dashboard_api(request):
             "loading": _("Birimo gutegurwa..."),
             "load_error": _("Ntibashoboye gutegura konti y'ibicuruzwa."),
             "edit_listing": _("Hindura"),
+            "edit_account": _("Hindura konti"),
+            "delete_account": _("Siba Konti"),
             "listing_created": _("Icyo ugurisha cyashyizwe ahagaragara."),
             "listing_updated": _("Impinduka zabitswe."),
             "hide_listing": _("Hisha igicuruzwa"),
@@ -604,6 +670,12 @@ def seller_listing_edit_api(request, pk):
 def seller_listing_status_api(request, pk):
     """Activate or hide a listing owned by the authenticated seller."""
     listing = get_object_or_404(Listing, pk=pk, seller=request.user)
+    if listing.moderation_status != Listing.ModerationStatus.VISIBLE:
+        return Response(
+            {"detail": _("This listing is hidden by a moderator and cannot be reactivated here.")},
+            status=403,
+            headers={"Cache-Control": "private, no-store"},
+        )
     serializer = SellerListingStatusSerializer(data=request.data)
     if not serializer.is_valid():
         return Response(
@@ -621,6 +693,8 @@ def seller_listing_status_api(request, pk):
         {
             "is_active": listing.is_active,
             "status": "active" if listing.is_active else "inactive",
+            "moderation_status": listing.moderation_status,
+            "moderation_reason": listing.moderation_reason,
             "detail": (
                 _("Igicuruzwa kiragaragara ubu.")
                 if listing.is_active

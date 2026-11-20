@@ -9,7 +9,10 @@ class ListingSitemap(Sitemap):
     priority = 0.7
 
     def items(self):
-        return Listing.objects.filter(is_active=True)
+        return Listing.objects.filter(
+            is_active=True,
+            moderation_status=Listing.ModerationStatus.VISIBLE,
+        )
 
     def lastmod(self, obj):
         return obj.updated_at

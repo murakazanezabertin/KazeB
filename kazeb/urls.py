@@ -8,6 +8,7 @@ from django.views.generic import TemplateView
 
 from accounts.forms import LoginForm
 from accounts import api as account_api
+from core import admin_api
 from listings import api as listing_api
 from listings import views as listing_views
 from .sitemaps import CategorySitemap, ListingSitemap, StaticViewSitemap
@@ -72,6 +73,43 @@ urlpatterns = [
         account_api.toggle_favorite_api,
         name="favorite_toggle_api",
     ),
+    path("api/admin/overview/", admin_api.admin_overview_api, name="admin_overview_api"),
+    path("api/admin/users/", admin_api.admin_users_api, name="admin_users_api"),
+    path(
+        "api/admin/users/<int:user_id>/",
+        admin_api.admin_user_detail_api,
+        name="admin_user_detail_api",
+    ),
+    path(
+        "api/admin/users/<int:user_id>/status/",
+        admin_api.admin_user_status_api,
+        name="admin_user_status_api",
+    ),
+    path("api/admin/listings/", admin_api.admin_listings_api, name="admin_listings_api"),
+    path(
+        "api/admin/listings/<int:listing_id>/",
+        admin_api.admin_listing_detail_api,
+        name="admin_listing_detail_api",
+    ),
+    path(
+        "api/admin/listings/<int:listing_id>/moderation/",
+        admin_api.admin_listing_moderation_api,
+        name="admin_listing_moderation_api",
+    ),
+    path("api/admin/reports/", admin_api.admin_reports_api, name="admin_reports_api"),
+    path(
+        "api/admin/reports/<int:report_id>/",
+        admin_api.admin_report_update_api,
+        name="admin_report_update_api",
+    ),
+    path("api/admin/reviews/", admin_api.admin_reviews_api, name="admin_reviews_api"),
+    path(
+        "api/admin/reviews/<int:review_id>/remove/",
+        admin_api.admin_review_remove_api,
+        name="admin_review_remove_api",
+    ),
+    path("api/admin/phones/", admin_api.admin_phones_api, name="admin_phones_api"),
+    path("api/admin/activity/", admin_api.admin_activity_api, name="admin_activity_api"),
     path("api/listings/", listing_api.listing_browse_api, name="listing_browse_api"),
     path(
         "api/seller/dashboard/",

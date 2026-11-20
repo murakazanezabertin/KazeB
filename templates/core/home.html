@@ -3,7 +3,20 @@
 
 {% block content %}
 
-<h1 class="kazeb-welcome-title">Murakaza neza kuri KazeB!</h1>
+<h1 class="kazeb-welcome-title">
+  {% trans "Murakaza neza kuri" %}
+  <span class="kazeb-logo-black">Kaze</span><span class="kazeb-logo-orange">B</span>!
+</h1>
+<p class="kazeb-welcome-tagline">Ikiraro gihuza abaguzi n'abagurisha</p>
+<div class="homepage-search">
+  <form action="{% url 'listings:search' %}" method="get" class="nav-search-box homepage-search-form">
+    <div class="input-group">
+      <span class="input-group-text bg-white border-end-0">🔍</span>
+      <input type="search" name="q" class="form-control border-start-0" placeholder="{% trans 'Shakisha ukurikije aho biherereye...' %}" value="{{ request.GET.q }}">
+      <button type="submit" class="btn btn-brand">{% trans "Shakisha" %}</button>
+    </div>
+  </form>
+</div>
 
 <!-- =========================
      KAZEB HERO CAROUSEL
@@ -214,17 +227,17 @@
 <!-- =========================
      CATEGORIES
      ========================= -->
-<section id="categories" class="mb-5">
+<section id="categories" class="homepage-category-section mb-5">
 
   <h2 class="find-by-category">
     {% trans "Shakisha ukurikije ubwoko" %}
   </h2>
 
-  <div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-4 mt-2">
+  <div class="homepage-category-grid">
 
     {% for category in nav_categories %}
 
-      <div class="col">
+      <div class="homepage-category-item">
 
         <a
           href="{{ category.get_absolute_url }}"

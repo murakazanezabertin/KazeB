@@ -147,7 +147,7 @@ function ListingBrowse({ labels }: { labels: Labels }) {
   }, []);
 
   if (error) return <main className="container py-4"><PageMessage error>{error}</PageMessage></main>;
-  if (!data) return <main className="container py-4"><p aria-live="polite">Loading listings…</p></main>;
+  if (!data) return <main className="container py-4"><p aria-live="polite">{labels.loading}</p></main>;
 
   return (
     <main className="container py-4">
@@ -256,7 +256,7 @@ function ListingDetail({
   }, [id]);
 
   if (error) return <main className="container py-4"><PageMessage error>{error}</PageMessage></main>;
-  if (!listing) return <main className="container py-4"><p aria-live="polite">Loading listing…</p></main>;
+  if (!listing) return <main className="container py-4"><p aria-live="polite">{labels.loading}</p></main>;
 
   const seller = listing.seller;
   const listingId = listing.id;
@@ -448,7 +448,7 @@ function SellerProfile({ labels, isAuthenticated }: { labels: Labels; isAuthenti
   }, [username, page]);
 
   if (error) return <main className="container py-4"><PageMessage error>{error}</PageMessage></main>;
-  if (!seller) return <main className="container py-4"><p aria-live="polite">Loading seller…</p></main>;
+  if (!seller) return <main className="container py-4"><p aria-live="polite">{labels.loading}</p></main>;
 
   const firstListing = seller.listings[0];
   const whatsappUrl = seller.whatsapp_digits
@@ -553,5 +553,5 @@ export default function Marketplace({
   if (/^\/seller\/[^/]+\/?$/.test(path)) {
     return <SellerProfile labels={labels} isAuthenticated={isAuthenticated} />;
   }
-  return <main className="container py-4"><PageMessage error>Page not found.</PageMessage></main>;
+  return <main className="container py-4"><PageMessage error>{labels.page_not_found}</PageMessage></main>;
 }

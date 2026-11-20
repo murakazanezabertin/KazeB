@@ -47,6 +47,11 @@ class Listing(models.Model):
         NEW = "new", _("Gishya")
         USED = "used", _("Gikoreshejwe")
 
+    class ModerationStatus(models.TextChoices):
+        VISIBLE = "visible", _("Visible")
+        HIDDEN = "hidden", _("Hidden by moderation")
+        REMOVED = "removed", _("Removed by moderation")
+
     class Currency(models.TextChoices):
         # RWF listed first so it's the default choice everywhere this
         # is used as a select field.
@@ -75,12 +80,30 @@ class Listing(models.Model):
     is_active = models.BooleanField(
         default=True, help_text="Uncheck to hide this listing without deleting it."
     )
+    moderation_status = models.CharField(
+        max_length=10,
+        choices=ModerationStatus.choices,
+        default=ModerationStatus.VISIBLE,
+    )
+    moderation_reason = models.TextField(blank=True)
+    moderated_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        related_name="moderated_listings",
+        null=True,
+        blank=True,
+    )
+    moderated_at = models.DateTimeField(null=True, blank=True)
     views_count = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["-created_at"]
+        permissions = [
+            ("moderate_listing", "Can hide or restore marketplace listings"),
+            ("remove_listing", "Can remove listings from the marketplace"),
+        ]
 
     def get_absolute_url(self):
         return reverse("listings:listing_detail", kwargs={"pk": self.pk})

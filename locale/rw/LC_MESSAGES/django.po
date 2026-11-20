@@ -415,6 +415,9 @@ msgstr "Konti"
 msgid "Konti yanjye"
 msgstr "Konti yanjye"
 
+msgid "Umwirondoro wanjye"
+msgstr "Umwirondoro wanjye"
+
 msgid "Konti yawe yasibwe burundu."
 msgstr "Konti yawe yasibwe burundu."
 
@@ -891,3 +894,24 @@ msgstr "Wasohotse kuri KazeB."
 
 msgid "Iki gicuruzwa ntikiboneka."
 msgstr "Iki gicuruzwa ntikiboneka."
+
+msgid "A password reset link has been sent to your email address. Please check your inbox."
+msgstr "Twohereje umurongo wo guhindura ijambobanga kuri imeli yawe. Reba inbox yawe."
+
+msgid "No account exists with this email address. Please check your email or create an account."
+msgstr "Nta konti ihari ifitanye isano n'iyi imeli. Reba neza imeli yawe cyangwa ufungure konti."
+
+msgid "Too many password reset requests. Please try again later."
+msgstr "Wasabye guhindura ijambobanga inshuro nyinshi. Ongera ugerageze nyuma y'igihe gito."
+
+msgid "Password reset is temporarily unavailable. Please try again later."
+msgstr "Serivisi yo guhindura ijambobanga ntiboneka ubu. Ongera ugerageze nyuma."
+
+msgid "This listing is hidden by a moderator."
+msgstr "Iki gicuruzwa cyahishwe n'ushinzwe kugenzura urubuga."
+
+msgid "This listing was removed by a moderator."
+msgstr "Iki gicuruzwa cyakuwe ku rubuga n'ushinzwe kurugenzura."
+
+msgid "This listing is hidden by a moderator and cannot be reactivated here."
+msgstr "Iki gicuruzwa cyahishwe n'ushinzwe kugenzura urubuga kandi ntushobora kongera kukigaragaza hano."

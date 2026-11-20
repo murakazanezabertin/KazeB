@@ -1,13 +1,13 @@
 # Deploying to Vercel
 
 Vercel runs Django as a serverless function (via `api/index.py`), not
-a long-lived `gunicorn` process like Fly.io/Railway/Render. That
-means a few things the Dockerfile/Procfile used to handle
-automatically now need to happen **before** you deploy, since Vercel
-doesn't run arbitrary build commands for Python projects.
+a long-lived `gunicorn` process like Fly.io/Railway/Render. The
+`pyproject.toml` build command prepares the React administrator bundle,
+vendored assets, and Django static files before the function is packaged.
 
-Read this in full before your first deploy -- steps 1-2 only need to
-be repeated when Bootstrap/static files change, not on every push.
+Read this in full before your first deploy. Vercel runs the configured
+build command on each deployment; migrations and administrator role
+assignment remain manual.
 
 ## Honest heads-up before you start
 
@@ -30,25 +30,22 @@ traditional server apps like Django. It will work for KazeB, but:
 
 ## One-time local setup (needs real internet access)
 
-Run these from the project root, before your first deploy:
+The Vercel build command performs these steps. To reproduce them locally,
+run them from the project root:
 
-```bash
-pip install -r requirements.txt
+```powershell
+npm --prefix frontend ci
+npm --prefix frontend run build
 
-# Downloads Bootstrap CSS/JS into static/vendor/ so the site doesn't
-# depend on a CDN at runtime (see core/management/commands/vendor_assets.py)
+# Downloads Bootstrap CSS/JS into static/vendor/ if not present.
 python manage.py vendor_assets
 
-# Bakes STATIC_ROOT (staticfiles/) so WhiteNoise can serve CSS/JS --
-# Vercel won't run this for you, so it must already exist in the repo
-# when you deploy.
-DJANGO_SECRET_KEY=build-time-only python manage.py collectstatic --noinput
+python manage.py collectstatic --noinput
 ```
 
-Commit the resulting `static/vendor/` and `staticfiles/` folders (do
-**not** add them to `.gitignore` -- they need to ship with the
-deployment). Re-run `collectstatic` (and commit again) any time you
-change CSS/JS.
+The Bootstrap assets under `static/vendor/` are committed. The Vite bundle
+under `static/react/` and collected files under `staticfiles/` are generated
+by the build and should not be committed.
 
 ## Vercel project setup
 
@@ -91,6 +88,12 @@ Then re-run your `python manage.py seed_categories` (or whichever seed
 commands you use) the same way, against that same `DATABASE_URL`, so
 production actually has data.
 
+After applying the administrator migrations, run
+`python manage.py setup_admin_roles` against that environment and assign
+staff accounts to the limited groups through Django admin. This does not
+create superusers. Do not run these commands against production without
+review and explicit approval.
+
 ## What changed in this project for Vercel
 
 - `api/index.py` -- new. Wraps `kazeb.wsgi.application` as `app`,
@@ -101,6 +104,9 @@ production actually has data.
 - `.vercelignore` -- new. Excludes `db.sqlite3`, local `media/`
   uploads, and the Fly.io-specific `Dockerfile`/`Procfile` from the
   deployment.
+- The Vercel build produces the React administrator app in
+  `static/react/`; Django serves it at `/admin-dashboard/`. Other
+  production pages continue using Django templates.
 - Nothing in `kazeb/settings.py`, `Dockerfile`, or `Procfile` was
   changed or removed -- Fly.io deployment still works exactly as
   before if you ever want to switch back or run both.

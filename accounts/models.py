@@ -1,6 +1,8 @@
+
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
+from django.db.models.functions import Lower
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
@@ -25,37 +27,67 @@ class User(AbstractUser):
         blank=True,
         null=True,
     )
-    location = models.CharField(_("Aho uherereye"), max_length=150, blank=True)
-    bio = models.TextField(_("Ibyo wivugaho"), max_length=500, blank=True)
+    location = models.CharField(
+        _("Aho uherereye"),
+        max_length=150,
+        blank=True,
+    )
+    bio = models.TextField(
+        _("Ibyo wivugaho"),
+        max_length=500,
+        blank=True,
+    )
     phone_number = models.CharField(
         _("Numero ya telefone"),
         max_length=20,
         blank=True,
-        help_text=_("Igaragara ku baguzi ku byo ugurisha, urugero: +250788123456"),
+        help_text=_(
+            "Igaragara ku baguzi ku byo ugurisha, urugero: +250788123456"
+        ),
     )
     whatsapp_number = models.CharField(
         _("Numero ya WhatsApp"),
         max_length=20,
         blank=True,
-        help_text=_("Abaguzi bazabona buto yo 'Kuvugana kuri WhatsApp' hakoreshejwe iyi numero."),
+        help_text=_(
+            "Abaguzi bazabona buto yo 'Kuvugana kuri WhatsApp' "
+            "hakoreshejwe iyi numero."
+        ),
     )
     agreed_to_terms = models.BooleanField(
         _("Yemeye amabwiriza"),
         default=False,
-        help_text=_("Yagaragaje ko yemeye amabwiriza n'amategeko igihe yiyandikishaga."),
+        help_text=_(
+            "Yagaragaje ko yemeye amabwiriza n'amategeko "
+            "igihe yiyandikishaga."
+        ),
     )
     email_verified = models.BooleanField(
         _("Imeli yemejwe"),
         default=False,
         help_text=_(
-            "Yakanze umurongo wo kwemeza wo muri imeli ye. Ntabwo ashobora "
-            "kwinjira kugeza iyi imeli yemejwe."
+            "Yakanze umurongo wo kwemeza wo muri imeli ye. "
+            "Ntabwo ashobora kwinjira kugeza iyi imeli yemejwe."
         ),
     )
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                Lower("email"),
+                condition=~models.Q(email=""),
+                name="unique_user_email_ci",
+            )
+        ]
+        permissions = [
+            ("suspend_user", "Can suspend and reactivate user accounts"),
+        ]
+
     def whatsapp_digits(self):
         """Digits only, for building a wa.me/<number> link."""
-        return "".join(ch for ch in self.whatsapp_number if ch.isdigit())
+        return "".join(
+            ch for ch in self.whatsapp_number if ch.isdigit()
+        )
 
     @property
     def is_phone_verified(self):
@@ -70,3 +102,25 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+
+class PasswordResetRateLimit(models.Model):
+    class Scope(models.TextChoices):
+        IP = "ip", "IP address"
+        EMAIL = "email", "Email address"
+
+    scope = models.CharField(max_length=8, choices=Scope.choices)
+    fingerprint = models.CharField(max_length=64)
+    window_started_at = models.DateTimeField()
+    attempts = models.PositiveSmallIntegerField(default=1)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=("scope", "fingerprint", "window_started_at"),
+                name="unique_password_reset_rate_bucket",
+            )
+        ]
+        indexes = [
+            models.Index(fields=("window_started_at",)),
+        ]

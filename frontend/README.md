@@ -1,8 +1,8 @@
 # KazeB React frontend
 
-This Vite app is a development preview of the migrated homepage, marketplace
-browsing, and seller-management pages. It does not replace Django's production
-frontend or change Vercel deployment routing.
+This Vite app powers the administrator dashboard at `/admin-dashboard/` in
+production. The migrated homepage, marketplace, account, and seller pages remain
+a development preview; the existing Django pages continue to serve them.
 
 ## Run locally
 
@@ -48,6 +48,11 @@ management uses `GET /api/seller/dashboard/`, `GET`/`POST /api/seller/listings/`
 database operations, image compression, and storage cleanup. Account and
 favorites pages also call Django's existing session-authenticated APIs.
 
+The administrator app uses the permission-protected `/api/admin/` endpoints
+for real user, listing, report, review, phone-verification, activity, and
+overview data. Django checks `is_staff` plus the relevant model permission on
+every API request; opening the React route alone does not grant access.
+
 In the Vite preview, `/listings/search/`, `/listings/category/<slug>/`,
 `/listings/<id>/`, `/listings/dashboard/`, `/listings/add/`,
 `/listings/<id>/edit/`, `/listings/favorites/`, account pages, and
@@ -62,9 +67,10 @@ session and CSRF protections for all seller actions.
 
 ## Production status
 
-The production Vercel configuration remains Django-only. Deploying the React
-build requires a separately reviewed Vercel routing/static-asset plan; do not
-switch production traffic until that plan and the remaining pages are tested.
+Vercel builds the React assets into `static/react/`, runs `collectstatic`, and
+serves the dashboard shell through Django/WhiteNoise. This integration is
+limited to `/admin-dashboard/`; it does not switch the homepage or other
+production routes away from their Django templates.
 
 The current full development dependency audit reports an upstream high-severity
 `picomatch` advisory through Vite's development dependency tree; no patched

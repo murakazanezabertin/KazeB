@@ -22,6 +22,15 @@ from rest_framework.response import Response
 
 class HomepageLabelsSerializer(serializers.Serializer):
     home = serializers.CharField()
+    welcome_prefix = serializers.CharField()
+    hero_title_line_1 = serializers.CharField()
+    hero_title_line_2 = serializers.CharField()
+    hero_title_line_3 = serializers.CharField()
+    hero_title_line_4 = serializers.CharField()
+    hero_title_line_5 = serializers.CharField()
+    hero_buyer_cta = serializers.CharField()
+    hero_seller_cta = serializers.CharField()
+    brand_tagline = serializers.CharField()
     add_listing = serializers.CharField()
     search_placeholder = serializers.CharField()
     search = serializers.CharField()
@@ -45,6 +54,8 @@ class HomepageLabelsSerializer(serializers.Serializer):
     sign_out = serializers.CharField()
     empty_image = serializers.CharField()
     empty_categories = serializers.CharField()
+    page_not_found = serializers.CharField()
+    loading = serializers.CharField()
     all_listings = serializers.CharField()
     all_conditions = serializers.CharField()
     new_condition = serializers.CharField()
@@ -140,7 +151,10 @@ def _homepage_payload(request):
         )
 
     recent_listings = (
-        Listing.objects.filter(is_active=True)
+        Listing.objects.filter(
+            is_active=True,
+            moderation_status=Listing.ModerationStatus.VISIBLE,
+        )
         .select_related("seller", "category")
         .prefetch_related("images")[:8]
     )
@@ -170,13 +184,22 @@ def _homepage_payload(request):
         "language": (get_language() or "rw").split("-")[0],
         "labels": {
             "home": _("Ahabanza"),
+            "welcome_prefix": _("Murakaza neza kuri"),
+            "hero_title_line_1": _("Bona umuguzi"),
+            "hero_title_line_2": _("cyangwa"),
+            "hero_title_line_3": _("umugurisha"),
+            "hero_title_line_4": _("vuba kandi"),
+            "hero_title_line_5": _("byoroshye."),
+            "hero_buyer_cta": _("Shaka umuguzi nonaha"),
+            "hero_seller_cta": _("Shaka umugurisha nonaha"),
+            "brand_tagline": _("Gura no kugurisha byoroshye!"),
             "add_listing": _("Ongeraho igicuruzwa"),
             "search_placeholder": _("Shakisha ukurikije aho biherereye..."),
             "search": _("Shakisha"),
             "login": _("Injira"),
             "register": _("Iyandikishe"),
             "my_account": _("Konti yanjye"),
-            "account": _("Konti"),
+            "account": _("Umwirondoro wanjye"),
             "favorites": _("Ibya kwibuka"),
             "messages": _("Ubutumwa"),
             "categories": _("Shakisha ukurikije ubwoko"),
@@ -193,6 +216,8 @@ def _homepage_payload(request):
             "sign_out": _("Sohoka"),
             "empty_image": _("Nta foto ihari"),
             "empty_categories": _("Nta bwoko burahari."),
+            "page_not_found": _("Urupapuro ntirwabashije kuboneka."),
+            "loading": _("Birimo gutegurwa..."),
             "all_listings": _("Ibicuruzwa byose"),
             "all_conditions": _("Uko bimeze: byose"),
             "new_condition": _("Gishya"),

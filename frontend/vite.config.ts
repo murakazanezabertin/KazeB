@@ -48,6 +48,12 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react()],
+    base: mode === "production" ? "/static/react/" : "/",
+    build: {
+      outDir: "../static/react",
+      emptyOutDir: true,
+      manifest: ".vite/manifest.json",
+    },
     server: {
       host: "127.0.0.1",
       proxy: {

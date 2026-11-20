@@ -1,14 +1,24 @@
+import hashlib
+import hmac
+import logging
+import smtplib
+from datetime import datetime, timedelta, timezone as datetime_timezone
+
+from django.conf import settings
 from django.contrib.auth import get_user_model, login, logout
 from django.contrib.auth.forms import (
     PasswordResetForm,
     SetPasswordForm,
 )
 from django.contrib.auth.tokens import default_token_generator
+from django.core.mail.message import BadHeaderError
+from django.db.models import F
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.utils.encoding import force_str
 from django.utils.http import url_has_allowed_host_and_scheme, urlsafe_base64_decode
+from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_GET, require_POST
 
@@ -19,12 +29,18 @@ from accounts.forms import (
     RegisterForm,
     ResendVerificationForm,
 )
+from accounts.models import PasswordResetRateLimit
 from accounts.views import _send_verification_email
 from kazeb.imaging import compress_uploaded_image
 from listings.api import _listing_card_payload
 from listings.models import Favorite, Listing
 
 User = get_user_model()
+logger = logging.getLogger(__name__)
+
+PASSWORD_RESET_WINDOW_SECONDS = 600
+PASSWORD_RESET_EMAIL_LIMIT = 3
+PASSWORD_RESET_IP_LIMIT = 10
 
 
 def _form_errors(form):
@@ -45,6 +61,34 @@ def _private_json(data, status=200):
     response = JsonResponse(data, status=status)
     response["Cache-Control"] = "private, no-store"
     return response
+
+
+def _password_reset_rate_limited(scope, value, limit, now):
+    fingerprint = hmac.new(
+        settings.SECRET_KEY.encode("utf-8"),
+        f"password-reset:{scope}:{value}".encode("utf-8"),
+        hashlib.sha256,
+    ).hexdigest()
+    window_epoch = (
+        int(now.timestamp()) // PASSWORD_RESET_WINDOW_SECONDS
+    ) * PASSWORD_RESET_WINDOW_SECONDS
+    window_started_at = datetime.fromtimestamp(
+        window_epoch, tz=datetime_timezone.utc
+    )
+    bucket, created = PasswordResetRateLimit.objects.get_or_create(
+        scope=scope,
+        fingerprint=fingerprint,
+        window_started_at=window_started_at,
+        defaults={"attempts": 1},
+    )
+    if created:
+        return False
+
+    updated = PasswordResetRateLimit.objects.filter(
+        pk=bucket.pk,
+        attempts__lt=limit,
+    ).update(attempts=F("attempts") + 1)
+    return updated == 0
 
 
 def _account_payload(request, user):
@@ -76,8 +120,8 @@ def auth_ui(request):
     return JsonResponse(
         {
             "labels": {
-                "account": _("Konti yanjye"),
-                "account_details": _("Konti"),
+                "account": _("Umwirondoro wanjye"),
+                "account_details": _("Umwirondoro wanjye"),
                 "save_changes": _("Bika impinduka"),
                 "delete_account": _("Siba Konti"),
                 "confirm_delete": _(
@@ -228,22 +272,87 @@ def resend_verification_api(request):
 
 @require_POST
 def password_reset_request_api(request):
+    now = timezone.now()
+    forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR", "")
+    client_ip = (
+        forwarded_for.split(",", 1)[0].strip()
+        or request.META.get("REMOTE_ADDR", "unknown")
+    )
+    PasswordResetRateLimit.objects.filter(
+        window_started_at__lt=now - timedelta(days=1)
+    ).delete()
+
+    if _password_reset_rate_limited(
+        PasswordResetRateLimit.Scope.IP,
+        client_ip,
+        PASSWORD_RESET_IP_LIMIT,
+        now,
+    ):
+        return _private_json(
+            {
+                "detail": _(
+                    "Too many password reset requests. Please try again later."
+                )
+            },
+            status=429,
+        )
+
     form = PasswordResetForm(request.POST)
     if not form.is_valid():
-        return _invalid_form(form)
+        return _private_json(
+            {
+                "detail": _("Habaye ikibazo. Ongera ugerageze."),
+                "errors": _form_errors(form),
+            },
+            status=400,
+        )
 
-    form.save(
-        request=request,
-        use_https=request.is_secure(),
-        subject_template_name="registration/password_reset_subject.txt",
-        email_template_name="registration/password_reset_email.html",
-        html_email_template_name=None,
-    )
-    return JsonResponse(
-        {
-            "detail": _("Niba imeli ijyanye na konti ihari, twohereje umurongo wo guhindura ijambobanga.")
-        }
-    )
+    email = form.cleaned_data["email"].strip().casefold()
+    if _password_reset_rate_limited(
+        PasswordResetRateLimit.Scope.EMAIL,
+        email,
+        PASSWORD_RESET_EMAIL_LIMIT,
+        now,
+    ):
+        return _private_json(
+            {
+                "detail": _(
+                    "Too many password reset requests. Please try again later."
+                )
+            },
+            status=429,
+        )
+
+    eligible_users = list(form.get_users(email))
+    if eligible_users:
+        try:
+            form.save(
+                request=request,
+                use_https=request.is_secure(),
+                subject_template_name="registration/password_reset_subject.txt",
+                email_template_name="registration/password_reset_email.html",
+                html_email_template_name=None,
+            )
+        except (BadHeaderError, OSError, smtplib.SMTPException):
+            logger.exception("Password reset email delivery failed")
+            return _private_json(
+                {
+                    "detail": _(
+                        "Password reset is temporarily unavailable. Please try again later."
+                    )
+                },
+                status=503,
+            )
+
+    if eligible_users:
+        detail = _(
+            "A password reset link has been sent to your email address. Please check your inbox."
+        )
+    else:
+        detail = _(
+            "No account exists with this email address. Please check your email or create an account."
+        )
+    return _private_json({"detail": detail})
 
 
 @require_POST
@@ -371,7 +480,10 @@ def toggle_favorite_api(request, pk):
     if favorite:
         favorite.delete()
         return _private_json({"is_favorited": False})
-    if not listing.is_active:
+    if (
+        not listing.is_active
+        or listing.moderation_status != Listing.ModerationStatus.VISIBLE
+    ):
         return JsonResponse({"detail": _("Igicuruzwa nticyabonetse.")}, status=404)
     Favorite.objects.create(user=request.user, listing=listing)
     return _private_json({"is_favorited": True})

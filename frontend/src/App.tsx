@@ -8,6 +8,7 @@ import {
   toggleFavorite,
   type HomepageData,
 } from "./api/client";
+import AdminDashboard from "./AdminDashboard";
 import AccountPages from "./Accounts";
 import Marketplace from "./Marketplace";
 import SellerDashboard from "./SellerDashboard";
@@ -33,7 +34,93 @@ const footerLinks = [
   { key: "privacy", href: "/privacy/" },
 ] as const;
 
+const footerSocialLinks = [
+  {
+    href: "https://www.tiktok.com/@kazeb57?_r=1&_t=ZS-99CeOPSb12T",
+    label: "TikTok",
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M16.6 5.82c-.9-.88-1.46-2.06-1.6-3.32h-3.06v13.44c0 1.63-1.32 2.95-2.95 2.95a2.95 2.95 0 0 1 0-5.9c.28 0 .55.04.8.12V9.98a6.08 6.08 0 0 0-.8-.05A6.08 6.08 0 1 0 15.03 16V9.4a9.14 9.14 0 0 0 5.35 1.72V8.06a5.98 5.98 0 0 1-3.78-2.24z" />
+      </svg>
+    ),
+  },
+  {
+    href: "https://www.instagram.com/kazeb.rw?igsi=MWxiODNidWpjeWljeQ==",
+    label: "Instagram",
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+        <rect x="3" y="3" width="18" height="18" rx="5" />
+        <circle cx="12" cy="12" r="4" />
+        <circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none" />
+      </svg>
+    ),
+  },
+  {
+    href: "https://www.facebook.com/share/1EUuLs9Mha/",
+    label: "Facebook",
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5 3.66 9.15 8.44 9.94v-7.03H7.9v-2.9h2.54V9.85c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.9h-2.34V22c4.78-.79 8.44-4.94 8.44-9.94z" />
+      </svg>
+    ),
+  },
+  {
+    href: "https://youtube.com/@kazebrwanda?si=woGH50aq8c8CkiEk",
+    label: "YouTube",
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M23 12s0-3.5-.45-5.15a2.87 2.87 0 0 0-2-2C18.9 4.4 12 4.4 12 4.4s-6.9 0-8.55.45a2.87 2.87 0 0 0-2 2C1 8.5 1 12 1 12s0 3.5.45 5.15a2.87 2.87 0 0 0 2 2c1.65.45 8.55.45 8.55.45s6.9 0 8.55-.45a2.87 2.87 0 0 0 2-2C23 15.5 23 12 23 12z" />
+        <path d="M9.75 15.5V8.5L15.5 12l-5.75 3.5z" fill="white" stroke="none" />
+      </svg>
+    ),
+  },
+  {
+    href: "https://whatsapp.com/channel/0029VbDSEdp7tkjFMCr2Jm34",
+    label: "WhatsApp",
+    icon: <img src="/static/images/icons/whatsapp.svg" alt="" width="20" height="20" />,
+  },
+  {
+    href: "https://x.com/KazeBrwanda",
+    label: "X",
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M18.9 3H22l-7.6 8.68L23.3 21h-6.7l-5.2-6.6L5.4 21H2.3l8.1-9.27L1.4 3h6.9l4.7 6.02L18.9 3zm-1.2 16h1.8L7.4 5H5.5l12.2 14z" />
+      </svg>
+    ),
+  },
+] as const;
+
+function SearchForm({
+  search,
+  placeholder,
+  className,
+}: {
+  search: string;
+  placeholder: string;
+  className: string;
+}) {
+  return (
+    <form action="/listings/search/" method="get" className={className}>
+      <div className="input-group">
+        <span className="input-group-text bg-white border-end-0" aria-hidden="true">
+          🔍
+        </span>
+        <input
+          type="search"
+          name="q"
+          className="form-control border-start-0"
+          placeholder={placeholder}
+        />
+        <button type="submit" className="btn btn-brand">
+          {search}
+        </button>
+      </div>
+    </form>
+  );
+}
+
 function App() {
+  const pathname = window.location.pathname;
   const [homepage, setHomepage] = useState<HomepageData | null>(null);
   const [csrfToken, setCsrfToken] = useState("");
   const [error, setError] = useState("");
@@ -56,6 +143,7 @@ function App() {
   }
 
   useEffect(() => {
+    if (pathname === "/admin-dashboard/") return;
     void loadHomepage();
   }, []);
 
@@ -125,6 +213,8 @@ function App() {
       const token = csrfToken || (await getCsrfToken());
       const formData = new FormData(form);
       formData.set("csrfmiddlewaretoken", token);
+      const returnTo = window.location.pathname + window.location.search + window.location.hash;
+      formData.set("next", window.location.pathname + window.location.search);
       const body = new URLSearchParams();
       formData.forEach((value, key) => body.set(key, String(value)));
       const response = await fetch("/i18n/setlang/", {
@@ -139,7 +229,7 @@ function App() {
       if (!response.ok) {
         throw new Error(`Language change failed (${response.status}).`);
       }
-      window.location.assign("/");
+      window.location.assign(returnTo);
     } catch (languageError) {
       setError(languageError instanceof Error ? languageError.message : "Language change failed.");
     }
@@ -202,6 +292,10 @@ function App() {
     }
   }
 
+  if (pathname === "/admin-dashboard/") {
+    return <AdminDashboard />;
+  }
+
   if (error) {
     return (
       <main className="container py-5" role="alert">
@@ -222,12 +316,14 @@ function App() {
   }
 
   const { labels, user } = homepage;
+  const isHomepage = pathname === "/";
+  const isDashboard = pathname === "/listings/dashboard/";
 
   return (
     <>
       <nav
         className={`navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top${
-          window.location.pathname === "/" ? " homepage-navbar" : ""
+          isHomepage || isDashboard ? " homepage-navbar" : ""
         }`}
       >
         <div className="container flex-wrap">
@@ -236,22 +332,13 @@ function App() {
             <span className="kazeb-logo-orange">B</span>
           </a>
 
-          <form action="/listings/search/" method="get" className="nav-search-box order-lg-0 flex-grow-1 mx-lg-3 my-2 my-lg-0">
-            <div className="input-group">
-              <span className="input-group-text bg-white border-end-0" aria-hidden="true">
-                🔍
-              </span>
-              <input
-                type="search"
-                name="q"
-                className="form-control border-start-0"
-                placeholder={labels.search_placeholder}
-              />
-              <button type="submit" className="btn btn-brand">
-                {labels.search}
-              </button>
-            </div>
-          </form>
+          {!isHomepage && (
+            <SearchForm
+              search={labels.search}
+              placeholder={labels.search_placeholder}
+              className="nav-search-box order-lg-0 flex-grow-1 mx-lg-3 my-2 my-lg-0"
+            />
+          )}
 
           <button
             className="navbar-toggler order-lg-1"
@@ -267,7 +354,11 @@ function App() {
           <div className={`collapse navbar-collapse order-lg-2${menuOpen ? " show" : ""}`} id="navMain">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0 nav-icons">
               <li className="nav-item">
-                <a className="nav-link" href="/" title={labels.home}>
+                <a
+                  className={`nav-link${isHomepage ? " is-active" : ""}`}
+                  href="/"
+                  title={labels.home}
+                >
                   🏠 {labels.home}
                 </a>
               </li>
@@ -279,7 +370,11 @@ function App() {
               {user.is_authenticated && (
                 <>
                   <li className="nav-item">
-                    <a className="nav-link" href="/listings/dashboard/" title={labels.my_account}>
+                    <a
+                      className={`nav-link${isDashboard ? " is-active" : ""}`}
+                      href="/listings/dashboard/"
+                      title={labels.my_account}
+                    >
                       👤 {labels.my_account}
                     </a>
                   </li>
@@ -308,7 +403,11 @@ function App() {
                   onSubmit={(event) => void handleLanguageChange(event)}
                 >
                   <input type="hidden" name="csrfmiddlewaretoken" value={csrfToken} />
-                  <input type="hidden" name="next" value="/" />
+                  <input
+                    type="hidden"
+                    name="next"
+                    value={window.location.pathname + window.location.search}
+                  />
                   <select
                     name="language"
                     className="form-select form-select-sm"
@@ -326,16 +425,18 @@ function App() {
               {user.is_authenticated ? (
                 <>
                   <li className="nav-item">
-                    <a className="nav-link" href="/accounts/profile/">{labels.account}</a>
+                    <a
+                      className={`nav-link${pathname === "/accounts/profile/" ? " is-active" : ""}`}
+                      href="/accounts/profile/"
+                    >
+                      {labels.account}
+                    </a>
                   </li>
                   <li className="nav-item">
                     <a className="nav-link" href="/listings/favorites/">{labels.favorites}</a>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" href="/listings/dashboard/">{labels.my_account}</a>
-                  </li>
-                  <li className="nav-item">
-                    <button className="btn btn-sm btn-outline-secondary" type="button" onClick={() => void handleLogout()}>
+                    <button className="btn btn-sm btn-outline-brand" type="button" onClick={() => void handleLogout()}>
                       {labels.sign_out}
                     </button>
                   </li>
@@ -359,29 +460,40 @@ function App() {
         </div>
       </nav>
 
-      {window.location.pathname === "/" ? (
-      <main className="container-fluid pt-4 pb-3 kazeb-homepage-content">
-        <h1 className="kazeb-welcome-title">Murakaza neza kuri KazeB!</h1>
+      {isHomepage ? (
+      <main className="container-fluid pt-4 pb-4 kazeb-homepage-content">
+        <h1 className="kazeb-welcome-title">
+          {labels.welcome_prefix} <span className="kazeb-logo-black">Kaze</span>
+          <span className="kazeb-logo-orange">B</span>!
+        </h1>
+        <p className="kazeb-welcome-tagline">Ikiraro gihuza abaguzi n'abagurisha</p>
+        <div className="homepage-search">
+          <SearchForm
+            search={labels.search}
+            placeholder={labels.search_placeholder}
+            className="nav-search-box homepage-search-form"
+          />
+        </div>
         <section className="kazeb-hero mb-5" aria-label="KazeB promotion">
           <div className="kazeb-hero-inner">
             <div className="kazeb-hero-content">
               <h2 className="kazeb-hero-title">
-                Bona umuguzi
+                {labels.hero_title_line_1}
                 <br />
-                cyangwa
+                {labels.hero_title_line_2}
                 <br />
-                umugurisha
+                {labels.hero_title_line_3}
                 <br />
-                vuba kandi
+                {labels.hero_title_line_4}
                 <br />
-                byoroshye.
+                {labels.hero_title_line_5}
               </h2>
               <div className="kazeb-hero-actions">
                 <a href="/listings/add/" className="btn btn-brand kazeb-hero-primary">
-                  Shaka umuguzi nonaha
+                  {labels.hero_buyer_cta}
                 </a>
                 <a href="#categories" className="btn btn-outline-brand kazeb-hero-secondary">
-                  Shaka umugurisha nonaha
+                  {labels.hero_seller_cta}
                 </a>
               </div>
             </div>
@@ -547,15 +659,15 @@ function App() {
           </section>
         )}
       </main>
-      ) : isAccountPage(window.location.pathname) ? (
-        <AccountPages pathname={window.location.pathname} common={labels} />
-      ) : window.location.pathname === "/listings/dashboard/" ? (
+      ) : isAccountPage(pathname) ? (
+        <AccountPages pathname={pathname} common={labels} />
+      ) : isDashboard ? (
         <SellerDashboard language={homepage.language} />
-      ) : window.location.pathname === "/listings/add/" ? (
+      ) : pathname === "/listings/add/" ? (
         <SellerListingCreate language={homepage.language} />
-      ) : /^\/listings\/\d+\/edit\/?$/.test(window.location.pathname) ? (
+      ) : /^\/listings\/\d+\/edit\/?$/.test(pathname) ? (
         <SellerListingEdit
-          listingId={Number(window.location.pathname.match(/^\/listings\/(\d+)\/edit\/?$/)?.[1])}
+          listingId={Number(pathname.match(/^\/listings\/(\d+)\/edit\/?$/)?.[1])}
           language={homepage.language}
         />
       ) : (
@@ -565,132 +677,75 @@ function App() {
         />
       )}
 
-      <footer className={window.location.pathname === "/" ? "homepage-footer" : "mt-5"}>
-        <div className="footer-highlight py-5">
-          <div className="container">
-            {window.location.pathname === "/" && (
+      <footer className="homepage-footer">
+        <div className="footer-highlight homepage-footer-band">
+          <div className="container homepage-footer-inner">
+            <div className="homepage-footer-top">
               <div className="homepage-footer-brand">
                 <a href="/" className="homepage-footer-logo" aria-label="KazeB">
-                  <span>Kaze</span>
-                  <span className="homepage-footer-logo-orange">B</span>
+                  <span className="kazeb-logo-black">Kaze</span>
+                  <span className="kazeb-logo-orange">B</span>
                 </a>
-                <p className="homepage-footer-tagline">Gura no kugurisha byoroshye!</p>
+                <p className="homepage-footer-tagline">{labels.brand_tagline}</p>
               </div>
-            )}
-            <div className="row gy-4">
-              <div className="col-6 col-md-3">
-                <h2 className="h6 text-uppercase mb-3">{labels.about}</h2>
-                <ul className="list-unstyled footer-links">
-                  {footerLinks.map((link) => (
-                    <li key={link.key}>
-                      <a href={link.href}>{labels[link.key]}</a>
-                    </li>
+              <div className="homepage-footer-follow">
+                <h2 className="homepage-footer-follow-title">{labels.follow}</h2>
+                <div className="homepage-footer-socials">
+                  {footerSocialLinks.map((social) => (
+                    <a
+                      key={social.label}
+                      href={social.href}
+                      className="footer-social-icon"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={social.label}
+                      title={social.label}
+                    >
+                      {social.icon}
+                    </a>
                   ))}
-                </ul>
+                </div>
               </div>
-              <div className="col-6 col-md-3">
-                <h2 className="h6 text-uppercase mb-3">{labels.contact}</h2>
-                <ul className="list-unstyled footer-links">
-                  <li>
-                    <a href="/contact/">{labels.contact}</a>
-                  </li>
-                </ul>
-              </div>
-              <div className="col-6 col-md-3">
-                <h2 className="h6 text-uppercase mb-3">{labels.my_account}</h2>
-                <ul className="list-unstyled footer-links">
-                  {user.is_authenticated ? (
+            </div>
+
+            <div className="homepage-footer-card">
+              <div className="homepage-footer-columns">
+                <div className="homepage-footer-column">
+                  <h2 className="h6 text-uppercase mb-3">{labels.about}</h2>
+                  <ul className="list-unstyled footer-links">
+                    {footerLinks.map((link) => (
+                      <li key={link.key}>
+                        <a href={link.href}>{labels[link.key]}</a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="homepage-footer-column">
+                  <h2 className="h6 text-uppercase mb-3">{labels.contact}</h2>
+                  <ul className="list-unstyled footer-links">
                     <li>
-                      <a href="/listings/dashboard/">{labels.my_account}</a>
+                      <a href="/contact/">{labels.contact}</a>
                     </li>
-                  ) : (
-                    <>
+                  </ul>
+                </div>
+                <div className="homepage-footer-column">
+                  <h2 className="h6 text-uppercase mb-3">{labels.my_account}</h2>
+                  <ul className="list-unstyled footer-links">
+                    {user.is_authenticated ? (
                       <li>
-                        <a href="/accounts/login/">{labels.login}</a>
+                        <a href="/listings/dashboard/">{labels.my_account}</a>
                       </li>
-                      <li>
-                        <a href="/accounts/register/">{labels.register}</a>
-                      </li>
-                    </>
-                  )}
-                </ul>
-              </div>
-              <div className="col-6 col-md-3">
-                <h2 className="h6 text-uppercase mb-3">{labels.follow}</h2>
-                <div className="d-flex flex-wrap gap-2">
-                  <a
-                    href="https://www.tiktok.com/@kazeb57?_r=1&_t=ZS-99CeOPSb12T"
-                    className="footer-social-icon"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="TikTok"
-                    title="TikTok"
-                  >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                      <path d="M16.6 5.82c-.9-.88-1.46-2.06-1.6-3.32h-3.06v13.44c0 1.63-1.32 2.95-2.95 2.95a2.95 2.95 0 0 1 0-5.9c.28 0 .55.04.8.12V9.98a6.08 6.08 0 0 0-.8-.05A6.08 6.08 0 1 0 15.03 16V9.4a9.14 9.14 0 0 0 5.35 1.72V8.06a5.98 5.98 0 0 1-3.78-2.24z" />
-                    </svg>
-                  </a>
-                  <a
-                    href="https://www.instagram.com/kazeb.rw?igsi=MWxiODNidWpjeWljeQ=="
-                    className="footer-social-icon"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Instagram"
-                    title="Instagram"
-                  >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
-                      <rect x="3" y="3" width="18" height="18" rx="5" />
-                      <circle cx="12" cy="12" r="4" />
-                      <circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none" />
-                    </svg>
-                  </a>
-                  <a
-                    href="https://www.facebook.com/share/1EUuLs9Mha/"
-                    className="footer-social-icon"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Facebook"
-                    title="Facebook"
-                  >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                      <path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5 3.66 9.15 8.44 9.94v-7.03H7.9v-2.9h2.54V9.85c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.9h-2.34V22c4.78-.79 8.44-4.94 8.44-9.94z" />
-                    </svg>
-                  </a>
-                  <a
-                    href="https://youtube.com/@kazebrwanda?si=woGH50aq8c8CkiEk"
-                    className="footer-social-icon"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="YouTube"
-                    title="YouTube"
-                  >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                      <path d="M23 12s0-3.5-.45-5.15a2.87 2.87 0 0 0-2-2C18.9 4.4 12 4.4 12 4.4s-6.9 0-8.55.45a2.87 2.87 0 0 0-2 2C1 8.5 1 12 1 12s0 3.5.45 5.15a2.87 2.87 0 0 0 2 2c1.65.45 8.55.45 8.55.45s6.9 0 8.55-.45a2.87 2.87 0 0 0 2-2C23 15.5 23 12 23 12z" />
-                      <path d="M9.75 15.5V8.5L15.5 12l-5.75 3.5z" fill="white" stroke="none" />
-                    </svg>
-                  </a>
-                  <a
-                    href="https://whatsapp.com/channel/0029VbDSEdp7tkjFMCr2Jm34"
-                    className="footer-social-icon"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="WhatsApp"
-                    title="WhatsApp"
-                  >
-                    <img src="/static/images/icons/whatsapp.svg" alt="" width="20" height="20" />
-                  </a>
-                  <a
-                    href="https://x.com/KazeBrwanda"
-                    className="footer-social-icon"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="X"
-                    title="X"
-                  >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                      <path d="M18.9 3H22l-7.6 8.68L23.3 21h-6.7l-5.2-6.6L5.4 21H2.3l8.1-9.27L1.4 3h6.9l4.7 6.02L18.9 3zm-1.2 16h1.8L7.4 5H5.5l12.2 14z" />
-                    </svg>
-                  </a>
+                    ) : (
+                      <>
+                        <li>
+                          <a href="/accounts/login/">{labels.login}</a>
+                        </li>
+                        <li>
+                          <a href="/accounts/register/">{labels.register}</a>
+                        </li>
+                      </>
+                    )}
+                  </ul>
                 </div>
               </div>
             </div>

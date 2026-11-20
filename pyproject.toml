@@ -1,2 +1,2 @@
 [tool.vercel.scripts]
-build = "python manage.py vendor_assets"
+build = "npm --prefix frontend ci && npm --prefix frontend run build && python manage.py vendor_assets && python manage.py collectstatic --noinput"

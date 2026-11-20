@@ -16,10 +16,35 @@ class ListingImageInline(admin.TabularInline):
 
 @admin.register(Listing)
 class ListingAdmin(admin.ModelAdmin):
-    list_display = ("name", "category", "seller", "price", "currency", "district", "sector", "is_active", "created_at")
-    list_filter = ("category", "condition", "currency", "is_active", "district")
+    list_display = (
+        "name",
+        "category",
+        "seller",
+        "price",
+        "currency",
+        "district",
+        "sector",
+        "is_active",
+        "moderation_status",
+        "created_at",
+    )
+    list_filter = (
+        "category",
+        "condition",
+        "currency",
+        "is_active",
+        "moderation_status",
+        "district",
+    )
     search_fields = ("name", "description", "district", "sector")
     inlines = [ListingImageInline]
+    readonly_fields = (
+        "is_active",
+        "moderation_status",
+        "moderation_reason",
+        "moderated_by",
+        "moderated_at",
+    )
 
 
 @admin.register(Favorite)

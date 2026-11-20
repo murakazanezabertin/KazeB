@@ -417,6 +417,14 @@ class ListingApiTests(TestCase):
         self.assertEqual(payload["statistics"]["inactive_listings"], 1)
         self.assertEqual(payload["statistics"]["total_views"], 7)
         self.assertEqual(payload["statistics"]["unread_messages"], 1)
+        self.assertEqual(payload["account"]["username"], self.seller.username)
+        self.assertEqual(payload["account"]["id"], self.seller.pk)
+        self.assertEqual(len(payload["recent_messages"]), 1)
+        self.assertEqual(payload["recent_messages"][0]["body"], "Is this available?")
+        self.assertEqual(
+            payload["recent_messages"][0]["url"],
+            f"/messages/listing/{self.listing.pk}/buyer/{self.buyer.pk}/",
+        )
         self.assertEqual(response["Cache-Control"], "private, no-store")
 
     def test_seller_listing_edit_rejects_anonymous_and_non_owner(self):

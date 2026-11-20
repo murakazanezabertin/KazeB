@@ -299,7 +299,7 @@ function PasswordResetRequestPage({ copy }: { copy: Copy }) {
         "/api/auth/password-reset/",
         new FormData(event.currentTarget),
       );
-      setMessage(copy.password_reset_sent || response.detail);
+      setMessage(response.detail);
     } catch (submitError) {
       setError(submitError);
     }
@@ -545,7 +545,7 @@ function FavoritesPage({ copy, common }: { copy: Copy; common: CommonLabels }) {
     );
   }
   if (error && favorites === null) return <AuthFrame title={copy.listing_saved}><ApiErrorMessage error={error} /></AuthFrame>;
-  if (favorites === null) return <AccountCard><p aria-live="polite">Loading…</p></AccountCard>;
+  if (favorites === null) return <AccountCard><p aria-live="polite">{common.loading}</p></AccountCard>;
 
   return (
     <AccountCard>
@@ -590,7 +590,7 @@ function FavoritesPage({ copy, common }: { copy: Copy; common: CommonLabels }) {
             ))}
           </div>
           {pagination && pagination.pages > 1 && (
-            <nav className="mt-4" aria-label="Favorite pages">
+            <nav className="mt-4" aria-label={common.favorites}>
               <ul className="pagination justify-content-center">
                 {pagination.has_previous && <li className="page-item"><a className="page-link" href={`?page=${pagination.page - 1}`}>{common.previous_page}</a></li>}
                 <li className="page-item disabled"><span className="page-link">{pagination.page} / {pagination.pages}</span></li>
@@ -647,7 +647,7 @@ export default function AccountPages({
   }, []);
 
   if (error) return <main className="container py-4"><ApiErrorMessage error={error} /></main>;
-  if (!ui) return <AccountCard><p aria-live="polite">Loading…</p></AccountCard>;
+  if (!ui) return <AccountCard><p aria-live="polite">{common.loading}</p></AccountCard>;
 
   if (pathname === "/accounts/register/") return <RegisterPage copy={ui.labels} ui={ui} />;
   if (pathname === "/accounts/login/") return <LoginPage copy={ui.labels} />;
@@ -670,5 +670,5 @@ export default function AccountPages({
   if (pathname === "/accounts/edit/") return <AccountPage copy={ui.labels} ui={ui} mode="edit" />;
   if (pathname === "/accounts/delete/") return <AccountPage copy={ui.labels} ui={ui} mode="delete" />;
   if (pathname === "/listings/favorites/") return <FavoritesPage copy={ui.labels} common={common} />;
-  return <AccountCard><ApiErrorMessage error={new Error("Page not found.")} /></AccountCard>;
+  return <AccountCard><ApiErrorMessage error={new Error(common.page_not_found)} /></AccountCard>;
 }

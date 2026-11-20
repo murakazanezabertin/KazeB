@@ -415,6 +415,9 @@ msgstr "Account"
 msgid "Konti yanjye"
 msgstr "My account"
 
+msgid "Umwirondoro wanjye"
+msgstr "My profile"
+
 msgid "Konti yawe yasibwe burundu."
 msgstr "Your account has been permanently deleted."
 
@@ -891,3 +894,114 @@ msgstr "You are signed out."
 
 msgid "Iki gicuruzwa ntikiboneka."
 msgstr "This listing is no longer available."
+
+msgid "Ongera wohereze"
+msgstr "Resend"
+
+msgid "Imeli yemejwe"
+msgstr "Email verified"
+
+msgid "Izina ry'umuryango"
+msgstr "Last name"
+
+msgid "Aho uherereye"
+msgstr "Location"
+
+msgid "Ibyo wivugaho"
+msgstr "About you"
+
+msgid "Vana mu bya kwibuka"
+msgstr "Remove from favourites"
+
+msgid "Konti isanzwe yinjiye."
+msgstr "You are already signed in."
+
+msgid "Yemeye amabwiriza"
+msgstr "Accepted the terms"
+
+msgid "Yagaragaje ko yemeye amabwiriza n'amategeko igihe yiyandikishaga."
+msgstr "Indicates whether the user accepted KazeB's terms and conditions during registration."
+
+msgid "Yakanze umurongo wo kwemeza wo muri imeli ye. Ntabwo ashobora kwinjira kugeza iyi imeli yemejwe."
+msgstr "Clicked the verification link in their email. They cannot sign in until this email is verified."
+
+msgid "Nta bwoko burahari."
+msgstr "No categories are available."
+
+msgid "Hamagara"
+msgstr "Call"
+
+msgid "Yinjiye kuri KazeB"
+msgstr "Joined KazeB"
+
+msgid "Ibicuruzwa biri ku isoko"
+msgstr "Active listings"
+
+msgid "Ibyo umucuruzi yivugaho"
+msgstr "About the seller"
+
+msgid "Uyu mucuruzi ntiyashyizeho ibisobanuro."
+msgstr "This seller has not added a bio."
+
+msgid "Ibicuruzwa by'uyu mucuruzi"
+msgstr "This seller's listings"
+
+msgid "Uyu mucuruzi nta gicuruzwa kiri ku isoko afite ubu."
+msgstr "This seller has no active listings at the moment."
+
+msgid "Uyu mucuruzi nta buryo bwo kuvugana na we yashyize ahagaragara."
+msgstr "This seller has not provided any contact information."
+
+msgid "Murakaza neza kuri"
+msgstr "Welcome to"
+
+msgid "Bona umuguzi"
+msgstr "Find a buyer"
+
+msgid "cyangwa"
+msgstr "or"
+
+msgid "umugurisha"
+msgstr "a seller"
+
+msgid "vuba kandi"
+msgstr "quickly and"
+
+msgid "byoroshye."
+msgstr "easily."
+
+msgid "Shaka umuguzi nonaha"
+msgstr "Find a buyer now"
+
+msgid "Shaka umugurisha nonaha"
+msgstr "Find a seller now"
+
+msgid "Gura no kugurisha byoroshye!"
+msgstr "Buy and sell with ease!"
+
+msgid "Bona umuguzi<br>cyangwa<br>umugurisha<br>vuba kandi<br>byoroshye."
+msgstr "Find a buyer<br>or<br>a seller<br>quickly and<br>easily."
+
+msgid "Urupapuro ntirwabashije kuboneka."
+msgstr "Page not found."
+
+msgid "A password reset link has been sent to your email address. Please check your inbox."
+msgstr "A password reset link has been sent to your email address. Please check your inbox."
+
+msgid "No account exists with this email address. Please check your email or create an account."
+msgstr "No account exists with this email address. Please check your email or create an account."
+
+msgid "Too many password reset requests. Please try again later."
+msgstr "Too many password reset requests. Please try again later."
+
+msgid "Password reset is temporarily unavailable. Please try again later."
+msgstr "Password reset is temporarily unavailable. Please try again later."
+
+msgid "This listing is hidden by a moderator."
+msgstr "This listing is hidden by a moderator."
+
+msgid "This listing was removed by a moderator."
+msgstr "This listing was removed by a moderator."
+
+msgid "This listing is hidden by a moderator and cannot be reactivated here."
+msgstr "This listing is hidden by a moderator and cannot be reactivated here."

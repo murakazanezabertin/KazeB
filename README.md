@@ -117,8 +117,11 @@ buyer and seller.
   sellers can verify their phone number via a one-time code, shown as
   a badge on their listings and My account. See the Launch checklist
   below for what phone verification needs to send *real* SMS.
-- **Admin panel** — manage categories (with icon images), listings,
-  images, users, reports, and reviews at `/admin/`.
+- **Administrator dashboard** — `/admin-dashboard/` is separate from the
+  seller dashboard and uses Django staff permissions and limited groups.
+  It shows database-backed statistics and supports user, listing, report,
+  review, phone-verification, and audit-log workflows. Django's built-in
+  `/admin/` remains available for staff with its normal model permissions.
 - **Full translation** — every page is written in Kinyarwanda as the
   site's base language, with complete English and French translations
   included (`locale/rw`, `locale/en`, `locale/fr`). Switching languages
@@ -249,6 +252,21 @@ English or Français; every label, button, and message updates.
   the account email resets verification, sends a new link, and signs
   the user out until the new address is confirmed; resend lookup is
   case-insensitive.
+- **Password-reset account enumeration is an intentional trade-off.**
+  The reset page tells the requester whether the submitted address has
+  an eligible account, so it can reveal account existence. Requests are
+  limited to 3 per email address and 10 per client IP in each 10-minute
+  window; only HMAC fingerprints are stored in the database, not the
+  submitted email or IP. Responses are not cacheable, invalid email
+  addresses are rejected, and Django's existing token/SMTP flow is
+  retained. The limit reduces abuse but does not remove the disclosure;
+  use it only with that trade-off understood.
+- **Administrator roles are explicit.** After applying migrations in a
+  deployment environment, run `python manage.py setup_admin_roles`, then
+  assign staff users to the `KazeB Admin Viewer`, `KazeB User Support`,
+  or `KazeB Trust & Safety` groups through Django admin. These groups
+  grant limited model permissions; the setup command never creates
+  superusers. Do not run deployment migrations without a reviewed backup.
 - **Bootstrap is vendored locally, not loaded from a CDN.** Templates
   used to pull it straight from `cdn.jsdelivr.net`; if that CDN was
   unreachable — a restricted network, jsDelivr blocked or slow in a

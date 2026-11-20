@@ -71,7 +71,11 @@ def category_detail(request, slug):
     category = get_object_or_404(Category, slug=slug)
     search_form = ListingSearchForm(request.GET or None)
 
-    listings_qs = Listing.objects.filter(category=category, is_active=True).select_related("seller")
+    listings_qs = Listing.objects.filter(
+        category=category,
+        is_active=True,
+        moderation_status=Listing.ModerationStatus.VISIBLE,
+    ).select_related("seller")
     listings_qs = _apply_search(listings_qs, search_form)
     listings_qs = _apply_filters_and_sort(request, listings_qs)
 
@@ -94,7 +98,10 @@ def search(request):
     bar search box -- same text filter, condition filter and sorting
     as a category page, but across every category."""
     search_form = ListingSearchForm(request.GET or None)
-    listings_qs = Listing.objects.filter(is_active=True).select_related("seller")
+    listings_qs = Listing.objects.filter(
+        is_active=True,
+        moderation_status=Listing.ModerationStatus.VISIBLE,
+    ).select_related("seller")
     listings_qs = _apply_search(listings_qs, search_form)
     listings_qs = _apply_filters_and_sort(request, listings_qs)
 
@@ -117,7 +124,10 @@ def listing_detail(request, pk):
     contact options -- in-site message, WhatsApp, and copy phone
     number."""
     listing = get_object_or_404(
-        Listing.objects.select_related("seller"), pk=pk, is_active=True
+        Listing.objects.select_related("seller"),
+        pk=pk,
+        is_active=True,
+        moderation_status=Listing.ModerationStatus.VISIBLE,
     )
     if request.user != listing.seller:
         Listing.objects.filter(pk=listing.pk).update(views_count=F("views_count") + 1)
@@ -151,7 +161,11 @@ def seller_profile(request, username):
     """Public seller page with only that seller's currently active listings."""
     seller = get_object_or_404(User, username=username)
     listings_qs = (
-        Listing.objects.filter(seller=seller, is_active=True)
+        Listing.objects.filter(
+            seller=seller,
+            is_active=True,
+            moderation_status=Listing.ModerationStatus.VISIBLE,
+        )
         .select_related("seller")
         .prefetch_related("images")
     )
@@ -180,7 +194,11 @@ def seller_profile_api(request, username):
         return JsonResponse({"detail": "Seller not found."}, status=404)
 
     listings_qs = (
-        Listing.objects.filter(seller=seller, is_active=True)
+        Listing.objects.filter(
+            seller=seller,
+            is_active=True,
+            moderation_status=Listing.ModerationStatus.VISIBLE,
+        )
         .prefetch_related("images")
         .order_by("-created_at")
     )
@@ -237,7 +255,12 @@ def seller_profile_api(request, username):
 def toggle_favorite(request, pk):
     """Save/un-save a listing to the signed-in user's favourites.
     POST only, redirects back to wherever the request came from."""
-    listing = get_object_or_404(Listing, pk=pk, is_active=True)
+    listing = get_object_or_404(
+        Listing,
+        pk=pk,
+        is_active=True,
+        moderation_status=Listing.ModerationStatus.VISIBLE,
+    )
     if request.method == "POST":
         favorite, created = Favorite.objects.get_or_create(user=request.user, listing=listing)
         if not created:
