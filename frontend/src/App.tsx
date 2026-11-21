@@ -126,6 +126,7 @@ function App() {
   const [error, setError] = useState("");
   const [activeSlide, setActiveSlide] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [favoriteIds, setFavoriteIds] = useState<Set<number>>(() => new Set());
   const [favoriteLoadStatus, setFavoriteLoadStatus] = useState<"loading" | "ready" | "error">("loading");
   const [pendingFavoriteIds, setPendingFavoriteIds] = useState<Set<number>>(() => new Set());
@@ -321,6 +322,53 @@ function App() {
 
   return (
     <>
+      <header className="mobile-header d-lg-none">
+        <a className="mobile-logo" href="/">
+          <span className="kazeb-logo-black">Kaze</span>
+          <span className="kazeb-logo-orange">B</span>
+        </a>
+        <div className="mobile-header-actions">
+          <a className="mobile-icon" href="/accounts/profile/" aria-label="Profile">
+            👤
+          </a>
+          <form action="/i18n/setlang/" method="post" className="mobile-lang" onSubmit={(event) => void handleLanguageChange(event)}>
+            <input type="hidden" name="csrfmiddlewaretoken" value={csrfToken} />
+            <input type="hidden" name="next" value={window.location.pathname + window.location.search} />
+            <select name="language" defaultValue={homepage.language} aria-label={labels.change_language}>
+              <option value="rw">RW</option>
+              <option value="en">EN</option>
+              <option value="fr">FR</option>
+            </select>
+          </form>
+          <button className="mobile-hamburger" type="button" aria-label="Open menu" onClick={() => setDrawerOpen(true)}>
+            ☰
+          </button>
+        </div>
+      </header>
+      {drawerOpen && (
+        <div className="mobile-drawer-overlay" onClick={() => setDrawerOpen(false)} />
+      )}
+      <aside className={`mobile-drawer ${drawerOpen ? "open" : ""}`} aria-hidden={!drawerOpen}>
+        <div className="mobile-drawer-header">
+          <span className="kazeb-logo-black">Kaze</span>
+          <span className="kazeb-logo-orange">B</span>
+          <button className="mobile-drawer-close" type="button" aria-label="Close menu" onClick={() => setDrawerOpen(false)}>
+            ✕
+          </button>
+        </div>
+        <nav className="mobile-drawer-nav">
+          <a href="/" onClick={() => setDrawerOpen(false)}>Ahabanza</a>
+          <a href="/accounts/profile/" onClick={() => setDrawerOpen(false)}>Konti yanjye</a>
+          <a href="/about/" onClick={() => setDrawerOpen(false)}>Uko bikora</a>
+          <a href="/faq/" onClick={() => setDrawerOpen(false)}>Ibibazo bikunze kubazwa</a>
+          <a href="/terms/" onClick={() => setDrawerOpen(false)}>Ibanza n'Amabwiriza</a>
+        </nav>
+        {!user.is_authenticated && (
+          <div className="mobile-drawer-footer">
+            <a className="btn btn-brand w-100" href="/accounts/login/" onClick={() => setDrawerOpen(false)}>Injira</a>
+          </div>
+        )}
+      </aside>
       <nav
         className={`navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top${
           isHomepage || isDashboard ? " homepage-navbar" : ""
@@ -757,6 +805,28 @@ function App() {
           </small>
         </div>
       </footer>
+      <nav className="mobile-bottom-nav d-lg-none" aria-label="Bottom navigation">
+        <a href="/" className={pathname === "/" ? "active" : ""}>
+          <span>H</span>
+          <small>Ahabanza</small>
+        </a>
+        <a href="/listings/" className={pathname.startsWith("/listings") ? "active" : ""}>
+          <span>P</span>
+          <small>Ibicuruzwa</small>
+        </a>
+        <a href="/listings/add/" className={pathname === "/listings/add/" ? "active" : ""}>
+          <span>+</span>
+          <small>Ongeraho</small>
+        </a>
+        <a href="/messages/" className={pathname.startsWith("/messages") ? "active" : ""}>
+          <span>M</span>
+          <small>Ubutumwa</small>
+        </a>
+        <a href="/accounts/profile/" className={pathname === "/accounts/profile/" ? "active" : ""}>
+          <span>U</span>
+          <small>Konti</small>
+        </a>
+      </nav>
     </>
   );
 }
