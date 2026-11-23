@@ -181,7 +181,7 @@ export default function SellerListingEdit({
                 {listing.images.map((image) => (
                   !removedImages.includes(image.id) && (
                     <div className="seller-image-preview" key={image.id}>
-                      <img src={image.url} alt="" />
+                      <img src={image.url} alt="" onError={(e) => { e.currentTarget.style.display = "none"; }} />
                       {image.is_cover && <span className="seller-image-cover">{labels.cover}</span>}
                       <button
                         type="button"

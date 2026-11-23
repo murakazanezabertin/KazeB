@@ -6,13 +6,16 @@
   <div class="col-md-6 text-center">
     <h1 class="h3 mb-4">{% trans "Reba imeli yawe" %}</h1>
     <p>
-      {% trans "Twakoherereje umurongo wo kwemeza konti yawe. Kanda kuri wo kugira ngo winjire kuri KazeB." %}
+      {% trans "Twakoherereje kode ya 6 inyuguti kuri imeli yawe. Kanda hano kugira ngo wiyandike kode." %}
     </p>
     <p class="text-muted small">
       {% trans "Ntabwo wabonye imeli? Reba mu 'Spam', cyangwa usabe indi hepfo." %}
     </p>
-    <a href="{% url 'accounts:resend_verification' %}" class="btn btn-outline-brand">
-      {% trans "Ohereza indi email yo kwemeza" %}
+    <a href="{% url 'accounts:verify_code' %}" class="btn btn-brand">
+      {% trans "Andika kode" %}
+    </a>
+    <a href="{% url 'accounts:resend_verification' %}" class="btn btn-outline-brand ms-2">
+      {% trans "Ohereza indi kode" %}
     </a>
   </div>
 </div>

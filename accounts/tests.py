@@ -1,6 +1,9 @@
 from django.contrib.auth import get_user_model
+from django.core import mail
 from django.test import TestCase
 from django.urls import reverse
+
+from accounts.models import EmailVerificationCode
 
 User = get_user_model()
 
@@ -21,26 +24,30 @@ class RegistrationTests(TestCase):
 
     def test_register_creates_unverified_user_without_logging_in(self):
         """Signing up no longer logs the user straight in -- they have
-        to click the emailed verification link first."""
+        to enter the emailed verification code first."""
         response = self.client.post(reverse("accounts:register"), self._valid_payload())
-        self.assertRedirects(response, reverse("accounts:verification_sent"))
+        self.assertRedirects(response, reverse("accounts:verify_code"))
         user = User.objects.get(username="newseller")
         self.assertFalse(response.wsgi_request.user.is_authenticated)
         self.assertFalse(user.email_verified)
         self.assertTrue(user.agreed_to_terms)
 
-    def test_register_sends_verification_email(self):
-        from django.core import mail
-
+    def test_register_sends_verification_email_with_code(self):
         self.client.post(reverse("accounts:register"), self._valid_payload())
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].to, ["newseller@example.com"])
+        # Check that email contains a 6-digit code
+        body = mail.outbox[0].body
+        import re
+        codes = re.findall(r'\b\d{6}\b', body)
+        self.assertEqual(len(codes), 1)
+        self.assertEqual(len(codes[0]), 6)
 
     def test_whatsapp_number_is_required(self):
         response = self.client.post(
             reverse("accounts:register"), self._valid_payload(whatsapp_number="")
         )
-        self.assertEqual(response.status_code, 200)  # re-rendered with an error, not redirected
+        self.assertEqual(response.status_code, 200)
         self.assertFalse(User.objects.filter(username="newseller").exists())
 
     def test_phone_number_is_required(self):
@@ -69,6 +76,71 @@ class RegistrationTests(TestCase):
         self.assertFalse(User.objects.filter(username="newseller").exists())
 
 
+class EmailVerificationCodeModelTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="unverified",
+            password="correct-password",
+            email="unverified@example.com",
+            phone_number="+250788555555",
+            whatsapp_number="+250788555555",
+        )
+        self.user.email_verified = False
+        self.user.save()
+
+    def test_generate_code_creates_6_digit_code(self):
+        code, evc = EmailVerificationCode.generate_code(self.user)
+        self.assertEqual(len(code), 6)
+        self.assertTrue(code.isdigit())
+        self.assertEqual(evc.user, self.user)
+        self.assertIsNotNone(evc.code_hash)
+        self.assertIsNotNone(evc.expires_at)
+        self.assertEqual(evc.attempts, 0)
+        self.assertEqual(evc.max_attempts, 5)
+        self.assertIsNone(evc.used_at)
+
+    def test_generate_code_invalidates_previous(self):
+        code1, evc1 = EmailVerificationCode.generate_code(self.user)
+        code2, evc2 = EmailVerificationCode.generate_code(self.user)
+        self.assertNotEqual(code1, code2)
+        self.assertEqual(EmailVerificationCode.objects.filter(user=self.user).count(), 1)
+        # Old code should not work
+        self.assertFalse(evc1.verify_code(code1))
+        # New code should work
+        self.assertTrue(evc2.verify_code(code2))
+
+    def test_verify_code_success(self):
+        code, evc = EmailVerificationCode.generate_code(self.user)
+        self.assertTrue(evc.verify_code(code))
+        evc.refresh_from_db()
+        self.assertIsNotNone(evc.used_at)
+
+    def test_verify_code_failure_increments_attempts(self):
+        code, evc = EmailVerificationCode.generate_code(self.user)
+        self.assertFalse(evc.verify_code("111111"))
+        evc.refresh_from_db()
+        self.assertEqual(evc.attempts, 1)
+
+    def test_verify_code_max_attempts(self):
+        code, evc = EmailVerificationCode.generate_code(self.user)
+        for _ in range(5):
+            evc.verify_code("111111")
+        evc.refresh_from_db()
+        self.assertEqual(evc.attempts, 5)
+        self.assertFalse(evc.is_valid())
+        # Even correct code should not work after max attempts
+        self.assertFalse(evc.verify_code(code))
+
+    def test_verify_code_expired(self):
+        code, evc = EmailVerificationCode.generate_code(self.user)
+        from django.utils import timezone
+        from datetime import timedelta
+        evc.expires_at = timezone.now() - timedelta(minutes=1)
+        evc.save()
+        self.assertFalse(evc.is_valid())
+        self.assertFalse(evc.verify_code(code))
+
+
 class EmailVerificationTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
@@ -78,53 +150,49 @@ class EmailVerificationTests(TestCase):
             phone_number="+250788555555",
             whatsapp_number="+250788555555",
         )
-        # create_user doesn't set email_verified, so it uses the model
-        # field's own default (False) -- confirmed explicitly here so
-        # this test's intent doesn't quietly depend on that default.
         self.user.email_verified = False
         self.user.save()
-
-    def _verify_url(self):
-        from django.utils.encoding import force_bytes
-        from django.utils.http import urlsafe_base64_encode
-
-        from accounts.tokens import email_verification_token
-
-        uidb64 = urlsafe_base64_encode(force_bytes(self.user.pk))
-        token = email_verification_token.make_token(self.user)
-        return reverse("accounts:verify_email", args=[uidb64, token])
 
     def test_unverified_user_cannot_log_in(self):
         response = self.client.post(
             reverse("login"),
             {"username": "unverified", "password": "correct-password"},
         )
-        self.assertEqual(response.status_code, 200)  # re-rendered with an error
+        self.assertEqual(response.status_code, 200)
         self.assertFalse(response.wsgi_request.user.is_authenticated)
 
-    def test_valid_link_verifies_and_logs_in(self):
-        response = self.client.get(self._verify_url())
+    def test_valid_code_verifies_and_logs_in(self):
+        code, _ = EmailVerificationCode.generate_code(self.user)
+        response = self.client.post(
+            reverse("accounts:verify_code"),
+            {"code": code},
+        )
         self.assertRedirects(response, reverse("core:home"))
         self.user.refresh_from_db()
         self.assertTrue(self.user.email_verified)
         self.assertTrue(response.wsgi_request.user.is_authenticated)
 
-    def test_link_only_works_once(self):
-        url = self._verify_url()
-        self.client.get(url)  # first click verifies successfully
-        self.client.logout()
-        second_response = self.client.get(url)  # replaying the same link
-        self.assertTemplateUsed(second_response, "registration/verification_invalid.html")
-
-    def test_garbage_token_shows_invalid_page(self):
-        from django.utils.encoding import force_bytes
-        from django.utils.http import urlsafe_base64_encode
-
-        uidb64 = urlsafe_base64_encode(force_bytes(self.user.pk))
-        response = self.client.get(
-            reverse("accounts:verify_email", args=[uidb64, "not-a-real-token"])
+    def test_invalid_code_shows_error(self):
+        code, _ = EmailVerificationCode.generate_code(self.user)
+        response = self.client.post(
+            reverse("accounts:verify_code"),
+            {"code": "111111"},
         )
-        self.assertTemplateUsed(response, "registration/verification_invalid.html")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Kode ntabwo ikora")
+        self.user.refresh_from_db()
+        self.assertFalse(self.user.email_verified)
+
+    def test_code_only_works_once(self):
+        code, _ = EmailVerificationCode.generate_code(self.user)
+        self.client.post(reverse("accounts:verify_code"), {"code": code})  # first use
+        self.client.logout()
+        second_response = self.client.post(
+            reverse("accounts:verify_code"),
+            {"code": code},
+        )
+        self.assertEqual(second_response.status_code, 200)
+        self.assertContains(second_response, "Kode ntabwo ikora")
 
     def test_resend_does_not_reveal_whether_email_exists(self):
         """Same redirect whether or not the address is a real,
@@ -136,20 +204,38 @@ class EmailVerificationTests(TestCase):
         fake = self.client.post(
             reverse("accounts:resend_verification"), {"email": "nobody@example.com"}
         )
-        self.assertRedirects(real, reverse("accounts:verification_sent"))
-        self.assertRedirects(fake, reverse("accounts:verification_sent"))
+        self.assertRedirects(real, reverse("accounts:verify_code"))
+        self.assertRedirects(fake, reverse("accounts:verify_code"))
 
     def test_resend_email_lookup_is_case_insensitive(self):
-        from django.core import mail
-
         response = self.client.post(
             reverse("accounts:resend_verification"),
             {"email": "UNVERIFIED@example.com"},
         )
 
-        self.assertRedirects(response, reverse("accounts:verification_sent"))
+        self.assertRedirects(response, reverse("accounts:verify_code"))
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].to, ["unverified@example.com"])
+
+    def test_resend_generates_new_code(self):
+        code1, _ = EmailVerificationCode.generate_code(self.user)
+        self.client.post(
+            reverse("accounts:resend_verification"), {"email": "unverified@example.com"}
+        )
+        # Old code should not work
+        response = self.client.post(
+            reverse("accounts:verify_code"),
+            {"code": code1},
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Kode ntabwo ikora")
+        # New code should be in the email
+        self.assertEqual(len(mail.outbox), 1)
+        body = mail.outbox[0].body
+        import re
+        codes = re.findall(r'\b\d{6}\b', body)
+        self.assertEqual(len(codes), 1)
+        self.assertNotEqual(codes[0], code1)
 
 
 class DeleteAccountTests(TestCase):
@@ -210,8 +296,6 @@ class EditAccountTests(TestCase):
         self.assertEqual(self.user.phone_number, "+250788444444")
 
     def test_email_change_requires_verification_of_new_address(self):
-        from django.core import mail
-
         self.user.email_verified = True
         self.user.save(update_fields=["email_verified"])
         self.client.force_login(self.user)

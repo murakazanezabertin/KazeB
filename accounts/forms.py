@@ -65,6 +65,39 @@ class RegisterForm(UserCreationForm):
         return email
 
 
+class VerifyCodeForm(forms.Form):
+    """Form for entering the 6-digit email verification code."""
+
+    code = forms.CharField(
+        label=_("Kode ya 6 inyuguti"),
+        max_length=6,
+        min_length=6,
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+            "placeholder": "000000",
+            "inputmode": "numeric",
+            "pattern": "[0-9]*",
+            "autocomplete": "one-time-code",
+            "style": "letter-spacing: 0.5em; font-size: 1.5rem; text-align: center;",
+        }),
+        error_messages={
+            "required": _("Andika kode wavugwa kuri imeli."),
+            "min_length": _("Kode rigomba kuba 6 inyuguti."),
+            "max_length": _("Kode rigomba kuba 6 inyuguti."),
+        },
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["code"].widget.attrs.setdefault("class", "form-control")
+
+    def clean_code(self):
+        code = self.cleaned_data["code"]
+        if not code.isdigit():
+            raise forms.ValidationError(_("Kode rigomba kuba imibare gusa."))
+        return code
+
+
 class LoginForm(AuthenticationForm):
     """AuthenticationForm with Kinyarwanda labels, since Django's
     built-in labels for this form aren't part of our translation

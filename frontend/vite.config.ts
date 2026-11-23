@@ -6,6 +6,7 @@ export default defineConfig(({ mode }) => {
   const djangoUrl = env.DJANGO_URL || "http://127.0.0.1:8000";
   const proxyConfig: ProxyOptions = {
     target: djangoUrl,
+    changeOrigin: true,
   };
   const listingsProxyConfig: ProxyOptions = {
     ...proxyConfig,
@@ -55,7 +56,9 @@ export default defineConfig(({ mode }) => {
       manifest: ".vite/manifest.json",
     },
     server: {
-      host: "127.0.0.1",
+      host: "0.0.0.0",
+      port: 5173,
+      strictPort: true,
       proxy: {
         ...Object.fromEntries(djangoPaths.map((path) => [path, proxyConfig])),
         "/listings": listingsProxyConfig,

@@ -28,8 +28,9 @@ from accounts.forms import (
     LoginForm,
     RegisterForm,
     ResendVerificationForm,
+    VerifyCodeForm,
 )
-from accounts.models import PasswordResetRateLimit
+from accounts.models import EmailVerificationCode, PasswordResetRateLimit, User
 from accounts.views import _send_verification_email
 from kazeb.imaging import compress_uploaded_image
 from listings.api import _listing_card_payload
@@ -218,6 +219,42 @@ def register_api(request):
 
 
 @require_POST
+def verify_code_api(request):
+    form = VerifyCodeForm(request.POST)
+    if not form.is_valid():
+        return _invalid_form(form)
+
+    code = form.cleaned_data["code"]
+    users = User.objects.filter(email_verified=False).select_related("email_verification_code")
+    verified_user = None
+    for user in users:
+        try:
+            evc = user.email_verification_code
+            if evc.verify_code(code):
+                verified_user = user
+                break
+        except EmailVerificationCode.DoesNotExist:
+            continue
+
+    if verified_user:
+        verified_user.email_verified = True
+        verified_user.save(update_fields=["email_verified"])
+        login(request, verified_user, backend="django.contrib.auth.backends.ModelBackend")
+        return JsonResponse(
+            {
+                "detail": _("Imeli yawe yemejwe. Murakaza neza kuri KazeB!"),
+                "account": _account_payload(request, verified_user),
+                "redirect_to": "/",
+            }
+        )
+
+    return JsonResponse(
+        {"detail": _("Kode ntabwo ikora, yagize, cyangwa yamaze gukoreshwa.")},
+        status=400,
+    )
+
+
+@require_POST
 def login_api(request):
     form = LoginForm(request=request, data=request.POST)
     if not form.is_valid():
@@ -265,7 +302,7 @@ def resend_verification_api(request):
 
     return JsonResponse(
         {
-            "detail": _("Niba konti ihari kandi itaremezwa, twakoherereje imeli.")
+            "detail": _("Niba konti ihari kandi itaremezwa, twakoherereje kode nshya.")
         }
     )
 

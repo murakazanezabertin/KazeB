@@ -175,12 +175,18 @@ export default function SellerDashboard({ language }: Props) {
             src={account.profile_picture}
             alt={account.display_name}
             className="account-avatar"
+            onError={(e) => {
+              e.currentTarget.style.display = "none";
+              const fallback = e.currentTarget.nextElementSibling;
+              if (fallback) {
+                (fallback as HTMLElement).style.display = "inline-flex";
+              }
+            }}
           />
-        ) : (
-          <span className="account-avatar account-avatar-fallback" aria-hidden="true">
-            {avatarInitial}
-          </span>
-        )}
+        ) : null}
+        <span className="account-avatar account-avatar-fallback" style={{ display: account.profile_picture ? "none" : "inline-flex" }} aria-hidden="true">
+          {avatarInitial}
+        </span>
         <div className="seller-profile-copy">
           <div className="fw-bold seller-profile-name">{account.display_name}</div>
           {account.phone_number && (
@@ -251,15 +257,17 @@ export default function SellerDashboard({ language }: Props) {
                       className="seller-listing-main text-decoration-none text-body"
                     >
                       {listing.cover_image ? (
-                        <img src={listing.cover_image} alt={listing.title} />
-                      ) : (
-                        <span
-                          className="seller-listing-image-placeholder"
-                          aria-label={labels.empty_image}
-                        >
-                          🖼
-                        </span>
-                      )}
+                        <img src={listing.cover_image} alt={listing.title} onError={(e) => {
+                          e.currentTarget.style.display = "none";
+                          const placeholder = e.currentTarget.parentNode?.querySelector(".seller-listing-image-placeholder");
+                          if (placeholder) {
+                            (placeholder as HTMLElement).style.display = "inline-flex";
+                          }
+                        }} />
+                      ) : null}
+                      <span className="seller-listing-image-placeholder" style={{ display: listing.cover_image ? "none" : "inline-flex" }} aria-label={labels.empty_image}>
+                        🖼
+                      </span>
                       <span className="seller-listing-copy">
                         <strong>{listing.title}</strong>
                         <span className="seller-listing-price">{listing.display_price}</span>

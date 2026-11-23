@@ -19,6 +19,7 @@
 
   <link rel="stylesheet" href="{% static 'vendor/bootstrap/bootstrap.min.css' %}">
   <link rel="stylesheet" href="{% static 'css/style.css' %}?v=20261029-hero-layout">
+<link rel="stylesheet" href="{% static 'css/kazeb-design-system.css' %}">
   <script>
     // Safety net for the case someone runs the dev server without ever
     // having run `python manage.py vendor_assets` (e.g. a fresh clone).
@@ -133,17 +134,38 @@
 <footer class="homepage-footer">
   <div class="footer-highlight homepage-footer-band">
     <div class="container homepage-footer-inner">
-      <div class="homepage-footer-top">
-        <div class="homepage-footer-brand">
-          <a href="{% url 'core:home' %}" class="homepage-footer-logo" aria-label="KazeB">
-            <span class="kazeb-logo-black">Kaze</span><span class="kazeb-logo-orange">B</span>
-          </a>
-          <p class="homepage-footer-tagline">{% trans "Gura no kugurisha byoroshye!" %}</p>
+      <div class="homepage-footer-columns">
+        <div class="homepage-footer-column">
+          <h2 class="h6 text-uppercase mb-3">{% trans "About Us" %}</h2>
+          <ul class="list-unstyled footer-links">
+            <li><a href="{% url 'core:about' %}">{% trans "About Us" %}</a></li>
+            <li><a href="{% url 'core:faq' %}">{% trans "Frequently Asked Questions" %}</a></li>
+            <li><a href="{% url 'core:anti_scam' %}">{% trans "Avoiding scams" %}</a></li>
+            <li><a href="{% url 'core:terms' %}">{% trans "Terms" %}</a></li>
+            <li><a href="{% url 'core:privacy' %}">{% trans "Privacy" %}</a></li>
+          </ul>
         </div>
-        <div class="homepage-footer-follow">
-          <h2 class="homepage-footer-follow-title">{% trans "Dukurikire kuri" %}</h2>
+        <div class="homepage-footer-column">
+          <h2 class="h6 text-uppercase mb-3">{% trans "Contact Us" %}</h2>
+          <ul class="list-unstyled footer-links">
+            <li><a href="{% url 'core:contact' %}">{% trans "Contact Us" %}</a></li>
+          </ul>
+        </div>
+        <div class="homepage-footer-column">
+          <h2 class="h6 text-uppercase mb-3">{% trans "My Account" %}</h2>
+          <ul class="list-unstyled footer-links">
+            {% if user.is_authenticated %}
+              <li><a href="{% url 'listings:dashboard' %}">{% trans "My Account" %}</a></li>
+            {% else %}
+              <li><a href="{% url 'login' %}">{% trans "Log In" %}</a></li>
+              <li><a href="{% url 'accounts:register' %}">{% trans "Register" %}</a></li>
+            {% endif %}
+          </ul>
+        </div>
+        <div class="homepage-footer-column">
+          <h2 class="h6 text-uppercase mb-3">{% trans "Follow Us On" %}</h2>
           <div class="homepage-footer-socials">
-            <a href="https://www.tiktok.com/@kazeb57?_r=1&amp;_t=ZS-99CeOPSb12T" class="footer-social-icon" target="_blank" rel="noopener noreferrer" aria-label="TikTok" title="TikTok">
+            <a href="https://www.tiktok.com/@kazeb57?_r=1&_t=ZS-99CeOPSb12T" class="footer-social-icon" target="_blank" rel="noopener noreferrer" aria-label="TikTok" title="TikTok">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                 <path d="M16.6 5.82c-.9-.88-1.46-2.06-1.6-3.32h-3.06v13.44c0 1.63-1.32 2.95-2.95 2.95a2.95 2.95 0 0 1 0-5.9c.28 0 .55.04.8.12V9.98a6.08 6.08 0 0 0-.8-.05A6.08 6.08 0 1 0 15.03 16V9.4a9.14 9.14 0 0 0 5.35 1.72V8.06a5.98 5.98 0 0 1-3.78-2.24z"/>
               </svg>
@@ -162,7 +184,7 @@
             </a>
             <a href="https://youtube.com/@kazebrwanda?si=woGH50aq8c8CkiEk" class="footer-social-icon" target="_blank" rel="noopener noreferrer" aria-label="YouTube" title="YouTube">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M23 12s0-3.5-.45-5.15a2.87 2.87 0 0 0-2-2C18.9 4.4 12 4.4 12 4.4s-6.9 0-8.55.45a2.87 2.87 0 0 0-2 2C1 8.5 1 12 1 12s0 3.5.45 5.15a2.87 2.87 0 0 0 2 2c1.65.45 8.55.45 8.55.45s6.9 0 8.55-.45a2.87 2.87 0 0 0 2-2C23 15.5 23 12 23 12z" fill="currentColor" stroke="none"/>
+                <path d="M23 12s0-3.5-.45-5.15a2.87 2.87 0 0 0-2-2C18.9 4.4 12 4.4s-6.9 0-8.55.45a2.87 2.87 0 0 0-2 2C1 8.5 1 12 1 12s0 3.5.45 5.15a2.87 2.87 0 0 0 2 2c1.65.45 8.55.45 8.55.45s6.9 0 8.55-.45a2.87 2.87 0 0 0 2-2C23 15.5 23 12 23 12z" fill="currentColor" stroke="none"/>
                 <path d="M9.75 15.5V8.5L15.5 12l-5.75 3.5z" fill="white" stroke="none"/>
               </svg>
             </a>
@@ -174,38 +196,6 @@
                 <path d="M18.9 3H22l-7.6 8.68L23.3 21h-6.7l-5.2-6.6L5.4 21H2.3l8.1-9.27L1.4 3h6.9l4.7 6.02L18.9 3zm-1.2 16h1.8L7.4 5H5.5l12.2 14z"/>
               </svg>
             </a>
-          </div>
-        </div>
-      </div>
-
-      <div class="homepage-footer-card">
-        <div class="homepage-footer-columns">
-          <div class="homepage-footer-column">
-            <h2 class="h6 text-uppercase mb-3">{% trans "Abo turi bo" %}</h2>
-            <ul class="list-unstyled footer-links">
-              <li><a href="{% url 'core:about' %}">{% trans "Abo turi bo" %}</a></li>
-              <li><a href="{% url 'core:faq' %}">{% trans "Ibibazo bikunze kubazwa" %}</a></li>
-              <li><a href="{% url 'core:anti_scam' %}">{% trans "Kwirinda uburiganya" %}</a></li>
-              <li><a href="{% url 'core:terms' %}">{% trans "Amabwiriza" %}</a></li>
-              <li><a href="{% url 'core:privacy' %}">{% trans "Ibanga" %}</a></li>
-            </ul>
-          </div>
-          <div class="homepage-footer-column">
-            <h2 class="h6 text-uppercase mb-3">{% trans "Twandikire" %}</h2>
-            <ul class="list-unstyled footer-links">
-              <li><a href="{% url 'core:contact' %}">{% trans "Twandikire" %}</a></li>
-            </ul>
-          </div>
-          <div class="homepage-footer-column">
-            <h2 class="h6 text-uppercase mb-3">{% trans "Konti yanjye" %}</h2>
-            <ul class="list-unstyled footer-links">
-              {% if user.is_authenticated %}
-                <li><a href="{% url 'listings:dashboard' %}">{% trans "Konti yanjye" %}</a></li>
-              {% else %}
-                <li><a href="{% url 'login' %}">{% trans "Injira" %}</a></li>
-                <li><a href="{% url 'accounts:register' %}">{% trans "Iyandikishe" %}</a></li>
-              {% endif %}
-            </ul>
           </div>
         </div>
       </div>

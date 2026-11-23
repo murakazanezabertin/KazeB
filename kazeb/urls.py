@@ -47,6 +47,7 @@ urlpatterns = [
     ),
     path("api/auth/ui/", account_api.auth_ui, name="auth_ui_api"),
     path("api/auth/register/", account_api.register_api, name="auth_register_api"),
+    path("api/auth/verify/code/", account_api.verify_code_api, name="auth_verify_code_api"),
     path("api/auth/login/", account_api.login_api, name="auth_login_api"),
     path("api/auth/logout/", account_api.logout_api, name="auth_logout_api"),
     path(

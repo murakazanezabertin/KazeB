@@ -329,13 +329,15 @@ function App() {
         </a>
         <div className="mobile-header-actions">
           <a className="mobile-icon" href="/accounts/profile/" aria-label="Profile">
-            👤
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+            {user.is_authenticated && <span className="mobile-account-dot" aria-label="Signed in" />}
           </a>
           <form action="/i18n/setlang/" method="post" className="mobile-lang" onSubmit={(event) => void handleLanguageChange(event)}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>
             <input type="hidden" name="csrfmiddlewaretoken" value={csrfToken} />
             <input type="hidden" name="next" value={window.location.pathname + window.location.search} />
             <select name="language" defaultValue={homepage.language} aria-label={labels.change_language}>
-              <option value="rw">RW</option>
+              <option value="rw">Kinya</option>
               <option value="en">EN</option>
               <option value="fr">FR</option>
             </select>
@@ -365,7 +367,7 @@ function App() {
         </nav>
         {!user.is_authenticated && (
           <div className="mobile-drawer-footer">
-            <a className="btn btn-brand w-100" href="/accounts/login/" onClick={() => setDrawerOpen(false)}>Injira</a>
+            <a className="btn btn-white-orange w-100" href="/accounts/login/" onClick={() => setDrawerOpen(false)}>Injira</a>
           </div>
         )}
       </aside>
@@ -407,12 +409,12 @@ function App() {
                   href="/"
                   title={labels.home}
                 >
-                  🏠 {labels.home}
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10l9-7 9 7v11a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg> {labels.home}
                 </a>
               </li>
               <li className="nav-item">
                 <a className="nav-link" href="/listings/add/" title={labels.add_listing}>
-                  ➕ {labels.add_listing}
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 8v8M8 12h8"/></svg> {labels.add_listing}
                 </a>
               </li>
               {user.is_authenticated && (
@@ -423,7 +425,7 @@ function App() {
                       href="/listings/dashboard/"
                       title={labels.my_account}
                     >
-                      👤 {labels.my_account}
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg> {labels.my_account}
                     </a>
                   </li>
                   <li className="nav-item">
@@ -432,7 +434,7 @@ function App() {
                       href="/messages/"
                       title={labels.messages}
                     >
-                      💬 {labels.messages}
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> {labels.messages}
                       {user.unread_message_count > 0 && (
                         <span className="unread-badge">{user.unread_message_count}</span>
                       )}
@@ -632,12 +634,18 @@ function App() {
                             className="card-img-top listing-card-img"
                             alt={listing.name}
                             loading="lazy"
+                            onError={(e) => {
+                              e.currentTarget.style.display = "none";
+                              const placeholder = e.currentTarget.parentNode?.querySelector(".listing-card-img-placeholder");
+                              if (placeholder) {
+                                (placeholder as HTMLElement).style.display = "flex";
+                              }
+                            }}
                           />
-                        ) : (
-                          <div className="listing-card-img listing-card-img-placeholder">
-                            {labels.empty_image}
-                          </div>
-                        )}
+                        ) : null}
+                        <div className="listing-card-img listing-card-img-placeholder" style={{ display: listing.image ? "none" : "flex" }}>
+                          {labels.empty_image}
+                        </div>
                       </a>
                       <button
                         type="button"
@@ -683,15 +691,18 @@ function App() {
                             className="seller-avatar-sm"
                             alt=""
                             loading="lazy"
+                            onError={(e) => {
+                              e.currentTarget.style.display = "none";
+                              const fallback = e.currentTarget.nextElementSibling;
+                              if (fallback) {
+                                (fallback as HTMLElement).style.display = "inline-flex";
+                              }
+                            }}
                           />
-                        ) : (
-                          <span
-                            className="seller-avatar-sm seller-avatar-fallback"
-                            aria-hidden="true"
-                          >
-                            {listing.seller.username.slice(0, 1).toUpperCase()}
-                          </span>
-                        )}
+                        ) : null}
+                        <span className="seller-avatar-sm seller-avatar-fallback" style={{ display: listing.seller.image ? "none" : "inline-flex" }} aria-hidden="true">
+                          {listing.seller.username.slice(0, 1).toUpperCase()}
+                        </span>
                         <span>{listing.seller.name}</span>
                       </a>
                     </div>
@@ -807,23 +818,23 @@ function App() {
       </footer>
       <nav className="mobile-bottom-nav d-lg-none" aria-label="Bottom navigation">
         <a href="/" className={pathname === "/" ? "active" : ""}>
-          <span>H</span>
+          <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10l9-7 9 7v11a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></span>
           <small>Ahabanza</small>
         </a>
         <a href="/listings/" className={pathname.startsWith("/listings") ? "active" : ""}>
-          <span>P</span>
+          <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></span>
           <small>Ibicuruzwa</small>
         </a>
         <a href="/listings/add/" className={pathname === "/listings/add/" ? "active" : ""}>
-          <span>+</span>
+          <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 8v8M8 12h8"/></svg></span>
           <small>Ongeraho</small>
         </a>
         <a href="/messages/" className={pathname.startsWith("/messages") ? "active" : ""}>
-          <span>M</span>
+          <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
           <small>Ubutumwa</small>
         </a>
         <a href="/accounts/profile/" className={pathname === "/accounts/profile/" ? "active" : ""}>
-          <span>U</span>
+          <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg></span>
           <small>Konti</small>
         </a>
       </nav>

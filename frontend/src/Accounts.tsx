@@ -56,6 +56,8 @@ function TextField({
   accept,
   maxLength,
   autoComplete,
+  inputMode,
+  pattern,
 }: {
   name: string;
   label: string;
@@ -66,6 +68,8 @@ function TextField({
   accept?: string;
   maxLength?: number;
   autoComplete?: string;
+  inputMode?: "text" | "search" | "none" | "email" | "tel" | "url" | "numeric" | "decimal";
+  pattern?: string;
 }) {
   return (
     <div className="mb-3">
@@ -80,6 +84,8 @@ function TextField({
         accept={accept}
         maxLength={maxLength}
         autoComplete={autoComplete}
+        inputMode={inputMode}
+        pattern={pattern}
       />
       <FormErrors error={error} field={name} />
     </div>
@@ -170,27 +176,16 @@ function AuthFrame({
 
 function RegisterPage({ copy, ui }: { copy: Copy; ui: AuthUiData }) {
   const [error, setError] = useState<unknown>(null);
-  const [sent, setSent] = useState(false);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
     try {
       await submitForm("/api/auth/register/", new FormData(event.currentTarget));
-      setSent(true);
+      window.location.assign("/accounts/verify/code/");
     } catch (submitError) {
       setError(submitError);
     }
-  }
-
-  if (sent) {
-    return (
-      <AuthFrame title={copy.register}>
-        <div className="alert alert-success" role="status">{copy.verification_sent}</div>
-        <a className="btn btn-brand" href="/accounts/verify/resend/">{copy.resend_verification}</a>
-        <p className="mt-3 mb-0"><a href="/accounts/login/">{copy.login}</a></p>
-      </AuthFrame>
-    );
   }
 
   return (
@@ -287,6 +282,56 @@ function ResendVerificationPage({ copy }: { copy: Copy }) {
   );
 }
 
+function VerifyCodePage({ copy }: { copy: Copy }) {
+  const [error, setError] = useState<unknown>(null);
+  const [message, setMessage] = useState("");
+
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setError(null);
+    try {
+      const response = await submitForm<{ detail: string; account?: any; redirect_to?: string }>(
+        "/api/auth/verify/code/",
+        new FormData(event.currentTarget),
+      );
+      if (response.redirect_to) {
+        window.location.assign(response.redirect_to);
+        return;
+      }
+      setMessage(response.detail);
+    } catch (submitError) {
+      setError(submitError);
+    }
+  }
+
+  return (
+    <AuthFrame title={copy.verify_status || "Emeza imeli"} footer={<a href="/accounts/verify/resend/">{copy.resend_verification}</a>}>
+      {message && <div className="alert alert-success" role="status">{message}</div>}
+      <ApiErrorMessage error={error} />
+      <form onSubmit={(event) => void submit(event)}>
+        <TextField
+          name="code"
+          label={copy.verify_status || "Kode ya 6 inyuguti"}
+          type="text"
+          required
+          autoComplete="one-time-code"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          maxLength={6}
+          error={error}
+        />
+        <button className="btn btn-brand w-100" type="submit">{copy.verify_status || "Emeza"}</button>
+      </form>
+      <p className="mt-3 text-center small">
+        <a href="/accounts/verify/resend/">{copy.resend_verification}</a>
+      </p>
+      <p className="mt-3 text-center small">
+        <a href="/accounts/login/">{copy.login}</a>
+      </p>
+    </AuthFrame>
+  );
+}
+
 function PasswordResetRequestPage({ copy }: { copy: Copy }) {
   const [error, setError] = useState<unknown>(null);
   const [message, setMessage] = useState("");
@@ -367,10 +412,17 @@ function AccountOverview({
     <AuthFrame title={copy.account_details}>
       <div className="account-profile-header">
         {account.profile_picture ? (
-          <img src={account.profile_picture} className="account-avatar" alt="" />
-        ) : (
-          <span className="account-avatar account-avatar-fallback">{account.username.slice(0, 1).toUpperCase()}</span>
-        )}
+          <img src={account.profile_picture} className="account-avatar" alt=""
+            onError={(e) => {
+              e.currentTarget.style.display = "none";
+              const fallback = e.currentTarget.nextElementSibling;
+              if (fallback) {
+                (fallback as HTMLElement).style.display = "inline-flex";
+              }
+            }}
+          />
+        ) : null}
+        <span className="account-avatar account-avatar-fallback" style={{ display: account.profile_picture ? "none" : "inline-flex" }}>{account.username.slice(0, 1).toUpperCase()}</span>
         <div>
           <h2 className="h5 mb-1">{[account.first_name, account.last_name].filter(Boolean).join(" ") || account.username}</h2>
           <p className="text-muted mb-0">@{account.username}</p>
@@ -616,7 +668,15 @@ function FavoriteImage({
   emptyLabel: string;
 }) {
   return image ? (
-    <img src={image} className="card-img-top listing-card-img" alt={title} loading="lazy" />
+    <img src={image} className="card-img-top listing-card-img" alt={title} loading="lazy"
+      onError={(e) => {
+        e.currentTarget.style.display = "none";
+        const placeholder = e.currentTarget.parentNode?.querySelector(".listing-card-img-placeholder");
+        if (placeholder) {
+          (placeholder as HTMLElement).style.display = "flex";
+        }
+      }}
+    />
   ) : (
     <div className="listing-card-img listing-card-img-placeholder">{emptyLabel}</div>
   );
@@ -658,6 +718,7 @@ export default function AccountPages({
       </AuthFrame>
     );
   }
+  if (pathname === "/accounts/verify/code/") return <VerifyCodePage copy={ui.labels} />;
   if (pathname === "/accounts/verify/resend/") return <ResendVerificationPage copy={ui.labels} />;
   if (pathname === "/accounts/password_reset/") return <PasswordResetRequestPage copy={ui.labels} />;
   if (/^\/accounts\/reset\/[^/]+\/[^/]+\/?$/.test(pathname)) {

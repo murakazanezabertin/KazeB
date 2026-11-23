@@ -40,7 +40,8 @@ function ListingCards({
   labels: Labels;
 }) {
   return (
-    <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4">
+    <div className="row row-cols-2 row-cols-lg-4 g-3">
+
       {listings.map((listing) => (
         <div className="col" key={listing.id}>
           <div className="card listing-card h-100">
@@ -51,10 +52,16 @@ function ListingCards({
                   className="card-img-top listing-card-img"
                   alt={listing.name}
                   loading="lazy"
+                  onError={(e) => {
+                    e.currentTarget.style.display = "none";
+                    const placeholder = e.currentTarget.parentNode?.querySelector(".listing-card-img-placeholder");
+                    if (placeholder) {
+                      (placeholder as HTMLElement).style.display = "flex";
+                    }
+                  }}
                 />
-              ) : (
-                <div className="listing-card-img listing-card-img-placeholder">{labels.empty_image}</div>
-              )}
+              ) : null}
+              <div className="listing-card-img listing-card-img-placeholder" style={{ display: listing.image ? "none" : "flex" }}>{labels.empty_image}</div>
               <div className="card-body">
                 <h2 className="h6 mb-1 text-truncate">{listing.name}</h2>
                 <p className="fw-bold text-brand mb-1">{listing.price}</p>
@@ -64,12 +71,19 @@ function ListingCards({
             <div className="card-footer bg-white border-0 pt-0">
               <a href={listing.seller.url} className="seller-card-link">
                 {listing.seller.image ? (
-                  <img src={listing.seller.image} className="seller-avatar-sm" alt="" loading="lazy" />
-                ) : (
-                  <span className="seller-avatar-sm seller-avatar-fallback" aria-hidden="true">
-                    {listing.seller.username.slice(0, 1).toUpperCase()}
-                  </span>
-                )}
+                  <img src={listing.seller.image} className="seller-avatar-sm" alt="" loading="lazy"
+                    onError={(e) => {
+                      e.currentTarget.style.display = "none";
+                      const fallback = e.currentTarget.nextElementSibling;
+                      if (fallback) {
+                        (fallback as HTMLElement).style.display = "inline-flex";
+                      }
+                    }}
+                  />
+                ) : null}
+                <span className="seller-avatar-sm seller-avatar-fallback" style={{ display: listing.seller.image ? "none" : "inline-flex" }} aria-hidden="true">
+                  {listing.seller.username.slice(0, 1).toUpperCase()}
+                </span>
                 <span>{listing.seller.name}</span>
               </a>
             </div>
@@ -310,10 +324,17 @@ function ListingDetail({
         <span className="mx-1">·</span>
         <a href={seller.url} className="seller-detail-link">
           {seller.image ? (
-            <img src={seller.image} className="seller-avatar-sm" alt="" />
-          ) : (
-            <span className="seller-avatar-sm seller-avatar-fallback" aria-hidden="true">{seller.username.slice(0, 1).toUpperCase()}</span>
-          )}
+            <img src={seller.image} className="seller-avatar-sm" alt=""
+              onError={(e) => {
+                e.currentTarget.style.display = "none";
+                const fallback = e.currentTarget.nextElementSibling;
+                if (fallback) {
+                  (fallback as HTMLElement).style.display = "inline-flex";
+                }
+              }}
+            />
+          ) : null}
+          <span className="seller-avatar-sm seller-avatar-fallback" style={{ display: seller.image ? "none" : "inline-flex" }} aria-hidden="true">{seller.username.slice(0, 1).toUpperCase()}</span>
           <span>{labels.posted_by} {seller.name}</span>
         </a>
         {seller.is_phone_verified && <span className="badge bg-success-subtle text-success-emphasis ms-1">✅ {labels.phone_verified}</span>}
@@ -327,7 +348,15 @@ function ListingDetail({
                 src={listing.images[activeImage]?.url}
                 className="listing-photo mb-3"
                 alt={listing.name}
+                onError={(e) => {
+                  e.currentTarget.style.display = "none";
+                  const placeholder = e.currentTarget.parentNode?.querySelector(".listing-card-img-placeholder");
+                  if (placeholder) {
+                    (placeholder as HTMLElement).style.display = "flex";
+                  }
+                }}
               />
+              <div className="listing-photo listing-card-img-placeholder mb-3" style={{ display: listing.images.length ? "none" : "flex" }}>{labels.empty_image}</div>
               {listing.images.length > 1 && (
                 <div className="d-flex flex-wrap gap-2" aria-label={listing.name}>
                   {listing.images.map((image, index) => (
@@ -339,7 +368,7 @@ function ListingDetail({
                       aria-label={`${listing.name} ${index + 1}`}
                       aria-pressed={index === activeImage}
                     >
-                      <img src={image.url} alt="" />
+                      <img src={image.url} alt="" onError={(e) => { e.currentTarget.style.display = "none"; }} />
                     </button>
                   ))}
                 </div>
@@ -475,10 +504,17 @@ function SellerProfile({ labels, isAuthenticated }: { labels: Labels; isAuthenti
       <section className="seller-profile-card mb-4">
         <div className="d-flex flex-column flex-sm-row align-items-center align-items-sm-start gap-3">
           {seller.profile_picture ? (
-            <img src={seller.profile_picture} className="seller-avatar-lg" alt="" />
-          ) : (
-            <span className="seller-avatar-lg seller-avatar-fallback" aria-hidden="true">{seller.username.slice(0, 1).toUpperCase()}</span>
-          )}
+            <img src={seller.profile_picture} className="seller-avatar-lg" alt=""
+              onError={(e) => {
+                e.currentTarget.style.display = "none";
+                const fallback = e.currentTarget.nextElementSibling;
+                if (fallback) {
+                  (fallback as HTMLElement).style.display = "inline-flex";
+                }
+              }}
+            />
+          ) : null}
+          <span className="seller-avatar-lg seller-avatar-fallback" style={{ display: seller.profile_picture ? "none" : "inline-flex" }} aria-hidden="true">{seller.username.slice(0, 1).toUpperCase()}</span>
           <div className="text-center text-sm-start flex-grow-1">
             <h1 className="h3 mb-1">{seller.display_name}</h1>
             <p className="text-muted mb-2">@{seller.username}</p>

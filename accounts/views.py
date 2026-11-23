@@ -4,38 +4,28 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
-from django.utils.encoding import force_bytes, force_str
-from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _t
 
 from kazeb.imaging import compress_uploaded_image
 
-from .forms import AccountDeleteForm, EditAccountForm, RegisterForm, ResendVerificationForm
-from .models import User
-from .tokens import email_verification_token
+from .forms import AccountDeleteForm, EditAccountForm, RegisterForm, ResendVerificationForm, VerifyCodeForm
+from .models import EmailVerificationCode, User
 
 
 def _send_verification_email(request, user):
-    """Emails a one-time "confirm your account" link. Used both right
-    after signup and from the resend-verification page -- kept as one
-    function so both call sites always build the link the same way."""
-    uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
-    token = email_verification_token.make_token(user)
-    verify_path = request.build_absolute_uri(
-        f"/accounts/verify/{uidb64}/{token}/"
-    )
-    subject = _("Emeza konti yawe kuri KazeB")
+    """Generates a 6-digit verification code and emails it to the user."""
+    code, _ = EmailVerificationCode.generate_code(user)
+    subject = _t("Emeza konti yawe kuri KazeB")
     message = render_to_string(
         "registration/verification_email.txt",
-        {"user": user, "verify_url": verify_path},
+        {"user": user, "code": code},
     )
     send_mail(subject, message, None, [user.email])
 
 
 def register(request):
-    """Sign up, send a verification email, but don't log the user in
-    yet -- they can't sign in until they click that link (see
-    LoginForm.confirm_login_allowed)."""
+    """Sign up, send a verification code, but don't log the user in
+    yet -- they can't sign in until they verify the code."""
     if request.user.is_authenticated:
         return redirect("core:home")
 
@@ -54,41 +44,51 @@ def register(request):
                 )
             user.save()
             _send_verification_email(request, user)
-            return redirect("accounts:verification_sent")
+            return redirect("accounts:verify_code")
     else:
         form = RegisterForm()
 
     return render(request, "registration/register.html", {"form": form})
 
 
-def verify_email(request, uidb64, token):
-    """Handles the link from the verification email. A valid,
-    not-yet-used token flips email_verified on and logs the user
-    straight in; anything else (bad/expired/already-used token) shows
-    a page offering to send a fresh one."""
-    try:
-        uid = force_str(urlsafe_base64_decode(uidb64))
-        user = User.objects.get(pk=uid)
-    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-        user = None
-
-    if user is not None and email_verification_token.check_token(user, token):
-        user.email_verified = True
-        user.save(update_fields=["email_verified"])
-        login(request, user, backend="django.contrib.auth.backends.ModelBackend")
-        messages.success(request, _("Imeli yawe yemejwe. Murakaza neza kuri KazeB!"))
+def verify_code(request):
+    """Handle the 6-digit verification code entry."""
+    if request.user.is_authenticated:
         return redirect("core:home")
 
-    return render(request, "registration/verification_invalid.html")
+    if request.method == "POST":
+        form = VerifyCodeForm(request.POST)
+        if form.is_valid():
+            code = form.cleaned_data["code"]
+            # Find the user by checking unverified users with a valid code
+            # We need to check all unverified users' codes
+            users = User.objects.filter(email_verified=False).select_related("email_verification_code")
+            verified_user = None
+            for user in users:
+                try:
+                    evc = user.email_verification_code
+                    if evc.verify_code(code):
+                        verified_user = user
+                        break
+                except EmailVerificationCode.DoesNotExist:
+                    continue
+
+            if verified_user:
+                verified_user.email_verified = True
+                verified_user.save(update_fields=["email_verified"])
+                login(request, verified_user, backend="django.contrib.auth.backends.ModelBackend")
+                messages.success(request, _t("Imeli yawe yemejwe. Murakaza neza kuri KazeB!"))
+                return redirect("core:home")
+
+            form.add_error("code", _t("Kode ntabwo ikora, yagize, cyangwa yamaze gukoreshwa."))
+    else:
+        form = VerifyCodeForm()
+
+    return render(request, "registration/verify_code.html", {"form": form})
 
 
 def resend_verification_email(request):
-    """Standalone page (linked from login's error and from the
-    invalid-link page) to request a fresh verification email.
-
-    Always shows the same "if that account exists..." message whether
-    or not the email matches a real, unverified account -- so this
-    can't be used to check which emails are registered on KazeB."""
+    """Standalone page to request a fresh verification code."""
     if request.method == "POST":
         form = ResendVerificationForm(request.POST)
         if form.is_valid():
@@ -99,7 +99,7 @@ def resend_verification_email(request):
                 _send_verification_email(request, user)
             except User.DoesNotExist:
                 pass
-            return redirect("accounts:verification_sent")
+            return redirect("accounts:verify_code")
     else:
         form = ResendVerificationForm()
 
@@ -127,7 +127,7 @@ def edit_account(request):
                 _send_verification_email(request, user)
                 logout(request)
                 return redirect("accounts:verification_sent")
-            messages.success(request, _("Impinduka ku konti yawe zabitswe."))
+            messages.success(request, _t("Impinduka ku konti yawe zabitswe."))
             return redirect("listings:dashboard")
     else:
         form = EditAccountForm(instance=request.user)
@@ -145,7 +145,7 @@ def delete_account(request):
         form = AccountDeleteForm(request.POST, user=request.user)
         if form.is_valid():
             user = request.user
-            messages.success(request, _("Konti yawe yasibwe burundu."))
+            messages.success(request, _t("Konti yawe yasibwe burundu."))
             logout(request)
             user.delete()
             return redirect("core:home")

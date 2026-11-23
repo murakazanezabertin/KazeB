@@ -947,3 +947,69 @@
 .mobile-bottom-nav a.active{color:#ff6a00}
 body{padding-bottom:64px}
 @media(min-width:992px){.mobile-header,.mobile-drawer,.mobile-drawer-overlay,.mobile-bottom-nav{display:none !important}body{padding-bottom:0}}
+
+/* Stage 2 mobile homepage */
+@media (max-width: 991px) {
+  .kazeb-homepage-content {
+    padding-bottom: 80px;
+  }
+  .homepage-search {
+    padding: 0 12px;
+  }
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .category-card {
+    text-align: center;
+  }
+  .category-card img {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto;
+    display: block;
+  }
+}
+
+@media (max-width: 991px) {
+  .navbar {
+    display: none !important;
+  }
+  .homepage-product-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .listing-card-img {
+    height: 120px;
+    object-fit: cover;
+  }
+}
+
+.mobile-account-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: #22c55e;
+  border-radius: 50%;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+
+/* White button with orange text for mobile drawer login */
+.btn-white-orange {
+  background: #fff;
+  color: var(--kazeb-brand);
+  border: 2px solid var(--kazeb-brand);
+  font-weight: 600;
+  border-radius: 0.5rem;
+}
+.btn-white-orange:hover,
+.btn-white-orange:focus {
+  background: #fff8f0;
+  color: var(--kazeb-brand-dark);
+  border-color: var(--kazeb-brand-dark);
+}

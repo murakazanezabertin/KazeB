@@ -1,7 +1,9 @@
 {% load i18n %}{% blocktrans %}Muraho {{ user }},{% endblocktrans %}
 
-{% trans "Kanda kuri uyu murongo kugira ngo wemeze konti yawe kuri KazeB:" %}
+{% trans "Kode yawe yo kwemeza konti kuri KazeB ni:" %}
 
-{{ verify_url }}
+{{ code }}
 
-{% trans "Niba atari wowe wasabye iyi konti, wirengagize iyi email." %}
+{% trans "Iyi kode izarangira mu minota 10. Ntibishoboka kuyishyiraho cyangwa kuyikoresha cyangwa kabiri." %}
+
+{% trans "Niba atari wowe wasabye iyi konti, wirengagize iyi email. Ntuvugire kode yawe na wese." %}
