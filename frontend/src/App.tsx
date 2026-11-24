@@ -175,8 +175,16 @@ function App() {
       try {
         const firstPage = await getFavorites();
         const pages = [firstPage];
-        for (let page = 2; page <= firstPage.pagination.pages; page += 1) {
-          pages.push(await getFavorites(String(page)));
+        const totalPages = firstPage.pagination.pages;
+        if (totalPages > 1) {
+          const remaining = Array.from({ length: totalPages - 1 }, (_, i) => i + 2);
+          const concurrency = 3;
+          for (let i = 0; i < remaining.length; i += concurrency) {
+            const chunk = remaining.slice(i, i + concurrency);
+            const results = await Promise.all(chunk.map((page) => getFavorites(String(page))));
+            pages.push(...results);
+            if (cancelled) return;
+          }
         }
         const ids = new Set(
           pages.flatMap((page) => page.results.map(({ listing }) => listing.id)),
