@@ -336,7 +336,7 @@ function App() {
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>
             <input type="hidden" name="csrfmiddlewaretoken" value={csrfToken} />
             <input type="hidden" name="next" value={window.location.pathname + window.location.search} />
-            <select name="language" defaultValue={homepage.language} aria-label={labels.change_language}>
+            <select name="language" defaultValue={homepage.language} aria-label={labels.change_language} onChange={(event) => event.currentTarget.form?.requestSubmit()}>
               <option value="rw">Kinya</option>
               <option value="en">EN</option>
               <option value="fr">FR</option>
@@ -466,7 +466,7 @@ function App() {
                     aria-label={labels.change_language}
                     onChange={(event) => event.currentTarget.form?.requestSubmit()}
                   >
-                    <option value="rw">Kinyarwanda</option>
+                    <option value="rw">Kinya</option>
                     <option value="en">English</option>
                     <option value="fr">Français</option>
                   </select>
@@ -860,3 +860,4 @@ function isAccountPage(pathname: string) {
 }
 
 export default App;
+
