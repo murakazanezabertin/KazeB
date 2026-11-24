@@ -4,8 +4,8 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="robots" content="noindex, nofollow">
-    <title>{{ page_title|default:"KazeB Administrator" }}</title>
+    {% if noindex %}<meta name="robots" content="noindex, nofollow">{% endif %}
+    <title>{{ page_title|default:"KazeB" }}</title>
     <link rel="icon" href="{% static 'images/favicon-32x32.png' %}">
     {% for stylesheet in vite_css %}
       <link rel="stylesheet" href="{{ stylesheet }}">

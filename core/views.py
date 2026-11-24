@@ -31,19 +31,42 @@ def _react_app_context():
     }
 
 
+def _render_react_app(request, page_title, *, noindex):
+    """Render the shared React application shell.
+
+    Single source of truth for serving the Vite-built React bundle so the
+    homepage, account pages, and admin dashboard never duplicate shell
+    wiring. ``noindex`` controls the robots meta tag (public pages are
+    indexable; authenticated/admin pages are not).
+    """
+    context = _react_app_context()
+    context["page_title"] = page_title
+    context["noindex"] = noindex
+    return render(request, "core/react_app.html", context)
+
+
+def react_home(request):
+    """Production homepage: serves the same React app verified locally.
+
+    The React ``App`` component fetches real data from ``/api/home/`` and
+    the other Django API routes, so this view only supplies the built
+    bundle via the Vite manifest. Kept separate from the legacy
+    ``home`` template view so that template remains available.
+    """
+    return _render_react_app(request, "KazeB", noindex=False)
+
+
 def admin_dashboard_page(request):
     if not request.user.is_authenticated:
         return HttpResponse("Authentication is required.", status=401)
     if not request.user.is_staff or not request.user.has_perm("trust.view_admin_dashboard"):
         return HttpResponseForbidden("You do not have permission to access this page.")
 
-    return render(request, "core/react_app.html", _react_app_context())
+    return _render_react_app(request, "KazeB Administrator", noindex=True)
 
 
 def account_profile_page(request):
-    context = _react_app_context()
-    context["page_title"] = f'{_("Umwirondoro wanjye")} · KazeB'
-    return render(request, "core/react_app.html", context)
+    return _render_react_app(request, f'{_("Umwirondoro wanjye")} · KazeB', noindex=True)
 
 
 def home(request):
