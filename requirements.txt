@@ -8,6 +8,6 @@ gunicorn>=22.0
 # Optional, only needed if you set the matching environment variable
 # (see kazeb/settings.py):
 psycopg2-binary>=2.9   # needed if DATABASE_URL points at Postgres
-sentry-sdk>=2.0        # needed if you set SENTRY_DSN
+sentry-sdk>=2.0,<3.0    # needed if you set SENTRY_DSN; <3.0 keeps send_default_pii support
 django-storages>=1.14  # needed if SUPABASE_STORAGE_BUCKET is set (media uploads)
 boto3>=1.34            # needed if SUPABASE_STORAGE_BUCKET is set (media uploads)
