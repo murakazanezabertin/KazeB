@@ -1005,3 +1005,21 @@ msgstr "This listing was removed by a moderator."
 
 msgid "This listing is hidden by a moderator and cannot be reactivated here."
 msgstr "This listing is hidden by a moderator and cannot be reactivated here."
+
+msgid "Shakisha"
+msgstr "Explore"
+
+msgid "KazeB yanjye"
+msgstr "My KazeB"
+
+msgid "Abo turi bo n'ubufasha"
+msgstr "About & Support"
+
+msgid "Shakisha ibicuruzwa"
+msgstr "Browse Listings"
+
+msgid "Icyiciro cyiza kugorora, kugura n'ukurisha ibicuruzwa."
+msgstr "A simple place to discover, buy and sell products."
+
+msgid "Uburenganzira bwose bya KazeB."
+msgstr "All rights reserved."

@@ -52,6 +52,12 @@ class HomepageLabelsSerializer(serializers.Serializer):
     footer_tagline = serializers.CharField()
     change_language = serializers.CharField()
     sign_out = serializers.CharField()
+    explore = serializers.CharField()
+    my_kazeb = serializers.CharField()
+    about_support = serializers.CharField()
+    browse_listings = serializers.CharField()
+    footer_description = serializers.CharField()
+    footer_copyright = serializers.CharField()
     empty_image = serializers.CharField()
     empty_categories = serializers.CharField()
     page_not_found = serializers.CharField()
@@ -212,8 +218,14 @@ def _homepage_payload(request):
             "contact": _("Twandikire"),
             "follow": _("Dukurikire kuri"),
             "footer_tagline": _("Ikiraro gihuza abaguzi n'abagurisha"),
+            "explore": _("Shakisha"),
+            "my_kazeb": _("KazeB yanjye"),
+            "about_support": _("Abo turi bo n'ubufasha"),
+            "browse_listings": _("Shakisha ibicuruzwa"),
             "change_language": _("Hindura Ururimi"),
             "sign_out": _("Sohoka"),
+            "footer_description": _("Icyiciro cyiza kugorora, kugura n'ukurisha ibicuruzwa."),
+            "footer_copyright": _("Uburenganzira bwose bya KazeB."),
             "empty_image": _("Nta foto ihari"),
             "empty_categories": _("Nta bwoko burahari."),
             "page_not_found": _("Urupapuro ntirwabashije kuboneka."),

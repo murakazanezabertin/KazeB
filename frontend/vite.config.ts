@@ -36,7 +36,6 @@ export default defineConfig(({ mode }) => {
     "/contact",
     "/faq",
     "/how-it-works",
-    "/i18n",
     "/media",
     "/messages",
     "/privacy",
@@ -59,6 +58,9 @@ export default defineConfig(({ mode }) => {
       host: "0.0.0.0",
       port: 5173,
       strictPort: true,
+      // Allow access from other devices on the same Wi-Fi network
+      // (e.g. a phone previewing the local site at <computer-ip>:5173).
+      allowedHosts: true,
       proxy: {
         ...Object.fromEntries(djangoPaths.map((path) => [path, proxyConfig])),
         "/listings": listingsProxyConfig,

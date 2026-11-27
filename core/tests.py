@@ -50,21 +50,20 @@ class HomepageApiTests(TestCase):
 
         self.assertTrue(response.json()["user"]["is_authenticated"])
 
-    def test_homepage_keeps_branding_tagline_categories_and_carousel(self):
+    def test_home_serves_react_app_shell(self):
         response = self.client.get("/")
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Murakaza neza kuri")
-        self.assertContains(response, 'class="kazeb-logo-black">Kaze</span>')
-        self.assertContains(response, 'class="kazeb-logo-orange">B</span>')
-        self.assertContains(response, "Ikiraro gihuza abaguzi n'abagurisha")
         page = response.content.decode()
-        self.assertLess(page.index("kazeb-welcome-tagline"), page.index("homepage-search"))
-        self.assertLess(page.index("homepage-search"), page.index("kazeb-hero"))
-        self.assertEqual(page.count('name="q"'), 1)
-        self.assertContains(response, self.category.get_absolute_url())
-        self.assertContains(response, "data-kazeb-carousel")
-        self.assertContains(response, "images/hero/car.png")
+        self.assertContains(response, "<title>KazeB</title>")
+        self.assertContains(response, '<div id="root"></div>')
+        self.assertContains(response, "static/react/assets/")
+        self.assertContains(response, ".js")
+        self.assertContains(response, ".css")
+        # The homepage is a client-rendered React app, not the legacy
+        # server-rendered template.
+        self.assertNotContains(response, "kazeb-hero")
+        self.assertNotContains(response, "data-kazeb-carousel")
 
     def test_api_translations_follow_language_switches(self):
         language_response = self.client.post(
@@ -75,12 +74,7 @@ class HomepageApiTests(TestCase):
 
         english_home = self.client.get("/api/home/").json()["labels"]
         english_auth = self.client.get("/api/auth/ui/").json()
-        english_page = self.client.get("/")
 
-        self.assertContains(english_page, "Welcome to")
-        self.assertContains(english_page, 'class="kazeb-logo-black">Kaze</span>')
-        self.assertContains(english_page, "Find a buyer<br>or<br>a seller")
-        self.assertContains(english_page, "Buy and sell with ease!")
         self.assertEqual(english_home["welcome_prefix"], "Welcome to")
         self.assertEqual(english_home["hero_title_line_1"], "Find a buyer")
         self.assertEqual(english_home["hero_buyer_cta"], "Find a buyer now")
@@ -98,12 +92,7 @@ class HomepageApiTests(TestCase):
 
         french_home = self.client.get("/api/home/").json()["labels"]
         french_auth = self.client.get("/api/auth/ui/").json()
-        french_page = self.client.get("/")
 
-        self.assertContains(french_page, "Bienvenue sur")
-        self.assertContains(french_page, 'class="kazeb-logo-black">Kaze</span>')
-        self.assertContains(french_page, "Trouvez un acheteur<br>ou<br>un vendeur")
-        self.assertContains(french_page, "Achetez et vendez facilement !")
         self.assertEqual(french_home["welcome_prefix"], "Bienvenue sur")
         self.assertEqual(french_home["hero_title_line_1"], "Trouvez un acheteur")
         self.assertEqual(french_home["hero_buyer_cta"], "Trouvez un acheteur maintenant")
@@ -126,16 +115,17 @@ class HomepageApiTests(TestCase):
         self.assertEqual(kinyarwanda_auth["labels"]["account"], "Umwirondoro wanjye")
         self.assertEqual(kinyarwanda_auth["labels"]["account_details"], "Umwirondoro wanjye")
 
-    def test_authenticated_navigation_has_one_link_to_each_account_page(self):
+    def test_authenticated_homepage_api_returns_user_and_labels(self):
         self.client.force_login(self.user)
 
-        response = self.client.get("/")
-        navigation = response.content.split(b"</nav>", 1)[0]
+        response = self.client.get("/api/home/")
 
-        self.assertEqual(navigation.count(b'href="/listings/dashboard/"'), 1)
-        self.assertEqual(navigation.count(b'href="/accounts/profile/"'), 1)
-        self.assertContains(response, "Konti yanjye")
-        self.assertContains(response, "Umwirondoro wanjye")
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertTrue(payload["user"]["is_authenticated"])
+        # Labels that drive the client-rendered navigation are present.
+        self.assertEqual(payload["labels"]["my_account"], "Konti yanjye")
+        self.assertEqual(payload["labels"]["account"], "Umwirondoro wanjye")
 
     def test_csrf_api_sets_cookie_and_token_for_same_origin_forms(self):
         client = Client(enforce_csrf_checks=True)

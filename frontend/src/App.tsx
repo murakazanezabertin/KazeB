@@ -26,70 +26,6 @@ const heroSlides = [
   { src: "clothes.png", alt: "Clothes" },
 ];
 
-const footerLinks = [
-  { key: "about", href: "/about/" },
-  { key: "faq", href: "/faq/" },
-  { key: "safety", href: "/anti-scam/" },
-  { key: "terms", href: "/terms/" },
-  { key: "privacy", href: "/privacy/" },
-] as const;
-
-const footerSocialLinks = [
-  {
-    href: "https://www.tiktok.com/@kazeb57?_r=1&_t=ZS-99CeOPSb12T",
-    label: "TikTok",
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M16.6 5.82c-.9-.88-1.46-2.06-1.6-3.32h-3.06v13.44c0 1.63-1.32 2.95-2.95 2.95a2.95 2.95 0 0 1 0-5.9c.28 0 .55.04.8.12V9.98a6.08 6.08 0 0 0-.8-.05A6.08 6.08 0 1 0 15.03 16V9.4a9.14 9.14 0 0 0 5.35 1.72V8.06a5.98 5.98 0 0 1-3.78-2.24z" />
-      </svg>
-    ),
-  },
-  {
-    href: "https://www.instagram.com/kazeb.rw?igsi=MWxiODNidWpjeWljeQ==",
-    label: "Instagram",
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
-        <rect x="3" y="3" width="18" height="18" rx="5" />
-        <circle cx="12" cy="12" r="4" />
-        <circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none" />
-      </svg>
-    ),
-  },
-  {
-    href: "https://www.facebook.com/share/1EUuLs9Mha/",
-    label: "Facebook",
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5 3.66 9.15 8.44 9.94v-7.03H7.9v-2.9h2.54V9.85c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.9h-2.34V22c4.78-.79 8.44-4.94 8.44-9.94z" />
-      </svg>
-    ),
-  },
-  {
-    href: "https://youtube.com/@kazebrwanda?si=woGH50aq8c8CkiEk",
-    label: "YouTube",
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M23 12s0-3.5-.45-5.15a2.87 2.87 0 0 0-2-2C18.9 4.4 12 4.4 12 4.4s-6.9 0-8.55.45a2.87 2.87 0 0 0-2 2C1 8.5 1 12 1 12s0 3.5.45 5.15a2.87 2.87 0 0 0 2 2c1.65.45 8.55.45 8.55.45s6.9 0 8.55-.45a2.87 2.87 0 0 0 2-2C23 15.5 23 12 23 12z" />
-        <path d="M9.75 15.5V8.5L15.5 12l-5.75 3.5z" fill="white" stroke="none" />
-      </svg>
-    ),
-  },
-  {
-    href: "https://whatsapp.com/channel/0029VbDSEdp7tkjFMCr2Jm34",
-    label: "WhatsApp",
-    icon: <img src="/static/images/icons/whatsapp.svg" alt="" width="20" height="20" />,
-  },
-  {
-    href: "https://x.com/KazeBrwanda",
-    label: "X",
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M18.9 3H22l-7.6 8.68L23.3 21h-6.7l-5.2-6.6L5.4 21H2.3l8.1-9.27L1.4 3h6.9l4.7 6.02L18.9 3zm-1.2 16h1.8L7.4 5H5.5l12.2 14z" />
-      </svg>
-    ),
-  },
-] as const;
-
 function SearchForm({
   search,
   placeholder,
@@ -127,6 +63,7 @@ function App() {
   const [activeSlide, setActiveSlide] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [footerExpanded, setFooterExpanded] = useState<Set<string>>(new Set());
   const [favoriteIds, setFavoriteIds] = useState<Set<number>>(() => new Set());
   const [favoriteLoadStatus, setFavoriteLoadStatus] = useState<"loading" | "ready" | "error">("loading");
   const [pendingFavoriteIds, setPendingFavoriteIds] = useState<Set<number>>(() => new Set());
@@ -226,13 +163,14 @@ function App() {
       formData.set("next", window.location.pathname + window.location.search);
       const body = new URLSearchParams();
       formData.forEach((value, key) => body.set(key, String(value)));
-      const response = await fetch("/i18n/setlang/", {
+      const djangoUrl = window.location.origin.replace(/:5173$/, ":8000");
+      const response = await fetch(`${djangoUrl}/i18n/setlang/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
           "X-CSRFToken": token,
         },
-        credentials: "same-origin",
+        credentials: "include",
         body,
       });
       if (!response.ok) {
@@ -344,7 +282,7 @@ function App() {
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>
             <input type="hidden" name="csrfmiddlewaretoken" value={csrfToken} />
             <input type="hidden" name="next" value={window.location.pathname + window.location.search} />
-            <select name="language" defaultValue={homepage.language} aria-label={labels.change_language} onChange={(event) => event.currentTarget.form?.requestSubmit()}>
+            <select name="language" defaultValue={homepage.language} aria-label={labels.change_language} className="language-select" onChange={(event) => event.currentTarget.form?.requestSubmit()}>
               <option value="rw">Kinya</option>
               <option value="en">EN</option>
               <option value="fr">FR</option>
@@ -417,12 +355,12 @@ function App() {
                   href="/"
                   title={labels.home}
                 >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10l9-7 9 7v11a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg> {labels.home}
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M3 10l9-7 9 7v11a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg> {labels.home}
                 </a>
               </li>
               <li className="nav-item">
                 <a className="nav-link" href="/listings/add/" title={labels.add_listing}>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 8v8M8 12h8"/></svg> {labels.add_listing}
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><rect x="3" y="3" width="20" height="20" rx="4"/><path d="M12 8v8M8 12h8"/></svg> {labels.add_listing}
                 </a>
               </li>
               {user.is_authenticated && (
@@ -433,7 +371,7 @@ function App() {
                       href="/listings/dashboard/"
                       title={labels.my_account}
                     >
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg> {labels.my_account}
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg> {labels.my_account}
                     </a>
                   </li>
                   <li className="nav-item">
@@ -442,7 +380,7 @@ function App() {
                       href="/messages/"
                       title={labels.messages}
                     >
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> {labels.messages}
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> {labels.messages}
                       {user.unread_message_count > 0 && (
                         <span className="unread-badge">{user.unread_message_count}</span>
                       )}
@@ -466,9 +404,10 @@ function App() {
                     name="next"
                     value={window.location.pathname + window.location.search}
                   />
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true" className="language-globe"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>
                   <select
                     name="language"
-                    className="form-select form-select-sm"
+                    className="form-select form-select-sm language-select"
                     defaultValue={homepage.language}
                     title={labels.change_language}
                     aria-label={labels.change_language}
@@ -745,104 +684,229 @@ function App() {
       )}
 
       <footer className="homepage-footer">
-        <div className="footer-highlight homepage-footer-band">
-          <div className="container homepage-footer-inner">
-            <div className="homepage-footer-top">
-              <div className="homepage-footer-brand">
-                <a href="/" className="homepage-footer-logo" aria-label="KazeB">
-                  <span className="kazeb-logo-black">Kaze</span>
-                  <span className="kazeb-logo-orange">B</span>
-                </a>
-                <p className="homepage-footer-tagline">{labels.brand_tagline}</p>
-              </div>
-              <div className="homepage-footer-follow">
-                <h2 className="homepage-footer-follow-title">{labels.follow}</h2>
-                <div className="homepage-footer-socials">
-                  {footerSocialLinks.map((social) => (
-                    <a
-                      key={social.label}
-                      href={social.href}
-                      className="footer-social-icon"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={social.label}
-                      title={social.label}
-                    >
-                      {social.icon}
-                    </a>
-                  ))}
-                </div>
-              </div>
+        <div className="footer-brand">
+          <div className="container">
+            <a href="/" className="footer-logo d-flex align-items-center gap-2 text-decoration-none">
+              <span className="kazeb-logo-black fw-bold">Kaze</span>
+              <span className="kazeb-logo-orange fw-bold">B</span>
+            </a>
+            <p className="footer-description">{labels.footer_description}</p>
+            <div className="footer-socials">
+              <a
+                href="https://www.tiktok.com/@kazeb57?_r=1&_t=ZS-99CeOPSb12T"
+                className="footer-social-icon"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="TikTok"
+                title="TikTok"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M16.6 5.82c-.9-.88-1.46-2.06-1.6-3.32h-3.06v13.44c0 1.63-1.32 2.95-2.95 2.95a2.95 2.95 0 0 1 0-5.9c.28 0 .55.04.8.12V9.98a6.08 6.08 0 0 0-.8-.05A6.08 6.08 0 1 0 15.03 16V9.4a9.14 9.14 0 0 0 5.35 1.72V8.06a5.98 5.98 0 0 1-3.78-2.24z" />
+                </svg>
+              </a>
+              <a
+                href="https://www.instagram.com/kazeb.rw?igsi=MWxiODNidWpjeWljeQ=="
+                className="footer-social-icon"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                title="Instagram"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+                  <rect x="3" y="3" width="18" height="18" rx="5" />
+                  <circle cx="12" cy="12" r="4" />
+                  <circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none" />
+                </svg>
+              </a>
+              <a
+                href="https://www.facebook.com/share/1EUuLs9Mha/"
+                className="footer-social-icon"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+                title="Facebook"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5 3.66 9.15 8.44 9.94v-7.03H7.9v-2.9h2.54V9.85c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.9h-2.34V22c4.78-.79 8.44-4.94 8.44-9.94z" />
+                </svg>
+              </a>
+              <a
+                href="https://youtube.com/@kazebrwanda?si=woGH50aq8c8CkiEk"
+                className="footer-social-icon"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="YouTube"
+                title="YouTube"
+              >
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                  <path d="M23 12c0-3.53-.47-6.88-1.31-10.09C20.47 3.82 18.26 2 12 2S3.53 3.82 2.31 7.03C1.53 10.24 1 13.59 1 17c0 3.41.53 6.76 1.31 9.97C3.53 20.18 5.74 22 12 22s8.47-1.82 9.69-4.03C22.47 13.76 23 10.41 23 17z" />
+                  <path d="M10 15.5l5.5-3.5v-6L10 15.5z" fill="currentColor" stroke="none" />
+                </svg>
+              </a>
+              <a
+                href="https://whatsapp.com/channel/0029VbDSEdp7tkjFMCr2Jm34"
+                className="footer-social-icon"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="WhatsApp"
+                title="WhatsApp"
+              >
+                <img src="/static/images/icons/whatsapp.svg" alt="" width="20" height="20" />
+              </a>
+              <a
+                href="https://x.com/KazeBrwanda"
+                className="footer-social-icon"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="X"
+                title="X"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M18.9 3H22l-7.6 8.68L23.3 21h-6.7l-5.2-6.6L5.4 21H2.3l8.1-9.27L1.4 3h6.9l4.7 6.02L18.9 3zm-1.2 16h1.8L7.4 5H5.5l12.2 14z" />
+                </svg>
+              </a>
             </div>
+          </div>
+        </div>
 
-            <div className="homepage-footer-card">
-              <div className="homepage-footer-columns">
-                <div className="homepage-footer-column">
-                  <h2 className="h6 text-uppercase mb-3">{labels.about}</h2>
+        <div className="footer-sections">
+          <div className="container homepage-footer-inner">
+            <div className="homepage-footer-columns">
+              <div className="homepage-footer-column footer-accordion">
+                <button
+                  className="footer-accordion-header"
+                  type="button"
+                  aria-expanded={footerExpanded.has("explore")}
+                  aria-controls="footer-explore"
+                  onClick={() => {
+                    const next = new Set(footerExpanded);
+                    if (next.has("explore")) next.delete("explore");
+                    else next.add("explore");
+                    setFooterExpanded(next);
+                  }}
+                >
+                  {labels.explore}
+                  <svg className="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </button>
+                <div
+                  className={`footer-accordion-content${footerExpanded.has("explore") ? " open" : ""}`}
+                  id="footer-explore"
+                >
                   <ul className="list-unstyled footer-links">
-                    {footerLinks.map((link) => (
-                      <li key={link.key}>
-                        <a href={link.href}>{labels[link.key]}</a>
-                      </li>
-                    ))}
+                    <li><a href="/listings/">{labels.browse_listings}</a></li>
+                    <li><a href="/faq/">{labels.faq}</a></li>
+                    <li><a href="/anti-scam/">{labels.safety}</a></li>
                   </ul>
                 </div>
-                <div className="homepage-footer-column">
-                  <h2 className="h6 text-uppercase mb-3">{labels.contact}</h2>
+              </div>
+
+              <div className="homepage-footer-column footer-accordion">
+                <button
+                  className="footer-accordion-header"
+                  type="button"
+                  aria-expanded={footerExpanded.has("kazeb")}
+                  aria-controls="footer-kazeb"
+                  onClick={() => {
+                    const next = new Set(footerExpanded);
+                    if (next.has("kazeb")) next.delete("kazeb");
+                    else next.add("kazeb");
+                    setFooterExpanded(next);
+                  }}
+                >
+                  {labels.my_kazeb}
+                  <svg className="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </button>
+                <div
+                  className={`footer-accordion-content${footerExpanded.has("kazeb") ? " open" : ""}`}
+                  id="footer-kazeb"
+                >
                   <ul className="list-unstyled footer-links">
-                    <li>
-                      <a href="/contact/">{labels.contact}</a>
-                    </li>
-                  </ul>
-                </div>
-                <div className="homepage-footer-column">
-                  <h2 className="h6 text-uppercase mb-3">{labels.my_account}</h2>
-                  <ul className="list-unstyled footer-links">
-                    {user.is_authenticated ? (
-                      <li>
-                        <a href="/listings/dashboard/">{labels.my_account}</a>
-                      </li>
-                    ) : (
-                      <>
-                        <li>
-                          <a href="/accounts/login/">{labels.login}</a>
-                        </li>
-                        <li>
-                          <a href="/accounts/register/">{labels.register}</a>
-                        </li>
-                      </>
+                    <li><a href="/accounts/login/">{labels.login}</a></li>
+                    <li><a href="/accounts/register/">{labels.register}</a></li>
+                    <li><a href="/listings/favorites/">{labels.favorites}</a></li>
+                    <li><a href="/listings/add/">{labels.add_listing}</a></li>
+                    {user.is_authenticated && (
+                      <li><a href="/listings/dashboard/">{labels.my_account}</a></li>
                     )}
+                  </ul>
+                </div>
+              </div>
+
+              <div className="homepage-footer-column footer-accordion">
+                <button
+                  className="footer-accordion-header"
+                  type="button"
+                  aria-expanded={footerExpanded.has("about")}
+                  aria-controls="footer-about"
+                  onClick={() => {
+                    const next = new Set(footerExpanded);
+                    if (next.has("about")) next.delete("about");
+                    else next.add("about");
+                    setFooterExpanded(next);
+                  }}
+                >
+                  {labels.about_support}
+                  <svg className="footer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </button>
+                <div
+                  className={`footer-accordion-content${footerExpanded.has("about") ? " open" : ""}`}
+                  id="footer-about"
+                >
+                  <ul className="list-unstyled footer-links">
+                    <li><a href="/about/">{labels.about}</a></li>
+                    <li><a href="/contact/">{labels.contact}</a></li>
+                    <li><a href="/terms/">{labels.terms}</a></li>
+                    <li><a href="/privacy/">{labels.privacy}</a></li>
                   </ul>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div className="text-center text-muted py-3 border-top">
-          <small>
-            © {new Date().getFullYear()} KazeB — {labels.footer_tagline}
-          </small>
+
+        <div className="footer-bottom">
+          <div className="container">
+            <div className="footer-bottom-content">
+              <span className="footer-copyright">
+                © {new Date().getFullYear()} KazeB. All rights reserved.
+              </span>
+              <div className="footer-bottom-links">
+                <a href="/terms/">{labels.terms}</a>
+                <span className="footer-separator">·</span>
+                <a href="/privacy/">{labels.privacy}</a>
+              </div>
+              <span className="footer-copyright">
+                © {new Date().getFullYear()} KazeB. {labels.footer_copyright}
+              </span>
+            </div>
+          </div>
         </div>
       </footer>
       <nav className="mobile-bottom-nav d-lg-none" aria-label="Bottom navigation">
         <a href="/" className={pathname === "/" ? "active" : ""}>
-          <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10l9-7 9 7v11a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></span>
+          <span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M3 10l9-7 9 7v11a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></span>
           <small>Ahabanza</small>
         </a>
         <a href="/listings/" className={pathname.startsWith("/listings") ? "active" : ""}>
-          <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></span>
+          <span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></span>
           <small>Ibicuruzwa</small>
         </a>
         <a href="/listings/add/" className={pathname === "/listings/add/" ? "active" : ""}>
-          <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 8v8M8 12h8"/></svg></span>
+          <span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><rect x="3" y="3" width="20" height="20" rx="4"/><path d="M12 8v8M8 12h8"/></svg></span>
           <small>Ongeraho</small>
         </a>
         <a href="/messages/" className={pathname.startsWith("/messages") ? "active" : ""}>
-          <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+          <span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
           <small>Ubutumwa</small>
         </a>
         <a href="/accounts/profile/" className={pathname === "/accounts/profile/" ? "active" : ""}>
-          <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg></span>
+          <span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg></span>
           <small>Konti</small>
         </a>
       </nav>

@@ -30,6 +30,12 @@ export interface HomepageData {
     contact: string;
     follow: string;
     footer_tagline: string;
+    explore: string;
+    my_kazeb: string;
+    about_support: string;
+    browse_listings: string;
+    footer_description: string;
+    footer_copyright: string;
     change_language: string;
     sign_out: string;
     empty_image: string;
@@ -428,10 +434,6 @@ export interface AdminAuditEntry {
   created_at: string;
 }
 
-interface CsrfResponse {
-  csrfToken: string;
-}
-
 let csrfToken: string | null = null;
 
 export class ApiError extends Error {
@@ -707,7 +709,15 @@ function submitAdminJson<T>(path: string, payload: unknown): Promise<T> {
 
 export async function getCsrfToken(): Promise<string> {
   if (!csrfToken) {
-    const data = await apiRequest<CsrfResponse>("/api/csrf/");
+    const djangoUrl = window.location.origin.replace(/:5173$/, ":8000");
+    const response = await fetch(`${djangoUrl}/api/csrf/`, {
+      method: "GET",
+      credentials: "include",
+    });
+    if (!response.ok) {
+      throw new Error(`CSRF token request failed (${response.status}).`);
+    }
+    const data = (await response.json()) as { csrfToken: string };
     csrfToken = data.csrfToken;
   }
   return csrfToken;

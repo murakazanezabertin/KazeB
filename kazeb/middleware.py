@@ -48,3 +48,48 @@ class ForceDefaultLanguageMiddleware:
         if not has_session_choice and not has_cookie_choice:
             request.META.pop("HTTP_ACCEPT_LANGUAGE", None)
         return self.get_response(request)
+
+
+class CorsDevMiddleware:
+    """
+    Adds CORS headers in local development (DEBUG=True) so the Vite dev
+    server (port 5173) can call Django (port 8000) directly for
+    cross-origin endpoints like /i18n/setlang/ while still sending
+    credentials (cookies).
+
+    The machine's LAN IP addresses are detected dynamically so phone or
+    other device preview over Wi-Fi works without hardcoding a specific IP.
+    """
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+        if settings.DEBUG:
+            origin = request.headers.get("Origin")
+            allowed = [
+                "http://localhost:5173",
+                "http://127.0.0.1:5173",
+            ]
+            try:
+                import socket
+
+                for addr in socket.getaddrinfo(socket.gethostname(), None, socket.AF_INET):
+                    ip = addr[4][0]
+                    if ip and not ip.startswith("127."):
+                        allowed.append(f"http://{ip}:5173")
+            except Exception:
+                pass
+            if origin in allowed:
+                response["Access-Control-Allow-Origin"] = origin
+                response["Access-Control-Allow-Credentials"] = "true"
+                response["Access-Control-Allow-Headers"] = (
+                    "accept, accept-language, content-language, content-type, "
+                    "x-csrftoken, x-requested-with"
+                )
+                response["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+            if request.method == "OPTIONS":
+                response.status_code = 204
+                response.content = b""
+        return response

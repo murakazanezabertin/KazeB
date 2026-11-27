@@ -24,6 +24,8 @@ from pathlib import Path
 from urllib.parse import urlsplit
 from django.core.exceptions import ImproperlyConfigured
 
+from kazeb.storage import SupabasePublicStorage
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 # Load local environment variables from the project root .env file.
 env_file = BASE_DIR / ".env"
@@ -67,7 +69,7 @@ ALLOWED_HOSTS = [
     host.strip()
     for host in os.environ.get(
         "DJANGO_ALLOWED_HOSTS",
-        "localhost,127.0.0.1"
+        "localhost,127.0.0.1,192.168.56.1,172.31.71.58"
     ).split(",")
     if host.strip()
 ]
@@ -106,6 +108,7 @@ MIDDLEWARE = [
     "django.middleware.locale.LocaleMiddleware",  # enables the language switcher
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
+    "kazeb.middleware.CorsDevMiddleware",  # CORS for Vite dev server -> Django direct calls
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -160,6 +163,10 @@ if DATABASE_URL:
             disable_server_side_cursors=True,
         )
     }
+    # Supabase requires SSL on every connection. dj_database_url parses
+    # sslmode from the URL query string, but the production DATABASE_URL
+    # may not include it, so enforce it explicitly here.
+    DATABASES["default"].setdefault("OPTIONS", {})["sslmode"] = "require"
 else:
     DATABASES = {
         "default": {
@@ -341,6 +348,21 @@ if SUPABASE_STORAGE_BUCKET:
     }
 
     MEDIA_URL = f"https://{public_domain}/"
+elif os.environ.get("KAZEB_EXPECTED_SUPABASE_PROJECT_REF"):
+    # Local development: Supabase project ref is set but full Supabase
+    # Storage (S3) credentials are not. Use SupabasePublicStorage so
+    # media URLs point at the Supabase public bucket (e.g.
+    # https://ytkioncyldwfecnjlgsa.supabase.co/storage/v1/object/public/media/...)
+    # while uploads still land locally under MEDIA_ROOT.
+    _project_ref = os.environ["KAZEB_EXPECTED_SUPABASE_PROJECT_REF"]
+    _bucket = os.environ.get("SUPABASE_STORAGE_BUCKET", "media")
+    STORAGES["default"] = {
+        "BACKEND": "kazeb.storage.SupabasePublicStorage",
+    }
+    MEDIA_URL = (
+        f"https://{_project_ref}.supabase.co/"
+        f"storage/v1/object/public/{_bucket}/"
+    )
 else:
     MEDIA_URL = "/media/"
 
@@ -436,8 +458,46 @@ if not DEBUG:
 # forms to this site (logging in, adding a listing, etc.) to be listed
 # here, or those POSTs get rejected as a CSRF failure. Comma-separated,
 # e.g. "https://kazeb.fly.dev,https://kazeb.rw".
-CSRF_TRUSTED_ORIGINS = [
+_csrf_trusted_origins = [
     origin.strip()
     for origin in os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",")
     if origin.strip()
 ]
+
+# In local development (DEBUG=True) also trust the Vite dev server and
+# the Django dev server on localhost, so the React app can be previewed
+# at http://localhost:5173/ and language-switch/login POSTs work.
+# The machine's LAN IP addresses are detected dynamically so phone/other
+# device preview over Wi-Fi works without hardcoding a specific IP.
+# When using start-dev.ps1, the LAN IP origins are added automatically
+# through DJANGO_CSRF_TRUSTED_ORIGINS before Django starts.
+# Production (DEBUG=False) is unaffected and uses only the env var.
+if DEBUG:
+    import socket
+
+    _lan_origins = []
+    try:
+        # Get all IP addresses associated with this host's name.
+        for addr in socket.getaddrinfo(socket.gethostname(), None, socket.AF_INET):
+            ip = addr[4][0]
+            if ip and not ip.startswith("127."):
+                _lan_origins.extend(
+                    [f"http://{ip}:5173", f"http://{ip}:8000"]
+                )
+    except Exception:
+        pass
+
+    _csrf_trusted_origins = list(
+        dict.fromkeys(
+            [
+                "http://localhost:5173",
+                "http://127.0.0.1:5173",
+                "http://localhost:8000",
+                "http://127.0.0.1:8000",
+                *_lan_origins,
+                *_csrf_trusted_origins,
+            ]
+        )
+    )
+
+CSRF_TRUSTED_ORIGINS = _csrf_trusted_origins

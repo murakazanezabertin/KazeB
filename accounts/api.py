@@ -225,7 +225,10 @@ def verify_code_api(request):
         return _invalid_form(form)
 
     code = form.cleaned_data["code"]
-    users = User.objects.filter(email_verified=False).select_related("email_verification_code")
+    users = User.objects.filter(
+        email_verified=False,
+        email_verification_code__isnull=False,
+    ).select_related("email_verification_code")
     verified_user = None
     for user in users:
         try:
