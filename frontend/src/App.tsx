@@ -8,6 +8,7 @@ import {
   toggleFavorite,
   type HomepageData,
 } from "./api/client";
+import { LanguageProvider, useLanguage } from "./LanguageContext";
 import AdminDashboard from "./AdminDashboard";
 import AccountPages from "./Accounts";
 import Marketplace from "./Marketplace";
@@ -68,6 +69,8 @@ function App() {
   const [favoriteLoadStatus, setFavoriteLoadStatus] = useState<"loading" | "ready" | "error">("loading");
   const [pendingFavoriteIds, setPendingFavoriteIds] = useState<Set<number>>(() => new Set());
   const [favoriteError, setFavoriteError] = useState("");
+
+  const { language, labels, setLanguage } = useLanguage();
 
   async function loadHomepage() {
     setError("");
@@ -155,28 +158,10 @@ function App() {
   async function handleLanguageChange(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
+    const select = form.elements.namedItem("language") as HTMLSelectElement | null;
+    if (!select) return;
     try {
-      const token = csrfToken || (await getCsrfToken());
-      const formData = new FormData(form);
-      formData.set("csrfmiddlewaretoken", token);
-      const returnTo = window.location.pathname + window.location.search + window.location.hash;
-      formData.set("next", window.location.pathname + window.location.search);
-      const body = new URLSearchParams();
-      formData.forEach((value, key) => body.set(key, String(value)));
-      const djangoUrl = window.location.origin.replace(/:5173$/, ":8000");
-      const response = await fetch(`${djangoUrl}/i18n/setlang/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          "X-CSRFToken": token,
-        },
-        credentials: "include",
-        body,
-      });
-      if (!response.ok) {
-        throw new Error(`Language change failed (${response.status}).`);
-      }
-      window.location.assign(returnTo);
+      await setLanguage(select.value as HomepageData["language"]);
     } catch (languageError) {
       setError(languageError instanceof Error ? languageError.message : "Language change failed.");
     }
@@ -262,12 +247,13 @@ function App() {
     );
   }
 
-  const { labels, user } = homepage;
+  const { user } = homepage;
   const isHomepage = pathname === "/";
   const isDashboard = pathname === "/listings/dashboard/";
 
   return (
-    <>
+    <LanguageProvider initialLanguage={homepage.language} initialLabels={homepage.labels}>
+      <>
       <header className="mobile-header d-lg-none">
         <a className="mobile-logo" href="/">
           <span className="kazeb-logo-black">Kaze</span>
@@ -282,7 +268,7 @@ function App() {
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>
             <input type="hidden" name="csrfmiddlewaretoken" value={csrfToken} />
             <input type="hidden" name="next" value={window.location.pathname + window.location.search} />
-            <select name="language" defaultValue={homepage.language} aria-label={labels.change_language} className="language-select" onChange={(event) => event.currentTarget.form?.requestSubmit()}>
+            <select name="language" value={language} aria-label={labels.change_language} className="language-select" onChange={(event) => { event.preventDefault(); void setLanguage(event.currentTarget.value as HomepageData["language"]); }}>
               <option value="rw">Kinya</option>
               <option value="en">EN</option>
               <option value="fr">FR</option>
@@ -408,10 +394,10 @@ function App() {
                   <select
                     name="language"
                     className="form-select form-select-sm language-select"
-                    defaultValue={homepage.language}
+                    value={language}
                     title={labels.change_language}
                     aria-label={labels.change_language}
-                    onChange={(event) => event.currentTarget.form?.requestSubmit()}
+                    onChange={(event) => { event.preventDefault(); void setLanguage(event.currentTarget.value as HomepageData["language"]); }}
                   >
                     <option value="rw">Kinya</option>
                     <option value="en">English</option>
@@ -911,6 +897,7 @@ function App() {
         </a>
       </nav>
     </>
+    </LanguageProvider>
   );
 }
 
