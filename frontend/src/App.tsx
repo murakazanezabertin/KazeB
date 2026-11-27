@@ -8,7 +8,7 @@ import {
   toggleFavorite,
   type HomepageData,
 } from "./api/client";
-import { LanguageProvider, useLanguage } from "./LanguageContext";
+import { useLanguage } from "./LanguageContext";
 import AdminDashboard from "./AdminDashboard";
 import AccountPages from "./Accounts";
 import Marketplace from "./Marketplace";
@@ -70,7 +70,7 @@ function App() {
   const [pendingFavoriteIds, setPendingFavoriteIds] = useState<Set<number>>(() => new Set());
   const [favoriteError, setFavoriteError] = useState("");
 
-  const { language, labels, setLanguage } = useLanguage();
+  const { language, labels, setLanguage, setPageLabels } = useLanguage();
 
   async function loadHomepage() {
     setError("");
@@ -82,6 +82,11 @@ function App() {
       setError(loadError instanceof Error ? loadError.message : "Unable to load KazeB.");
     }
   }
+
+  useEffect(() => {
+    if (!homepage) return;
+    setPageLabels(homepage.language, homepage.labels);
+  }, [homepage, setPageLabels]);
 
   useEffect(() => {
     if (pathname === "/admin-dashboard/") return;
@@ -252,8 +257,7 @@ function App() {
   const isDashboard = pathname === "/listings/dashboard/";
 
   return (
-    <LanguageProvider initialLanguage={homepage.language} initialLabels={homepage.labels}>
-      <>
+    <>
       <header className="mobile-header d-lg-none">
         <a className="mobile-logo" href="/">
           <span className="kazeb-logo-black">Kaze</span>
@@ -897,7 +901,6 @@ function App() {
         </a>
       </nav>
     </>
-    </LanguageProvider>
   );
 }
 

@@ -6,6 +6,7 @@ type LanguageContextType = {
   language: HomepageData["language"];
   labels: HomepageData["labels"];
   setLanguage: (language: HomepageData["language"]) => Promise<void>;
+  setPageLabels: (language: HomepageData["language"], labels: HomepageData["labels"]) => void;
 };
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -49,7 +50,21 @@ export function LanguageProvider({
     [],
   );
 
-  const value: LanguageContextType = { language, labels, setLanguage };
+  const setPageLabels = useCallback(
+    (nextLanguage: HomepageData["language"], nextLabels: HomepageData["labels"]) => {
+      setLanguageState(nextLanguage);
+      setLabels(nextLabels);
+      document.documentElement.lang = nextLanguage;
+    },
+    [],
+  );
+
+  const value: LanguageContextType = {
+    language,
+    labels,
+    setLanguage,
+    setPageLabels,
+  };
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
 }
